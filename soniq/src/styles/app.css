@@ -200,8 +200,8 @@ table { border-collapse: collapse; width: 100%; }
 .ppanel { position: absolute; top: 4px; right: var(--gut); bottom: 12px; width: min(440px, 42vw); display: flex; flex-direction: column; }
 .ppanel .panel { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .ppanel-scroll { overflow-y: auto; flex: 1; padding: 20px 22px 26px; display: grid; gap: 14px; align-content: start; scrollbar-width: thin; scrollbar-color: var(--violet) transparent; overscroll-behavior: contain; }
-.tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--edge); overflow-x: auto; scrollbar-width: none; margin: 0 -2px; }
-.tab { padding: 11px 12px; font: 700 13px/1 var(--body); color: var(--graphite); white-space: nowrap; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color var(--t-med), border-color var(--t-med); }
+.tabs { display: flex; flex-wrap: wrap; gap: 0 4px; border-bottom: 1px solid var(--edge); }
+.tab { padding: 11px 9px; font: 700 13px/1 var(--body); color: var(--graphite); white-space: nowrap; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color var(--t-med), border-color var(--t-med); }
 .tab:hover { color: #fff; }
 .tab[aria-selected='true'] { color: #fff; border-color: var(--violet); }
 .feat { display: grid; gap: 8px; }

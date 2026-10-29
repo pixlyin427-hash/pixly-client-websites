@@ -7,7 +7,7 @@ import { Icon, Price, Swatches, Thumb } from '../components/ui'
 import Reviews from '../components/Reviews'
 import { rupees, pct } from '../lib/format'
 
-const TABS = [['overview', 'Overview'], ['specs', 'Specs'], ['details', 'Details'], ['box', 'Box & policy'], ['reviews', 'Reviews']]
+const TABS = [['overview', 'Overview'], ['specs', 'Specs'], ['details', 'Details'], ['box', 'Box'], ['reviews', 'Reviews']]
 const view = (detail) => window.dispatchEvent(new CustomEvent('soniq:view', { detail }))
 const MAX_BATTERY = Math.max(...AUDIO.map((x) => x.attrs.battery || 0))
 
