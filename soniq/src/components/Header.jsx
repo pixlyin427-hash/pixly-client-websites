@@ -33,7 +33,7 @@ export default function Header() {
   const { path } = useRoute()
   return (
     <header className="top">
-      <div className="demo-strip" role="note"><span>Fictional brand prototype · demo content · no real orders, payments or locations</span></div>
+      <div className="demo-strip" role="note"><span className="long">Fictional brand prototype · demo content · no real orders, payments or locations</span><span className="short">Fictional prototype · no real orders or payments</span></div>
       <div className="bar">
         <Link to="/" className="brand" aria-label="SONIQ home"><Logo /></Link>
         <nav className="nav" aria-label="Main">

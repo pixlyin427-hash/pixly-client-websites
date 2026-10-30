@@ -88,6 +88,7 @@ table { border-collapse: collapse; width: 100%; }
 .hud > * { pointer-events: auto; }
 .top { position: relative; z-index: 30; flex: none; background: linear-gradient(180deg, rgba(16, 13, 25, .92), rgba(16, 13, 25, .55) 80%, transparent); }
 .demo-strip { height: var(--banner); display: flex; align-items: center; justify-content: center; gap: 8px; font: 700 10.5px/1 var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--ink); background: var(--lav); padding: 0 12px; text-align: center; overflow: hidden; }
+.demo-strip .short { display: none; }
 .demo-strip span { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 .bar { height: var(--hdr); display: flex; align-items: center; gap: 20px; padding: 0 var(--gut); max-width: 1680px; margin: 0 auto; }
 .brand { display: inline-flex; align-items: center; height: 44px; }
@@ -463,6 +464,7 @@ table { border-collapse: collapse; width: 100%; }
   .rec { grid-template-columns: 90px 1fr; }
   .rec .thumb { width: 90px; }
   .demo-strip { font-size: 9.5px; letter-spacing: .08em; }
+  .demo-strip .long { display: none; } .demo-strip .short { display: inline; }
   .tools .hide-s { display: none; }
 }
 @media (max-width: 520px) {

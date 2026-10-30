@@ -243,7 +243,8 @@ function Scene({ cfg, reduced, lite }) {
 
   // camera presets per view
   const { cam, target, controls, autoRotate, limits } = useMemo(() => {
-    const fit = aspect < 1 ? 1 + (1 / aspect - 1) * 0.5 : aspect < 1.4 ? 1.15 : 1
+    const modelFit = { earbuds: 1.45, speaker: 1.1, siliconecase: 1.45 }[prod.model] || 1
+    const fit = (aspect < 1 ? 1 + (1 / aspect - 1) * 0.5 : aspect < 1.4 ? 1.15 : 1) * modelFit
     const scl = (v, t) => { const o = new V3(...v).sub(new V3(...t)).multiplyScalar(fit).add(new V3(...t)); return o.toArray() }
     const A = prod.anatomy.find((a) => a.id === cfg.detail)
     let c = [0, 0.5, 7.8], t = [0, -0.1, 0], ctl = true, auto = false, lim

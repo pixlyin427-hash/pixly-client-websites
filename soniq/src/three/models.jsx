@@ -167,7 +167,7 @@ export function Earbuds({ variant, c, open, snap }) {
   const amt = useRef(open ? 1 : 0)
   useFrame((_, dt) => {
     amt.current += ((open ? 1 : 0) - amt.current) * (snap ? 1 : 1 - Math.exp(-dt * 4.5))
-    if (lid.current) lid.current.rotation.x = -amt.current * 1.85
+    if (lid.current) lid.current.rotation.x = -amt.current * 1.6
   })
   const cut = Math.PI * 0.36
   const cy = Math.cos(cut) * 0.8
@@ -195,7 +195,7 @@ export function Earbuds({ variant, c, open, snap }) {
       <group ref={lid} position={pro ? [0, cy, -cr * 0.9] : [0, 0.26, -0.55]}>
         {pro ? (
           <group position={[0, -cy, cr * 0.9]} scale={[1.15, 0.8, 0.9]}>
-            <mesh><sphereGeometry args={[1, 56, 24, 0, Math.PI * 2, 0, cut]} /><Body color={c.body} snap={snap} /></mesh>
+            <mesh><sphereGeometry args={[1, 56, 24, 0, Math.PI * 2, 0, cut]} /><Body color={c.body} snap={snap} side={THREE.DoubleSide} /></mesh>
             <mesh position={[0, 0.98, 0]} rotation={[-Math.PI / 2, 0, 0]}><circleGeometry args={[0.2, 32]} /><Mat color={c.light ? '#cfc8e2' : '#0f0c16'} snap={snap} roughness={0.4} metalness={0.4} /></mesh>
             <mesh position={[0, 0.985, 0]} rotation={[Math.PI / 2, 0, 0]}><torusGeometry args={[0.14, 0.012, 8, 32]} /><Glow color={c.accent} ei={1.6} snap={snap} /></mesh>
           </group>
