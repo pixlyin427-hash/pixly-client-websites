@@ -255,7 +255,7 @@ function Scene({ cfg, reduced, lite }) {
     if (cfg.view === 'dim') { c = [0, 0.9, 10.5]; t = [0, 0.1, 0]; ctl = false }
     if (cfg.view === 'lab') { c = [0, 5.2, 9.4]; t = [0, -0.2, 0]; ctl = true }
     if (cfg.view === 'studio') { c = cfg.zone === 'wave' ? [0, 2.2, 9] : cfg.zone === 'wall' ? [3.5, 1.6, 10] : cfg.zone === 'counter' ? [2.4, 2, 9.4] : [-2.4, 2, 9.4]; t = [cfg.zone === 'counter' ? 2.4 : cfg.zone === 'bar' ? -2.4 : 0, -0.4, 0]; ctl = true }
-    if (cfg.view === 'story') { const s = [[0, 0.6, 7], [3.4, 0.9, 3.8], [-1.2, 0.3, 4.1], [0, 3.4, 6.5]][cfg.chapter || 0]; c = s; t = [[0, 0, 0], [1.1, 0.1, 0], [-0.7, 0, 0], [0, 0, 0]][cfg.chapter || 0] }
+    if (cfg.view === 'story') { const s = [[0, 0.6, 8.6], [3.4, 0.9, 3.8], [-1.2, 0.3, 4.1], [0, 3.4, 6.5]][cfg.chapter || 0]; c = s; t = [[0, 0, 0], [1.1, 0.1, 0], [-0.7, 0, 0], [0, 0, 0]][cfg.chapter || 0] }
     return { cam: scl(c, t), target: t, controls: ctl, autoRotate: auto, limits: lim }
   }, [cfg.view, cfg.detail, cfg.zone, cfg.chapter, cfg.product, aspect, prod])
 
