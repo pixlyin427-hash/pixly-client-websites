@@ -353,7 +353,7 @@ end
 -- INFORMATION BOARD, KIOSK, SIGNS ------------------------------------------------
 local function buildInfoBoard(model)
 	local board = Kit.model(model, "InformationBoard")
-	local f = CFrame.new(-15, 0, -34) * CFrame.Angles(0, rad(-35), 0)
+	local f = CFrame.new(15, 0, -34) * CFrame.Angles(0, rad(35), 0)
 	for _, sx in ipairs({ -1, 1 }) do
 		Kit.cylY(board, 11, 0.6, f * CFrame.new(sx * 6.6, 5.5, 0.1), C.Iron, M.Metal, { Name = "Post" })
 		Kit.part(board, V(1.4, 0.6, 1.4), f * CFrame.new(sx * 6.6, 0.3, 0.1), C.Iron, M.Metal, { Name = "Foot" })

@@ -23,7 +23,7 @@ Everything is plain Luau source plus a ready-to-open place file.
 
 ### On a phone (no PC)
 
-Open the 3D browser preview that Claude published (the link is in the chat). It is generated from the same build code, so every part, light and sign is the real layout.
+Open the 3D browser preview: https://claude.ai/artifact/LPxpU35VxdBuVsK7u2J6Ef (private to your account until you share it). It is generated from the same build code, so every part, light and sign is the real layout.
 
 It is still only an approximation:
 
