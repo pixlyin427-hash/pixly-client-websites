@@ -1,0 +1,547 @@
+<title>The Last Train</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@500;600&family=Oswald:wght@400;500&display=swap">
+<style>
+  /* Layout: full-bleed WebGL scene; brand plate top-left, viewpoint rail along the bottom. */
+  :root {
+    --night: #12151b;
+    --panel: rgba(22, 20, 18, 0.86);
+    --panel-solid: #191715;
+    --line: rgba(176, 140, 82, 0.42);
+    --lamp: #e2a860;
+    --brass: #b08c52;
+    --text: #eee4d2;
+    --muted: #a69a88;
+    --font-display: "Merriweather", Georgia, "Times New Roman", serif;
+    --font-label: "Oswald", "Arial Narrow", "Roboto Condensed", sans-serif;
+    --font-body: "Montserrat", "Segoe UI", system-ui, sans-serif;
+    color-scheme: dark;
+  }
+  html, body { height: 100%; }
+  body { background: var(--night); color: var(--text); font-family: var(--font-body); overflow: hidden; }
+  #scene { position: fixed; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; }
+  .plate {
+    position: fixed; top: calc(12px + env(safe-area-inset-top, 0px)); left: max(16px, env(safe-area-inset-left, 0px));
+    background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px 14px; display: flex; gap: 12px; align-items: center; max-width: calc(100% - 32px - 56px);
+  }
+  .plate svg { flex: none; }
+  .plate h1 { margin: 0; font-family: var(--font-label); font-weight: 500; font-size: 15px; letter-spacing: 0.16em; color: var(--lamp); }
+  .plate p { margin: 3px 0 0; font-size: 12px; color: var(--muted); line-height: 1.35; }
+  .info-btn {
+    position: fixed; top: calc(12px + env(safe-area-inset-top, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+    width: 44px; height: 44px; border-radius: 22px; border: 1px solid var(--line); background: var(--panel);
+    color: var(--text); font-family: var(--font-display); font-size: 18px; cursor: pointer;
+  }
+  .info-btn:focus-visible, .chip:focus-visible { outline: 2px solid var(--lamp); outline-offset: 2px; }
+  .note {
+    position: fixed; top: calc(66px + env(safe-area-inset-top, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+    width: min(340px, calc(100% - 32px)); background: var(--panel-solid); border: 1px solid var(--line); border-radius: 8px;
+    padding: 14px 16px; font-size: 13px; line-height: 1.5; color: var(--muted);
+  }
+  .note strong { color: var(--text); font-weight: 600; }
+  .note p { margin: 0 0 8px; }
+  .note p:last-child { margin: 0; }
+  .rail {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+    background: linear-gradient(to top, rgba(10, 10, 12, 0.85), rgba(10, 10, 12, 0));
+  }
+  .rail-label { font-family: var(--font-label); font-size: 11px; letter-spacing: 0.14em; color: var(--muted); margin: 0 0 6px 2px; }
+  .chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: none; height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid var(--line);
+    background: var(--panel); color: var(--text); font-family: var(--font-label); font-size: 14px; letter-spacing: 0.06em; cursor: pointer;
+  }
+  .chip[aria-pressed="true"] { background: var(--lamp); color: #1c140c; border-color: var(--lamp); }
+  .chip.group-start { margin-left: 10px; }
+  .loading {
+    position: fixed; inset: 0; display: grid; place-items: center; background: var(--night);
+    font-family: var(--font-label); letter-spacing: 0.16em; color: var(--lamp); font-size: 14px;
+  }
+  .caption {
+    position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    max-width: calc(100% - 32px); background: var(--panel); border: 1px solid var(--line); border-radius: 18px;
+    padding: 8px 16px; font-size: 13px; color: var(--text); text-align: center; line-height: 1.4;
+  }
+  @media (prefers-reduced-motion: reduce) { .chip { transition: none; } }
+</style>
+
+<canvas id="scene" aria-label="3D preview of the expedition terminal and the train"></canvas>
+
+<div class="plate">
+  <svg width="38" height="38" viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="50" cy="50" r="46" fill="none" stroke="#b08c52" stroke-width="5"/>
+    <circle cx="50" cy="50" r="38" fill="none" stroke="#b08c52" stroke-width="2.5"/>
+    <path d="M41 82 L47 32 M59 82 L53 32" stroke="#b08c52" stroke-width="4" stroke-linecap="round"/>
+    <path d="M31 74 H69 M36 60 H64 M41 48 H59" stroke="#b08c52" stroke-width="3"/>
+    <rect x="45" y="22" width="10" height="10" transform="rotate(45 50 27)" fill="#b08c52"/>
+  </svg>
+  <div>
+    <h1>THE LAST TRAIN</h1>
+    <p>Expedition terminal and train, phases 1–2</p>
+  </div>
+</div>
+
+<button class="info-btn" id="infoBtn" aria-expanded="false" aria-controls="note" title="About this preview">i</button>
+<div class="note" id="note" hidden>
+  <p><strong>What this is.</strong> A browser preview generated from the same world-building code as the Roblox place. Every part, light and sign comes from that build.</p>
+  <p><strong>What differs in Roblox.</strong> Materials, shadows, fog, fonts and text sizes look different in Studio, and the preview has no sound, no players and no interaction.</p>
+  <p><strong>Controls.</strong> Drag to look around, pinch or scroll to zoom, two-finger drag to pan. Pick a viewpoint below.</p>
+</div>
+
+<div class="caption" id="caption" hidden></div>
+
+<div class="rail">
+  <p class="rail-label">VIEWPOINTS</p>
+  <div class="chips" id="chips" role="group" aria-label="Viewpoints"></div>
+</div>
+
+<div class="loading" id="loading">LOADING THE TERMINAL…</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+const VIEWS = [
+  { id: "arrival", label: "Arrival", pos: [0, 7, -60], at: [0, 9, -10], text: "Spawn medallion. The guide path, the clock and the platform sign line up ahead." },
+  { id: "clock", label: "Station clock", pos: [-6, 15, -39], at: [0, 21, -24], text: "The central landmark. Count the marks between XI and XII." },
+  { id: "keeper", label: "Station Keeper", pos: [-8, 6.5, -33], at: [-17, 5.5, -25], text: "The Station Keeper by the office and the departures board." },
+  { id: "cabins", label: "Cabins", pos: [0, 3, 22], at: [0, -1, 54], text: "Solo, Duo, Squad and Crew boarding cabins on the lower platform." },
+  { id: "crewcabin", label: "Crew cabin", pos: [28.5, 1.5, 36], at: [28.5, 1.5, 54], text: "Semaphore arm, capacity bulbs, counter plate and pocket doors." },
+  { id: "teaser", label: "Train glimpse", pos: [40, 6, -20], at: [76, 2, -36], text: "From the viewing bay: the train waits in the cold yard." },
+  { id: "yard", label: "Engine", pos: [58, 4, -70], at: [76, 6, -36], text: "The locomotive's silhouette: prow guard, emblem door, high headlamp." },
+  { id: "boarding", label: "Boarding car", pos: [0, 12.5, 4268], at: [0, 9, 4238], text: "Where every expedition arrives. The Conductor waits by the far door.", group: true },
+  { id: "explorer", label: "Explorer car", pos: [0, 12.5, 4228], at: [0, 8, 4196], text: "Lockers, equipment rack, planning table. Placards mark future systems." },
+  { id: "discovery", label: "Discovery car", pos: [0, 12.5, 4187], at: [0, 8, 4160], text: "Empty cases and pedestals, waiting for discoveries." },
+  { id: "crew", label: "Crew car", pos: [0, 12.5, 4146], at: [0, 8, 4114], text: "A warm lounge for the crew." },
+  { id: "mystery", label: "Sealed door", pos: [0, 11, 4121], at: [0, 10, 4106], text: "The Mystery Carriage. No keyhole, only the emblem." },
+  { id: "deck", label: "Rear deck", pos: [0, 11, 4276], at: [0, 3, 4420], text: "The observation deck. The world slides away behind the train." },
+  { id: "outside", label: "Train outside", pos: [-34, 16, 4005], at: [0, 9, 4040], text: "The expedition train under way (the scenery moves, the train does not)." },
+];
+
+const $ = (id) => document.getElementById(id);
+const canvas = $("scene");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.25;
+renderer.useLegacyLights = true;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(62, 1, 0.3, 2600);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.maxDistance = 420;
+controls.minDistance = 0.5;
+
+function resize() {
+  const w = window.innerWidth, h = window.innerHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener("resize", resize);
+resize();
+
+const srgb = (r, g, b) => new THREE.Color().setRGB(r, g, b, THREE.SRGBColorSpace);
+
+function setAtmosphere(zone) {
+  if (zone === "train") {
+    scene.background = new THREE.Color(0x0e1320);
+    scene.fog = new THREE.FogExp2(0x1d2638, 0.0052);
+  } else {
+    scene.background = new THREE.Color(0x1c2536);
+    scene.fog = new THREE.FogExp2(0x2c374a, 0.0038);
+  }
+}
+setAtmosphere("terminal");
+
+scene.add(new THREE.HemisphereLight(0x8a9bbd, 0x2e2722, 0.85));
+scene.add(new THREE.AmbientLight(0x6e5c50, 0.35));
+const moon = new THREE.DirectionalLight(0xa3b6d8, 0.35);
+moon.position.set(-200, 300, -120);
+scene.add(moon);
+
+// ---- geometry -------------------------------------------------------------
+function wedgeGeometry() {
+  const v = [
+    // bottom
+    -.5,-.5,-.5,  .5,-.5,-.5,  .5,-.5,.5,   -.5,-.5,-.5,  .5,-.5,.5,  -.5,-.5,.5,
+    // back
+    -.5,-.5,.5,  .5,-.5,.5,  .5,.5,.5,   -.5,-.5,.5,  .5,.5,.5,  -.5,.5,.5,
+    // slope
+    -.5,-.5,-.5,  -.5,.5,.5,  .5,.5,.5,   -.5,-.5,-.5,  .5,.5,.5,  .5,-.5,-.5,
+    // sides
+    .5,-.5,-.5,  .5,.5,.5,  .5,-.5,.5,
+    -.5,-.5,-.5,  -.5,-.5,.5,  -.5,.5,.5,
+  ];
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(v, 3));
+  g.computeVertexNormals();
+  return g;
+}
+const cyl = new THREE.CylinderGeometry(0.5, 0.5, 1, 22);
+cyl.rotateZ(-Math.PI / 2);
+const GEOMS = [new THREE.BoxGeometry(1, 1, 1), new THREE.SphereGeometry(0.5, 18, 12), cyl, wedgeGeometry()];
+
+const METALS = new Set(["Metal", "CorrodedMetal", "DiamondPlate", "Foil"]);
+function matClass(material, t) {
+  if (material === "Neon") return t > 0.05 ? "neonT" : "neon";
+  if (material === "Glass" || t > 0.05) return "glass";
+  return METALS.has(material) ? "metal" : "std";
+}
+const MATERIALS = {
+  std: () => new THREE.MeshStandardMaterial({ roughness: 0.88, metalness: 0.0 }),
+  metal: () => new THREE.MeshStandardMaterial({ roughness: 0.55, metalness: 0.2 }),
+  glass: () => new THREE.MeshStandardMaterial({ roughness: 0.15, metalness: 0.1, transparent: true, opacity: 0.32, depthWrite: false }),
+  neon: () => new THREE.MeshBasicMaterial({ toneMapped: false }),
+  neonT: () => new THREE.MeshBasicMaterial({ toneMapped: false, transparent: true, opacity: 0.6, depthWrite: false }),
+};
+
+const tmpM = new THREE.Matrix4();
+function partMatrix(p, out) {
+  const shape = p[0];
+  let sx = p[1], sy = p[2], sz = p[3];
+  if (shape === 1) { const d = Math.min(sx, sy, sz); sx = sy = sz = d; }
+  if (shape === 2) { const d = Math.min(sy, sz); sy = sz = d; }
+  out.set(
+    p[7] * sx, p[8] * sy, p[9] * sz, p[4],
+    p[10] * sx, p[11] * sy, p[12] * sz, p[5],
+    p[13] * sx, p[14] * sy, p[15] * sz, p[6],
+    0, 0, 0, 1);
+  return out;
+}
+
+function buildParts(parts, scroll) {
+  const scrollInfo = new Map();
+  for (const s of scroll) scrollInfo.set(s[0], s);
+  const groups = new Map();
+  parts.forEach((p, i) => {
+    const t = p[20];
+    if (t >= 0.98) return;
+    const key = (scrollInfo.has(i) ? "S" : "") + p[0] + ":" + matClass(p[19], t);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(i);
+  });
+  const dynamic = [];
+  for (const [key, list] of groups) {
+    const [shapeStr, cls] = key.replace("S", "").split(":");
+    const mesh = new THREE.InstancedMesh(GEOMS[+shapeStr], MATERIALS[cls](), list.length);
+    if (+shapeStr === 3) mesh.material.side = THREE.DoubleSide;
+    const color = new THREE.Color();
+    list.forEach((pi, k) => {
+      const p = parts[pi];
+      mesh.setMatrixAt(k, partMatrix(p, tmpM));
+      color.copy(srgb(p[16], p[17], p[18]));
+      if (cls === "neon" || cls === "neonT") color.multiplyScalar(1.35);
+      mesh.setColorAt(k, color);
+    });
+    mesh.frustumCulled = false;
+    scene.add(mesh);
+    if (key.startsWith("S")) {
+      dynamic.push({ mesh, items: list.map((pi) => ({ base: partMatrix(parts[pi], new THREE.Matrix4()), info: scrollInfo.get(pi), z: parts[pi][6] })) });
+    }
+  }
+  // wrap origins per layer (mirrors the game's ZoneController)
+  const layerMin = {};
+  for (const d of dynamic) for (const it of d.items) {
+    const key = it.info[1] + ":" + it.info[2];
+    layerMin[key] = Math.min(layerMin[key] ?? Infinity, it.z);
+  }
+  for (const d of dynamic) for (const it of d.items) {
+    it.z0 = it.info[2] !== false ? it.info[2] : layerMin[it.info[1] + ":" + it.info[2]] - 10;
+    it.len = it.info[3];
+    it.speed = it.info[1] === "Mid" ? 16 : 44;
+  }
+  return dynamic;
+}
+
+// ---- SurfaceGuis drawn to canvases ------------------------------------------------
+const FONT = {
+  Oswald: "Oswald", Merriweather: "Merriweather", GothamMedium: "Montserrat", Gotham: "Montserrat", GothamBold: "Montserrat",
+};
+function roundRect(ctx, x, y, w, h, r) {
+  r = Math.max(0, Math.min(r, w / 2, h / 2));
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+const rgba = (c, a) => `rgba(${Math.round(c[0] * 255)},${Math.round(c[1] * 255)},${Math.round(c[2] * 255)},${a})`;
+
+function drawNode(ctx, node, parent, k) {
+  const w = node.size[0] * parent.w + node.size[1] * k;
+  const h = node.size[2] * parent.h + node.size[3] * k;
+  const x = parent.x + node.pos[0] * parent.w + node.pos[1] * k - node.anchor[0] * w;
+  const y = parent.y + node.pos[2] * parent.h + node.pos[3] * k - node.anchor[1] * h;
+  ctx.save();
+  if (node.rot) {
+    ctx.translate(x + w / 2, y + h / 2);
+    ctx.rotate(node.rot * Math.PI / 180);
+    ctx.translate(-(x + w / 2), -(y + h / 2));
+  }
+  const r = node.corner ? node.corner[0] * Math.min(w, h) + node.corner[1] * k : 0;
+  if (node.bgT < 0.99) {
+    ctx.fillStyle = rgba(node.bg, 1 - node.bgT);
+    if (r > 0) { roundRect(ctx, x, y, w, h, r); ctx.fill(); } else ctx.fillRect(x, y, w, h);
+  }
+  if (node.stroke && node.stroke[2] < 0.99) {
+    ctx.strokeStyle = rgba(node.stroke[0], 1 - node.stroke[2]);
+    ctx.lineWidth = Math.max(1, node.stroke[1] * k);
+    roundRect(ctx, x, y, w, h, r); ctx.stroke();
+  }
+  if (node.cls === "TextLabel" && node.text) {
+    const family = FONT[node.font] || "Montserrat";
+    const weight = node.font === "GothamBold" ? "600 " : "";
+    let size = node.scaled ? h * 0.9 : node.tsize * k;
+    ctx.font = `${weight}${size}px ${family}`;
+    if (node.scaled) {
+      const m = ctx.measureText(node.text).width;
+      if (m > w * 0.96) size = size * (w * 0.96) / m;
+      ctx.font = `${weight}${size}px ${family}`;
+    }
+    ctx.fillStyle = rgba(node.tc, 1 - node.tT);
+    ctx.textBaseline = "middle";
+    ctx.textAlign = node.xa === "Left" ? "left" : node.xa === "Right" ? "right" : "center";
+    const tx = node.xa === "Left" ? x : node.xa === "Right" ? x + w : x + w / 2;
+    ctx.fillText(node.text, tx, y + h / 2 + size * 0.04);
+  }
+  if (node.kids.length) {
+    if (node.clip) { ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip(); }
+    const kids = node.kids.slice().sort((a, b) => a.z - b.z);
+    for (const kid of kids) drawNode(ctx, kid, { x, y, w, h }, k);
+  }
+  ctx.restore();
+}
+
+const FACES = {
+  Front: { n: [0, 0, -1], r: [-1, 0, 0], dims: (s) => [s[0], s[1], s[2]] },
+  Back: { n: [0, 0, 1], r: [1, 0, 0], dims: (s) => [s[0], s[1], s[2]] },
+  Right: { n: [1, 0, 0], r: [0, 0, -1], dims: (s) => [s[2], s[1], s[0]] },
+  Left: { n: [-1, 0, 0], r: [0, 0, 1], dims: (s) => [s[2], s[1], s[0]] },
+};
+
+function buildGuis(parts, guis) {
+  const plane = new THREE.PlaneGeometry(1, 1);
+  for (const g of guis) {
+    const face = FACES[g.face];
+    if (!face) continue;
+    const p = parts[g.part];
+    const [fw, fh, depth] = face.dims([p[1], p[2], p[3]]);
+    const natW = fw * g.pps, natH = fh * g.pps;
+    const cap = Math.max(natW, natH) > 512 ? 512 / Math.max(natW, natH) : 1;
+    const cw = Math.max(16, Math.round(natW * cap)), ch = Math.max(16, Math.round(natH * cap));
+    const cv = document.createElement("canvas");
+    cv.width = cw; cv.height = ch;
+    const ctx = cv.getContext("2d");
+    for (const kid of g.kids) drawNode(ctx, kid, { x: 0, y: 0, w: cw, h: ch }, cap);
+    const tex = new THREE.CanvasTexture(cv);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 4;
+    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, color: 0xdedede });
+    const mesh = new THREE.Mesh(plane, mat);
+    const R = new THREE.Matrix4().set(p[7], p[8], p[9], 0, p[10], p[11], p[12], 0, p[13], p[14], p[15], 0, 0, 0, 0, 1);
+    const n = new THREE.Vector3(...face.n), right = new THREE.Vector3(...face.r), up = new THREE.Vector3(0, 1, 0);
+    const basis = new THREE.Matrix4().makeBasis(right, up, n);
+    const local = n.clone().multiplyScalar(depth / 2 + 0.03);
+    const world = local.applyMatrix4(R).add(new THREE.Vector3(p[4], p[5], p[6]));
+    mesh.matrixAutoUpdate = false;
+    mesh.matrix.copy(R).multiply(basis).scale(new THREE.Vector3(fw, fh, 1)).setPosition(world);
+    scene.add(mesh);
+  }
+}
+
+// ---- lights: a small pool follows the camera ------------------------------------------
+const POOL = 12;
+const pool = [];
+for (let i = 0; i < POOL; i++) {
+  const l = new THREE.PointLight(0xffb070, 0, 10, 1);
+  scene.add(l);
+  pool.push(l);
+}
+let lightSources = [];
+function updatePool() {
+  const c = camera.position;
+  const sorted = lightSources.slice().sort((a, b) => a.pos.distanceToSquared(c) - b.pos.distanceToSquared(c));
+  pool.forEach((l, i) => {
+    const s = sorted[i];
+    if (!s) { l.intensity = 0; return; }
+    l.position.copy(s.pos);
+    l.color.copy(s.color);
+    l.intensity = s.brightness * 1.7;
+    l.distance = s.range * 1.25;
+  });
+}
+
+function buildLights(lights) {
+  for (const L of lights) {
+    const pos = new THREE.Vector3(L[1], L[2], L[3]);
+    const color = srgb(...L[4]);
+    if (L[0] === 1) {
+      const s = new THREE.SpotLight(color, L[5] * 2.2, L[6] * 1.2, THREE.MathUtils.degToRad(L[8] / 2), 0.45, 1);
+      s.position.copy(pos);
+      s.target.position.copy(pos.clone().add(new THREE.Vector3(...L[7]).multiplyScalar(10)));
+      scene.add(s, s.target);
+    } else {
+      lightSources.push({ pos, color, brightness: L[5], range: L[6] });
+    }
+  }
+}
+
+// ---- steam --------------------------------------------------------------------------------
+function puffTexture() {
+  const c = document.createElement("canvas");
+  c.width = c.height = 64;
+  const ctx = c.getContext("2d");
+  const grad = ctx.createRadialGradient(32, 32, 2, 32, 32, 30);
+  grad.addColorStop(0, "rgba(220,226,234,0.55)");
+  grad.addColorStop(1, "rgba(220,226,234,0)");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 64, 64);
+  return new THREE.CanvasTexture(c);
+}
+const puffs = [];
+function buildSmoke(smoke) {
+  const tex = puffTexture();
+  for (const s of smoke) {
+    const count = s[3] > 2 ? 9 : 3;
+    for (let i = 0; i < count; i++) {
+      const m = new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0 });
+      const sp = new THREE.Sprite(m);
+      scene.add(sp);
+      puffs.push({ sp, origin: new THREE.Vector3(s[0], s[1], s[2]), size: s[3], phase: i / count, alpha: Math.min(0.9, s[4] * 4) });
+    }
+  }
+}
+function updateSmoke(t) {
+  for (const p of puffs) {
+    const u = (t * 0.12 + p.phase) % 1;
+    p.sp.position.set(p.origin.x + Math.sin(u * 6 + p.phase * 9) * 0.6, p.origin.y + u * p.size * 3.2, p.origin.z + u * p.size * 0.8);
+    const s = p.size * (0.6 + u * 1.8);
+    p.sp.scale.set(s, s, 1);
+    p.sp.material.opacity = p.alpha * Math.sin(u * Math.PI);
+  }
+}
+
+// ---- viewpoints ----------------------------------------------------------------------------
+let flight = null;
+function goTo(view, instant) {
+  const toPos = new THREE.Vector3(...view.pos), toAt = new THREE.Vector3(...view.at);
+  setAtmosphere(view.pos[2] > 3000 ? "train" : "terminal");
+  const far = camera.position.distanceTo(toPos) > 600;
+  if (instant || far) {
+    camera.position.copy(toPos);
+    controls.target.copy(toAt);
+    flight = null;
+  } else {
+    flight = { fromPos: camera.position.clone(), fromAt: controls.target.clone(), toPos, toAt, t: 0 };
+  }
+  for (const b of document.querySelectorAll(".chip")) b.setAttribute("aria-pressed", String(b.dataset.id === view.id));
+  const cap = $("caption");
+  cap.textContent = view.text;
+  cap.hidden = false;
+  updatePool();
+  try { localStorage.setItem("lt-view", view.id); } catch (e) { /* storage unavailable */ }
+}
+
+function buildChips() {
+  const wrap = $("chips");
+  for (const v of VIEWS) {
+    const b = document.createElement("button");
+    b.className = "chip" + (v.group ? " group-start" : "");
+    b.type = "button";
+    b.id = "view-" + v.id;
+    b.dataset.id = v.id;
+    b.textContent = v.label;
+    b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", () => goTo(v));
+    wrap.appendChild(b);
+  }
+}
+
+window.addEventListener("hashchange", () => {
+  const v = VIEWS.find((x) => x.id === location.hash.slice(1));
+  if (v) goTo(v);
+});
+
+$("infoBtn").addEventListener("click", () => {
+  const note = $("note");
+  note.hidden = !note.hidden;
+  $("infoBtn").setAttribute("aria-expanded", String(!note.hidden));
+});
+
+// ---- boot -------------------------------------------------------------------------------------
+async function boot() {
+  const res = await fetch("world.json");
+  const data = await res.json();
+  try {
+    await Promise.all(["16px Oswald", "16px Merriweather", "16px Montserrat"].map((f) => document.fonts.load(f)));
+  } catch (e) { /* fall back to system fonts */ }
+  const dynamic = buildParts(data.parts, data.scroll || []);
+  buildGuis(data.parts, data.guis);
+  buildLights(data.lights);
+  buildSmoke(data.smoke);
+  buildChips();
+  let start = VIEWS[0];
+  try {
+    const saved = localStorage.getItem("lt-view");
+    const hash = location.hash.slice(1);
+    start = VIEWS.find((v) => v.id === hash) || VIEWS.find((v) => v.id === saved) || VIEWS[0];
+  } catch (e) { /* ignore */ }
+  goTo(start, true);
+  window.jumpTo = (id) => goTo(VIEWS.find((v) => v.id === id) || VIEWS[0], true);
+  $("loading").hidden = true;
+
+  const clock = new THREE.Clock();
+  let frame = 0;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function tick() {
+    const dt = Math.min(clock.getDelta(), 0.05);
+    const t = clock.elapsedTime;
+    if (flight) {
+      flight.t = Math.min(1, flight.t + dt / 1.1);
+      const e = flight.t < 0.5 ? 2 * flight.t * flight.t : 1 - Math.pow(-2 * flight.t + 2, 2) / 2;
+      camera.position.lerpVectors(flight.fromPos, flight.toPos, e);
+      controls.target.lerpVectors(flight.fromAt, flight.toAt, e);
+      if (flight.t >= 1) flight = null;
+    }
+    controls.update();
+    if (++frame % 20 === 0) updatePool();
+    updateSmoke(t);
+    if (camera.position.z > 3000 && !reduce) {
+      for (const d of dynamic) {
+        d.items.forEach((it, k) => {
+          const off = (t * it.speed) % it.len;
+          let z = it.z + off;
+          if (z > it.z0 + it.len) z -= it.len;
+          tmpM.copy(it.base);
+          tmpM.elements[14] = z;
+          d.mesh.setMatrixAt(k, tmpM);
+        });
+        d.mesh.instanceMatrix.needsUpdate = true;
+      }
+    }
+    renderer.render(scene, camera);
+    requestAnimationFrame(tick);
+  }
+  tick();
+}
+boot().catch((err) => {
+  $("loading").textContent = "COULD NOT LOAD THE PREVIEW: " + err.message;
+});
+</script>
