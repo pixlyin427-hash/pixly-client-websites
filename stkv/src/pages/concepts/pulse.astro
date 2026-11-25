@@ -1,0 +1,342 @@
+---
+import '@fontsource-variable/bricolage-grotesque/index.css';
+import '@fontsource-variable/manrope/index.css';
+import { Image } from 'astro:assets';
+import ConceptBase from '../../components/concepts/ConceptBase.astro';
+import Photo from '../../components/concepts/Photo.astro';
+import { photos, logoTransparent as logoOfficial } from '../../data/photos';
+import { verified as v } from '../../data/verified';
+
+const nav = ['Our School', 'Academics', 'Campus Life', 'Admissions', 'Resources'];
+const stats = [
+  { n: v.stats.students, label: 'Learners from Bal Vatika to Class 10', suffix: '' },
+  { n: v.stats.teachers, label: 'Teachers & educators', suffix: '' },
+  { n: v.stats.digitalClassrooms, label: 'Digital classrooms', suffix: '' },
+  { n: v.stats.libraryBooks, label: 'Books in our library', suffix: '' },
+];
+const journey = [
+  { t: 'Bal Vatika', c: 'Pre-school', d: 'Play, stories and first friendships.', tone: 'sun' },
+  { t: 'Primary', c: 'Classes 1–5', d: 'Strong basics in reading, numbers and the world around us.', tone: 'red' },
+  { t: 'Middle', c: 'Classes 6–8', d: 'Labs, projects and growing independence.', tone: 'navy' },
+  { t: 'Secondary', c: 'Classes 9–10', d: 'Focused preparation for the CBSE Class X board.', tone: 'sky' },
+];
+---
+<ConceptBase title="A · Pulse" theme="pulse">
+  <header class="nav">
+    <a class="nav__brand" href="#top"><Image src={logoOfficial} alt="Shri S. T. Kadam Vidyalaya — official logo" width={120} class="nav__logo" /></a>
+    <ul class="nav__links" role="list">{nav.map((n) => <li><a href="#">{n}</a></li>)}</ul>
+    <a class="btn btn--red nav__cta" href="#apply">Apply 2027–28 <span aria-hidden="true">→</span></a>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero__media" data-hero-media><Photo photo={photos.hero} eager sizes="100vw" class="hero__photo" /></div>
+      <div class="hero__shade"></div>
+      <div class="hero__content">
+        <p class="hero__kicker" data-hero-kicker><span class="dot"></span> CBSE · Palghar · Bal Vatika to Class 10</p>
+        <h1 class="hero__title" data-hero-title>
+          <span class="line"><span class="li">Think <mark class="hl hl--sun">bold.</mark></span></span>
+          <span class="line"><span class="li">Play <mark class="hl hl--red">hard.</mark></span></span>
+          <span class="line"><span class="li">Grow <mark class="hl hl--white">kind.</mark></span></span>
+        </h1>
+        <div class="hero__row" data-hero-row>
+          <a class="btn btn--sun btn--lg" href="#apply">Start your admission <span aria-hidden="true">→</span></a>
+          <a class="btn btn--glass btn--lg" href="#life">Explore school life</a>
+        </div>
+      </div>
+      <div class="sticker sticker--a" data-sticker>CBSE<br /><b>{v.cbse.affiliationNo}</b></div>
+      <div class="sticker sticker--b" data-sticker>Since<br /><b>{v.school.founded}</b></div>
+      <div class="sticker sticker--c" data-sticker><b>{v.stats.students.toLocaleString('en-IN')}</b><br />happy learners</div>
+    </section>
+
+    <div class="ribbon-wrap"><div class="ribbon" aria-label="Activities at STKV">
+      <div class="ribbon__track" data-marquee>
+        {[0, 1].map(() => v.activities.map((a) => <span>{a} <i aria-hidden="true">✦</i></span>))}
+      </div>
+    </div></div>
+
+    <section class="stats">
+      <div class="wrap stats__grid">
+        {stats.map((s, i) => (
+          <div class="stat" data-stat>
+            <span class="stat__n" data-count={s.n}>{s.n.toLocaleString('en-IN')}</span>
+            <span class="stat__l">{s.label}</span>
+          </div>
+        ))}
+      </div>
+      <p class="wrap stats__src">Source: school’s published CBSE OASIS record</p>
+    </section>
+
+    <section class="life" id="life">
+      <div class="wrap">
+        <div class="life__head">
+          <h2 class="h2" data-split>Every day has a <em>new favourite thing.</em></h2>
+          <p class="lead">Horse riding, skating, yoga, music, dance and more — part of the school week at STKV, not an afterthought.</p>
+        </div>
+        <div class="mosaic">
+          <a class="tile tile--xl" href="#" data-tile><Photo photo={photos.riding} sizes="(min-width:1000px) 50vw, 100vw" /><span class="tile__label"><b>Horse riding</b> Confidence in the saddle</span></a>
+          <a class="tile" href="#" data-tile><Photo photo={photos.skating} sizes="(min-width:1000px) 25vw, 50vw" /><span class="tile__label"><b>Skating</b> Balance & speed</span></a>
+          <a class="tile tile--tall" href="#" data-tile><Photo photo={photos.janmashtami} sizes="(min-width:1000px) 25vw, 50vw" /><span class="tile__label"><b>Festivals</b> Janmashtami at STKV</span></a>
+          <a class="tile" href="#" data-tile><Photo photo={photos.lab} sizes="(min-width:1000px) 25vw, 50vw" /><span class="tile__label"><b>Science</b> Questions → experiments</span></a>
+          <a class="tile tile--wide" href="#" data-tile><Photo photo={photos.carnival} sizes="(min-width:1000px) 50vw, 100vw" /><span class="tile__label"><b>Christmas Kids Carnival</b> Our whole school family</span></a>
+          <a class="tile" href="#" data-tile><Photo photo={photos.art} sizes="(min-width:1000px) 25vw, 50vw" /><span class="tile__label"><b>Art</b> Colour everything</span></a>
+          <a class="tile" href="#" data-tile><Photo photo={photos.computer} sizes="(min-width:1000px) 25vw, 50vw" /><span class="tile__label"><b>Coding</b> 50 computers, big ideas</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="journey">
+      <div class="wrap">
+        <h2 class="h2 h2--light" data-split>One school. <em>Your child’s whole journey.</em></h2>
+        <ol class="journey__cards" role="list">
+          {journey.map((j, i) => (
+            <li class={`jcard jcard--${j.tone}`} data-jcard style={`--i:${i}`}>
+              <span class="jcard__n">0{i + 1}</span>
+              <h3>{j.t}</h3>
+              <p class="jcard__c">{j.c}</p>
+              <p>{j.d}</p>
+              <span class="jcard__go" aria-hidden="true">→</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="voice">
+      <div class="wrap voice__grid">
+        <div class="voice__photo" data-voice-photo><Photo photo={photos.principal} sizes="(min-width:1000px) 30vw, 60vw" /></div>
+        <div>
+          <p class="voice__kicker">From the Principal’s desk</p>
+          <blockquote class="voice__q" data-scrub>“{v.principalQuote}”</blockquote>
+          <p class="voice__by"><b>{v.school.principal}</b> · Principal</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="apply" id="apply">
+      <div class="wrap apply__grid">
+        <div>
+          <p class="apply__kicker">Admissions 2027–28</p>
+          <h2 class="apply__title" data-split>Applications open <span>1 December</span></h2>
+          <p class="apply__note">{v.admissions.opens}</p>
+          <div class="apply__ctas"><a class="btn btn--red btn--lg" href="#">Make an enquiry <span aria-hidden="true">→</span></a><a class="btn btn--navy btn--lg" href="#">Book a campus visit</a></div>
+        </div>
+        <div class="count" data-countdown aria-label="Time until admissions open">
+          <div><b data-cd="d">00</b><span>days</span></div>
+          <div><b data-cd="h">00</b><span>hours</span></div>
+          <div><b data-cd="m">00</b><span>mins</span></div>
+          <div><b data-cd="s">00</b><span>secs</span></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <div class="wrap foot__grid">
+        <Image src={logoOfficial} alt="STKV logo" width={140} class="foot__logo" />
+        <p>{v.contact.address}<br />{v.contact.phone} · {v.contact.email}</p>
+        <p class="foot__honest">Concept preview · Photos marked “AI Concept Image” are AI-generated illustrations, not real students or scenes, and and will be replaced by approved school photography.</p>
+      </div>
+    </footer>
+  </main>
+</ConceptBase>
+
+<style is:global>
+  .pulse { --red: #d42a2f; --red-d: #a3191f; --navy: #1b2a6b; --ink: #0e1433; --sun: #ffc23c; --sky: #dfeaff; --cream: #fff8ee; --white: #fff;
+    --disp: 'Bricolage Grotesque Variable', system-ui, sans-serif; --body: 'Manrope Variable', system-ui, sans-serif; --ease: cubic-bezier(.22,1,.36,1); }
+  .pulse body { background: var(--cream); color: var(--ink); font: 500 1.0625rem/1.6 var(--body); }
+  .pulse .wrap { width: min(100% - 2 * clamp(16px, 4vw, 56px), 1320px); margin-inline: auto; }
+  .pulse .h2 { font: 800 clamp(2.2rem, 1.4rem + 3.6vw, 4.6rem)/0.98 var(--disp); letter-spacing: -0.035em; font-variation-settings: 'wdth' 90; }
+  .pulse .h2 em { font-style: normal; color: var(--red); }
+  .pulse .h2--light { color: #fff; } .pulse .h2--light em { color: var(--sun); }
+  .pulse .lead { font-size: clamp(1.05rem, 1rem + .4vw, 1.3rem); color: #3b4266; max-width: 44ch; }
+
+  .pulse .btn { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 14px; font: 800 0.95rem/1 var(--body); letter-spacing: -0.01em; transition: transform .25s var(--ease), box-shadow .25s var(--ease), background-color .2s; }
+  .pulse .btn span { transition: transform .35s var(--ease); }
+  .pulse .btn:hover { transform: translateY(-3px); } .pulse .btn:hover span { transform: translateX(5px); }
+  .pulse .btn:active { transform: translateY(0) scale(.97); }
+  .pulse .btn--lg { min-height: 58px; padding: 0 28px; font-size: 1.02rem; border-radius: 16px; }
+  .pulse .btn--red { background: var(--red); color: #fff; box-shadow: 0 6px 0 var(--red-d); }
+  .pulse .btn--red:hover { box-shadow: 0 9px 0 var(--red-d); }
+  .pulse .btn--sun { background: var(--sun); color: var(--ink); box-shadow: 0 6px 0 #d99a12; }
+  .pulse .btn--sun:hover { box-shadow: 0 9px 0 #d99a12; }
+  .pulse .btn--navy { background: var(--navy); color: #fff; box-shadow: 0 6px 0 #0e1747; }
+  .pulse .btn--glass { background: rgb(255 255 255 / .16); color: #fff; backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / .5); }
+
+  /* Nav */
+  .pulse .nav { position: fixed; z-index: 50; top: 14px; left: 50%; translate: -50% 0; width: min(100% - 24px, 1320px); display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 8px 8px 8px 16px; border-radius: 20px; background: rgb(255 255 255 / .92); backdrop-filter: blur(14px); box-shadow: 0 10px 30px rgb(14 20 51 / .18); }
+  .pulse .nav__logo { width: 112px; height: auto; }
+  .pulse .nav__links { display: none; gap: 4px; font-weight: 700; font-size: .95rem; }
+  .pulse .nav__links a { position: relative; padding: 10px 14px; border-radius: 12px; transition: background-color .2s; }
+  .pulse .nav__links a:hover { background: var(--sky); }
+  @media (min-width: 1100px) { .pulse .nav__links { display: flex; } }
+  @media (max-width: 520px) { .pulse .nav__cta { padding: 0 14px; font-size: .85rem; } .pulse .nav__logo { width: 90px; } }
+
+  /* Hero */
+  .pulse .hero { position: relative; min-height: 100svh; display: grid; align-items: end; overflow: clip; color: #fff; isolation: isolate; }
+  .pulse .hero__media { position: absolute; inset: 0; z-index: -2; }
+  .pulse .hero__photo { width: 100%; height: 100%; }
+  .pulse .hero__photo .ph__img { object-position: 50% 40%; }
+  .pulse .hero__shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(14 20 51 / .25) 0%, rgb(14 20 51 / 0) 30%, rgb(14 20 51 / .35) 55%, rgb(14 20 51 / .9) 100%); }
+  .pulse .hero__content { width: min(100% - 2 * clamp(16px, 4vw, 56px), 1320px); margin: 0 auto; padding-bottom: clamp(90px, 14vh, 150px); }
+  .pulse .hero__kicker { display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 99px; background: rgb(255 255 255 / .16); backdrop-filter: blur(8px); font-weight: 700; font-size: .85rem; letter-spacing: .02em; }
+  .pulse .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sun); box-shadow: 0 0 0 4px rgb(255 194 60 / .3); }
+  .pulse .hero__title { margin-top: 18px; font: 800 clamp(3.2rem, 1.6rem + 7.4vw, 8.6rem)/.88 var(--disp); letter-spacing: -0.045em; font-variation-settings: 'wdth' 85; }
+  .pulse .hero__title .line { display: block; overflow: clip; padding-bottom: .06em; margin-bottom: -.02em; }
+  .pulse .hero__title .li { display: inline-block; }
+  .pulse .hl { position: relative; display: inline-block; color: inherit; background: none; padding: 0 .08em; z-index: 0; }
+  .pulse .hl::before { content: ''; position: absolute; inset: .12em -.02em .02em; z-index: -1; border-radius: .12em; transform-origin: left; transform: scaleX(var(--hl, 1)); }
+  .pulse .hl--sun { color: var(--ink); } .pulse .hl--sun::before { background: var(--sun); }
+  .pulse .hl--red::before { background: var(--red); }
+  .pulse .hl--white { color: var(--navy); } .pulse .hl--white::before { background: #fff; }
+  .pulse .hero__row { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 14px; }
+  .pulse .sticker { position: absolute; display: grid; place-content: center; text-align: center; width: 118px; height: 118px; border-radius: 50%; font: 700 .8rem/1.15 var(--body); text-transform: uppercase; letter-spacing: .06em; box-shadow: 0 14px 30px rgb(0 0 0 / .25); }
+  .pulse .sticker b { font: 800 1.45rem/1 var(--disp); letter-spacing: -0.02em; text-transform: none; }
+  .pulse .sticker--a { right: 7%; top: 22%; background: var(--sun); color: var(--ink); rotate: -10deg; }
+  .pulse .sticker--b { right: 18%; top: 44%; background: var(--red); color: #fff; rotate: 8deg; width: 100px; height: 100px; }
+  .pulse .sticker--c { right: 6%; top: 58%; background: #fff; color: var(--navy); rotate: -4deg; }
+  @media (max-width: 760px) { .pulse .sticker { width: 86px; height: 86px; font-size: .62rem; } .pulse .sticker b { font-size: 1.05rem; } .pulse .sticker--a { top: 15%; right: 5%; } .pulse .sticker--b { top: 27%; right: 30%; width: 74px; height: 74px; } .pulse .sticker--c { display: none; } }
+
+  .pulse .ribbon-wrap { position: relative; z-index: 3; margin-top: -42px; overflow-x: clip; padding-block: 12px; }
+  .pulse .ribbon { background: var(--red); color: #fff; rotate: -2deg; scale: 1.04; padding: 18px 0; overflow: clip; box-shadow: 0 10px 0 var(--sun); }
+  .pulse .ribbon__track { display: flex; width: max-content; gap: 34px; font: 800 clamp(1.4rem, 1rem + 1.6vw, 2.3rem)/1 var(--disp); letter-spacing: -0.02em; text-transform: uppercase; }
+  .pulse .ribbon__track span { display: inline-flex; gap: 34px; align-items: center; white-space: nowrap; }
+  .pulse .ribbon i { font-style: normal; color: var(--sun); }
+
+  /* Stats */
+  .pulse .stats { padding: clamp(90px, 10vw, 140px) 0 clamp(50px, 6vw, 80px); }
+  .pulse .stats__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  @media (min-width: 900px) { .pulse .stats__grid { grid-template-columns: repeat(4, 1fr); } }
+  .pulse .stat { display: grid; gap: 8px; align-content: space-between; min-height: 200px; padding: 24px; border-radius: 24px; background: #fff; box-shadow: 0 2px 0 rgb(14 20 51 / .06); transition: transform .4s var(--ease); }
+  .pulse .stat:nth-child(1) { background: var(--navy); color: #fff; } .pulse .stat:nth-child(2) { background: var(--sun); }
+  .pulse .stat:nth-child(3) { background: var(--red); color: #fff; } .pulse .stat:nth-child(4) { background: var(--sky); }
+  .pulse .stat:hover { transform: translateY(-6px) rotate(-1deg); }
+  .pulse .stat__n { font: 800 clamp(3rem, 2rem + 3.4vw, 5.2rem)/.9 var(--disp); letter-spacing: -0.05em; font-variant-numeric: tabular-nums; }
+  .pulse .stat__l { font-weight: 700; max-width: 18ch; }
+  .pulse .stats__src { margin-top: 14px; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #6b7090; }
+
+  /* Life mosaic */
+  .pulse .life { padding: clamp(60px, 8vw, 120px) 0; }
+  .pulse .life__head { display: grid; gap: 20px; align-items: end; margin-bottom: 40px; }
+  @media (min-width: 900px) { .pulse .life__head { grid-template-columns: 1.3fr .7fr; } }
+  .pulse .mosaic { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 200px; }
+  @media (min-width: 900px) { .pulse .mosaic { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 250px; } .pulse .tile--xl { grid-column: span 2; grid-row: span 2; } .pulse .tile--wide { grid-column: span 2; } }
+  @media (max-width: 899px) { .pulse .tile--xl, .pulse .tile--wide { grid-column: span 2; } }
+  .pulse .tile--tall { grid-row: span 2; }
+  .pulse .tile { position: relative; border-radius: 24px; overflow: hidden; isolation: isolate; }
+  .pulse .tile .ph { position: absolute; inset: 0; }
+  .pulse .tile .ph__img { transition: transform 1s var(--ease); }
+  .pulse .tile:hover .ph__img { transform: scale(1.07); }
+  .pulse .tile__label { position: absolute; left: 12px; bottom: 12px; z-index: 2; display: grid; gap: 2px; padding: 10px 14px; border-radius: 14px; background: #fff; color: var(--ink); font-size: .85rem; font-weight: 600; transform: translateY(0); transition: transform .4s var(--ease), background-color .3s; box-shadow: 0 8px 20px rgb(0 0 0 / .15); }
+  .pulse .tile__label b { font: 800 1.05rem/1.1 var(--disp); }
+  .pulse .tile:hover .tile__label { background: var(--sun); transform: translateY(-4px) rotate(-1.5deg); }
+  .pulse .tile .ph__tag { top: 10px; bottom: auto; }
+
+  /* Journey */
+  .pulse .journey { padding: clamp(80px, 10vw, 140px) 0; background: var(--navy); overflow: clip; }
+  .pulse .journey__cards { margin-top: 48px; display: grid; gap: 16px; }
+  @media (min-width: 900px) { .pulse .journey__cards { grid-template-columns: repeat(4, 1fr); } .pulse .jcard { margin-top: calc(var(--i) * 34px); } }
+  .pulse .jcard { position: relative; display: grid; gap: 10px; align-content: start; min-height: 300px; padding: 28px; border-radius: 28px; transition: transform .45s var(--ease); }
+  .pulse .jcard:hover { transform: translateY(-10px) rotate(-1.2deg); }
+  .pulse .jcard--sun { background: var(--sun); color: var(--ink); } .pulse .jcard--red { background: var(--red); color: #fff; }
+  .pulse .jcard--navy { background: #fff; color: var(--ink); } .pulse .jcard--sky { background: var(--sky); color: var(--ink); }
+  .pulse .jcard__n { font: 800 1rem var(--disp); opacity: .6; }
+  .pulse .jcard h3 { font: 800 clamp(1.8rem, 1.4rem + 1vw, 2.4rem)/1 var(--disp); letter-spacing: -0.03em; }
+  .pulse .jcard__c { font-weight: 800; text-transform: uppercase; letter-spacing: .08em; font-size: .78rem; }
+  .pulse .jcard__go { position: absolute; right: 22px; bottom: 20px; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--ink); color: #fff; font-weight: 800; transition: transform .4s var(--ease); }
+  .pulse .jcard:hover .jcard__go { transform: rotate(-45deg) scale(1.1); }
+
+  /* Voice */
+  .pulse .voice { padding: clamp(80px, 10vw, 140px) 0; background: var(--cream); }
+  .pulse .voice__grid { display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 900px) { .pulse .voice__grid { grid-template-columns: .55fr 1.45fr; gap: 72px; } }
+  .pulse .voice__photo .ph { aspect-ratio: 4/5; border-radius: 200px 200px 28px 28px; box-shadow: 18px 18px 0 var(--red); max-width: 360px; }
+  .pulse .voice__kicker { font-weight: 800; text-transform: uppercase; letter-spacing: .1em; font-size: .8rem; color: var(--red); }
+  .pulse .voice__q { margin: 16px 0 22px; font: 700 clamp(1.7rem, 1.1rem + 2.4vw, 3.3rem)/1.08 var(--disp); letter-spacing: -0.03em; }
+  .pulse .voice__q .word { opacity: .18; }
+
+  /* Apply */
+  .pulse .apply { padding: clamp(80px, 10vw, 140px) 0; background: var(--sun); }
+  .pulse .apply__grid { display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 1000px) { .pulse .apply__grid { grid-template-columns: 1.2fr .8fr; } }
+  .pulse .apply__kicker { font-weight: 800; text-transform: uppercase; letter-spacing: .1em; font-size: .85rem; }
+  .pulse .apply__title { margin-top: 10px; font: 800 clamp(2.8rem, 1.6rem + 5vw, 6.4rem)/.9 var(--disp); letter-spacing: -0.045em; }
+  .pulse .apply__title span { color: var(--red); display: inline-block; }
+  .pulse .apply__note { margin-top: 18px; max-width: 52ch; font-weight: 600; }
+  .pulse .apply__ctas { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 14px; }
+  .pulse .count { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .pulse .count div { display: grid; justify-items: center; gap: 4px; padding: 18px 6px; border-radius: 20px; background: var(--ink); color: #fff; box-shadow: 0 8px 0 rgb(14 20 51 / .3); }
+  .pulse .count b { font: 800 clamp(2rem, 1.4rem + 2vw, 3.4rem)/1 var(--disp); font-variant-numeric: tabular-nums; }
+  .pulse .count span { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; opacity: .7; }
+
+  .pulse .foot { padding: 60px 0 110px; background: var(--ink); color: #c9cde4; font-size: .9rem; }
+  .pulse .foot__grid { display: grid; gap: 20px; }
+  .pulse .foot__logo { width: 130px; height: auto; background: #fff; border-radius: 12px; padding: 8px; }
+  .pulse .foot__honest { opacity: .7; font-size: .8rem; }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { SplitText } from 'gsap/SplitText';
+  gsap.registerPlugin(ScrollTrigger, SplitText);
+
+  // Admissions countdown (opens 1 Dec, 00:00 IST)
+  const target = new Date('2026-12-01T00:00:00+05:30').getTime();
+  const cd = (k: string) => document.querySelector<HTMLElement>(`[data-cd="${k}"]`)!;
+  const tick = () => {
+    const ms = Math.max(0, target - Date.now());
+    const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60, s = Math.floor(ms / 1e3) % 60;
+    [['d', d], ['h', h], ['m', m], ['s', s]].forEach(([k, val]) => { const el = cd(k as string); const t = String(val).padStart(2, '0'); if (el.textContent !== t) el.textContent = t; });
+  };
+  tick(); setInterval(tick, 1000);
+
+  const mm = gsap.matchMedia();
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    // Hero entrance: image settles, lines rise, highlights swipe in, stickers pop
+    const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+    tl.from('[data-hero-media]', { scale: 1.18, duration: 2.2, ease: 'power3.out' })
+      .from('[data-hero-kicker]', { y: 20, autoAlpha: 0, duration: .8 }, .2)
+      .from('[data-hero-title] .li', { yPercent: 110, duration: 1.1, stagger: .12 }, .3)
+      .fromTo('.hl', { '--hl': 0 }, { '--hl': 1, duration: .7, stagger: .15, ease: 'power3.inOut' }, .9)
+      .from('[data-hero-row] > *', { y: 30, autoAlpha: 0, duration: .9, stagger: .1 }, 1.1)
+      .from('[data-sticker]', { scale: 0, rotate: -40, duration: 1, stagger: .12, ease: 'back.out(2)' }, 1.2);
+    // Hero parallax + subtle zoom out while scrolling away
+    gsap.to('[data-hero-media]', { yPercent: 14, scale: 1.06, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+    gsap.to('[data-sticker]', { y: (i) => -60 - i * 40, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+    // Ribbon marquee (direction follows scroll velocity)
+    const track = document.querySelector('[data-marquee]') as HTMLElement;
+    const loop = gsap.to(track, { xPercent: -50, duration: 28, ease: 'none', repeat: -1 });
+    ScrollTrigger.create({ onUpdate: (self) => { gsap.to(loop, { timeScale: self.direction * Math.min(4, 1 + Math.abs(self.getVelocity()) / 600), duration: .4, overwrite: true }); } });
+
+    // Stats: cards bounce in, numbers count up
+    gsap.from('[data-stat]', { y: 80, rotate: (i) => (i % 2 ? 4 : -4), autoAlpha: 0, duration: 1, stagger: .1, ease: 'back.out(1.4)', scrollTrigger: { trigger: '.stats', start: 'top 80%' } });
+    document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
+      const n = Number(el.dataset.count); const o = { v: 0 };
+      gsap.to(o, { v: n, duration: 2, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%' }, onUpdate: () => { el.textContent = Math.round(o.v).toLocaleString('en-IN'); } });
+    });
+
+    // Headings: words rise from a mask
+    document.querySelectorAll<HTMLElement>('[data-split]').forEach((h) => {
+      const s = SplitText.create(h, { type: 'words', mask: 'words' });
+      gsap.from(s.words, { yPercent: 110, duration: 1, stagger: .05, ease: 'expo.out', scrollTrigger: { trigger: h, start: 'top 85%' } });
+    });
+
+    // Mosaic tiles: clip-path wipe + image zoom-out, batched
+    ScrollTrigger.batch('[data-tile]', { start: 'top 88%', onEnter: (els) => {
+      gsap.fromTo(els, { clipPath: 'inset(100% 0% 0% 0% round 24px)' }, { clipPath: 'inset(0% 0% 0% 0% round 24px)', duration: 1.1, stagger: .1, ease: 'power4.inOut' });
+      gsap.from(els.map((e) => e.querySelector('.ph__img')), { scale: 1.3, duration: 1.6, stagger: .1, ease: 'power3.out' });
+    } });
+
+    // Journey cards fan in from the right, tied to scroll
+    gsap.from('[data-jcard]', { xPercent: 60, rotate: 8, autoAlpha: 0, stagger: .12, ease: 'power3.out', scrollTrigger: { trigger: '.journey__cards', start: 'top 85%', end: 'top 35%', scrub: 1 } });
+
+    // Principal quote lights up word by word with scroll
+    const q = SplitText.create('[data-scrub]', { type: 'words', wordsClass: 'word' });
+    gsap.to(q.words, { opacity: 1, stagger: .1, ease: 'none', scrollTrigger: { trigger: '[data-scrub]', start: 'top 75%', end: 'bottom 45%', scrub: true } });
+    gsap.from('[data-voice-photo]', { rotate: -8, y: 80, autoAlpha: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.voice', start: 'top 70%' } });
+
+    // Countdown tiles flip in
+    gsap.from('.count div', { rotateX: -90, transformOrigin: 'top', autoAlpha: 0, duration: .9, stagger: .08, ease: 'back.out(1.6)', scrollTrigger: { trigger: '.count', start: 'top 85%' } });
+  });
+</script>

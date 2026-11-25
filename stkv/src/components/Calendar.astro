@@ -1,0 +1,39 @@
+---
+import Icon from './Icon.astro';
+import { calendarEvents, eventKinds } from '../data/calendar';
+---
+<div class="cal" data-calendar data-view="month">
+  <div>
+    <div class="cal__bar">
+      <p class="cal__title" data-cal-title aria-live="polite">Month</p>
+      <div class="cal__nav">
+        <div class="tabs__list" role="group" aria-label="View">
+          <button class="chip" type="button" data-cal-view="month" aria-pressed="true"><Icon name="grid" size={14} />Month</button>
+          <button class="chip" type="button" data-cal-view="list" aria-pressed="false"><Icon name="list" size={14} />List</button>
+        </div>
+        <button class="icon-btn" type="button" data-cal-prev aria-label="Previous month"><Icon name="chevron-left" /></button>
+        <button class="chip" type="button" data-cal-today>Today</button>
+        <button class="icon-btn" type="button" data-cal-next aria-label="Next month"><Icon name="chevron-right" /></button>
+      </div>
+    </div>
+    <div class="cal__month">
+      <div class="cal__week" aria-hidden="true">{['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => <span>{d}</span>)}</div>
+      <div class="cal__grid" data-cal-grid role="group" aria-label="Days of the month (use arrow keys)"></div>
+    </div>
+    <ol class="cal__list" data-cal-list role="list"></ol>
+    <div class="cal__filters" role="group" aria-label="Show event types">
+      {eventKinds.map((k) => <button class="chip" type="button" data-cal-kind={k} aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span class="cal-kind" data-kind={k}>{k}</span></button>)}
+    </div>
+  </div>
+  <aside class="cal-detail" data-cal-detail aria-live="polite"></aside>
+</div>
+<p class="small muted cal-note">National observances use their fixed dates. Entries marked <span class="sample-tag">Sample</span> are demonstrations — the school’s academic calendar will replace them.</p>
+<script type="application/json" id="calendar-data" set:html={JSON.stringify(calendarEvents)} />
+<style>
+  .cal-note { margin-top: 24px; }
+  .cal__nav .tabs__list { padding: 0; background: none; gap: 6px; margin-right: 8px; }
+  .cal__nav .chip { min-height: 40px; }
+  @media (max-width: 560px) { .cal__nav { flex-wrap: wrap; } .cal__nav .tabs__list { width: 100%; margin: 0 0 4px; } }
+  .cal__filters .chip { gap: 6px; }
+  .cal__filters .chip[aria-pressed='true'] .cal-kind { color: var(--white); }
+</style>

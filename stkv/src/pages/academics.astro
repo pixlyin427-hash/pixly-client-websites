@@ -1,0 +1,159 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import SubNav from '../components/SubNav.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Calendar from '../components/Calendar.astro';
+import Icon from '../components/Icon.astro';
+import Pending from '../components/Pending.astro';
+import { stages, classes, resources } from '../data/academics';
+
+const exams = [
+  { q: 'Internal assessment (Classes 1–9)', a: 'Periodic tests, term examinations and assessment weightage for each class will be published from the school’s examination policy.' },
+  { q: 'CBSE Secondary School Examination (Class X)', a: 'Class X students appear for the board examination conducted by CBSE. Official schedules, sample papers and circulars are published by CBSE on cbse.gov.in.' },
+  { q: 'Results and promotion', a: 'Promotion criteria and result declaration dates will be published by the school through the Notice Centre.' },
+  { q: 'Examination conduct & guidelines', a: 'Rules for attendance, conduct and re-tests will be added from the school’s official guidelines.' },
+];
+---
+<Base title="Academics" description="CBSE curriculum at STKV from Class 1 to Class 10: stages, class-wise subjects, book lists, examinations and the academic calendar.">
+  <PageHero crumb="Academics" kicker="Academics" title="Curiosity, <em>class by class.</em>" lead="The CBSE curriculum from Class 1 to Class 10 — organised into clear stages, with class-wise subjects, book lists and resources." art="maths" tone="marigold" />
+  <SubNav items={[{ id: 'approach', label: 'Academic Approach' }, { id: 'centre', label: 'Academic Centre' }, { id: 'exams', label: 'Examinations' }, { id: 'calendar', label: 'Academic Calendar' }, { id: 'resources', label: 'Resources' }]} />
+
+  <section class="section" id="approach" aria-labelledby="ap-t">
+    <div class="container">
+      <SectionHead kicker="Academic Approach" title="Four stages, <em>one continuous journey</em>" lead="STKV follows the CBSE scheme of studies, structured by the stages of the National Education Policy 2020." split id="ap-t" />
+      <ol class="stairs" role="list">
+        {stages.map((s, i) => (
+          <li class="stair" style={`--h:${i};--delay:${i * 120}ms`} data-reveal="up">
+            <span class="stair__n">0{i + 1}</span>
+            <p class="label muted">{s.classes}</p>
+            <h3 class="h3">{s.name}</h3>
+            <p class="small muted">{s.lead}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section bg-paper2" id="centre" aria-labelledby="ac-t">
+    <div class="container" data-class-selector>
+      <SectionHead kicker="Academic Centre" title="Choose a class to see <em>subjects & book lists</em>" id="ac-t" />
+      <div class="cls" role="group" aria-label="Select class" data-reveal="fade">
+        {classes.map((c) => <button type="button" class="cls__b" data-class={c.n} aria-pressed="false" aria-controls="class-panel"><span class="sr-only">Class </span>{c.n}</button>)}
+        <span class="cls-ink" aria-hidden="true"></span>
+      </div>
+      <div class="cpanel" id="class-panel" data-class-panel aria-live="polite">
+        <div class="cpanel__id">
+          <span class="cpanel__num" data-c-num>1</span>
+          <div><p class="label" data-c-roman>Class I</p><p class="muted small" data-c-stage></p></div>
+        </div>
+        <div class="cpanel__main">
+          <p class="h3 cpanel__lead" data-c-lead></p>
+          <div class="cpanel__cols">
+            <div>
+              <h3 class="label cpanel__h">Subjects <span class="sample-tag" data-tip="Based on the CBSE scheme of studies. The school will confirm subjects and languages." tabindex="0">Indicative</span></h3>
+              <ul class="cpanel__subjects" role="list" data-c-subjects></ul>
+            </div>
+            <div class="book">
+              <Icon name="book" size={32} class="book__ico" />
+              <h3 class="h4">Book list — <span data-c-name>Class 1</span></h3>
+              <p class="small muted">The 2026–27 book list will be published by the school. A clearly marked sample file shows how downloads will work.</p>
+              <Pending label="Awaiting school upload" />
+              <a class="btn btn--sm" href="/docs/sample-book-list.pdf" download data-c-book data-sample-download><span class="btn__label">Download sample</span><span class="btn__icon" aria-hidden="true"><Icon name="download" size={18} /><Icon name="download" size={18} /></span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="application/json" id="class-data" set:html={JSON.stringify(classes)} />
+  </section>
+
+  <section class="section" id="exams" aria-labelledby="ex-t">
+    <div class="container exams">
+      <SectionHead kicker="Examinations" title="How learning <em>is assessed</em>" id="ex-t" lead="Assessment details will be published from the school’s examination policy." />
+      <div class="acc" data-acc-single>
+        {exams.map((e) => (
+          <div class="acc__item">
+            <h3><button class="acc__btn" type="button" aria-expanded="false" data-acc-btn>{e.q}<span class="acc__icon" aria-hidden="true"></span></button></h3>
+            <div class="acc__panel"><div><p>{e.a}</p></div></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-paper2" id="calendar" aria-labelledby="cal-t">
+    <div class="container">
+      <SectionHead kicker="Academic Calendar" title="The year <em>at a glance</em>" id="cal-t" />
+      <Calendar />
+    </div>
+  </section>
+
+  <section class="section" id="resources" aria-labelledby="res-t">
+    <div class="container">
+      <SectionHead kicker="Resources" title="Academic <em>resources</em>" id="res-t" />
+      <ul class="res" role="list" data-reveal="stagger">
+        {resources.map((r) => {
+          const ext = r.file.startsWith('http');
+          return (
+            <li><a class="res__row" href={r.file} {...(ext ? { target: '_blank', rel: 'noopener' } : { download: '', 'data-sample-download': '' })}>
+              <span class="res__type">{r.type}</span>
+              <span><span class="res__t">{r.title}</span><span class="small muted">{r.desc}{!ext && ' · Sample file'}</span></span>
+              <Icon name={ext ? 'external' : 'download'} size={22} />
+            </a></li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .stairs { display: grid; gap: 16px; }
+  @media (min-width: 900px) { .stairs { grid-template-columns: repeat(4, 1fr); align-items: end; } }
+  .stair { position: relative; display: grid; gap: 10px; align-content: start; padding: 28px; border-radius: var(--r-2) var(--r-2) 0 0; background: var(--white); box-shadow: var(--shadow-1); border-top: 3px solid var(--marigold-500); transition: transform var(--d-panel) var(--ease-out), box-shadow var(--d-panel); }
+  @media (min-width: 900px) { .stair { min-height: calc(280px + var(--h) * 70px); } }
+  .stair:hover { transform: translateY(-8px); box-shadow: var(--shadow-2); }
+  .stair__n { font-family: var(--font-display); font-style: italic; font-size: 2.6rem; color: var(--marigold-600); line-height: 1; margin-bottom: 8px; }
+  .stair:nth-child(4) { background: var(--navy-900); color: var(--paper); --text-muted: rgb(246 241 231 / 0.7); }
+  .stair:nth-child(4) .stair__n { color: var(--marigold-300); }
+
+  .cls { position: relative; display: flex; gap: 4px; padding: 6px; border-radius: var(--r-pill); background: var(--white); box-shadow: var(--shadow-1); width: max-content; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .cls::-webkit-scrollbar { display: none; }
+  .cls__b { position: relative; z-index: 1; flex: none; width: 52px; height: 52px; border-radius: 50%; font-family: var(--font-display); font-size: 1.35rem; color: var(--ink-2); transition: color var(--d-ui), transform var(--d-press); }
+  .cls__b:hover { color: var(--ink); }
+  .cls__b:active { transform: scale(0.92); }
+  .cls__b[aria-pressed='true'] { color: var(--white); }
+  .cls-ink { position: absolute; z-index: 0; top: 6px; left: 0; height: 52px; width: var(--w, 52px); transform: translateX(var(--x, 6px)); border-radius: 50%; background: var(--navy-900); transition: transform 520ms var(--ease-snap); }
+  @media (max-width: 560px) { .cls__b { width: 44px; height: 44px; font-size: 1.15rem; } .cls-ink { height: 44px; } }
+
+  .cpanel { margin-top: 40px; display: grid; gap: 32px; padding: clamp(28px, 4vw, 56px); border-radius: var(--r-2); background: var(--white); box-shadow: var(--shadow-1); }
+  @media (min-width: 960px) { .cpanel { grid-template-columns: 220px 1fr; gap: 56px; } }
+  .cpanel:global(.is-entering) .cpanel__num { animation: num-in 700ms var(--ease-out) both; }
+  .cpanel:global(.is-entering) .cpanel__main { animation: panel-in 600ms 80ms var(--ease-out) both; }
+  @keyframes num-in { from { opacity: 0; transform: translateY(40%) rotate(-6deg); } }
+  .cpanel__id { display: flex; gap: 20px; align-items: end; }
+  @media (min-width: 960px) { .cpanel__id { display: grid; align-content: start; } }
+  .cpanel__num { font-family: var(--font-display); font-size: clamp(6rem, 4rem + 8vw, 11rem); line-height: 0.8; letter-spacing: -0.06em; font-weight: 300; color: var(--navy-900); }
+  .cpanel__id .label { color: var(--marigold-600); }
+  .cpanel__lead { max-width: 34ch; }
+  .cpanel__cols { margin-top: 32px; display: grid; gap: 32px; }
+  @media (min-width: 800px) { .cpanel__cols { grid-template-columns: 1.2fr 1fr; gap: 48px; } }
+  .cpanel__h { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; color: var(--ink-2); }
+  .cpanel__subjects { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cpanel__subjects :global(li) { padding: 8px 14px; border-radius: var(--r-pill); background: var(--paper); font-weight: 650; font-size: 0.875rem; animation: row-in 420ms var(--ease-out) both; animation-delay: calc(var(--i) * 40ms); }
+  .book { display: grid; gap: 12px; justify-items: start; align-content: start; padding: 24px; border-radius: var(--r-2); background: var(--paper); border: 1px dashed var(--line-strong); }
+  .book :global(.book__ico) { color: var(--marigold-600); }
+
+  .exams { display: grid; gap: 24px; }
+  @media (min-width: 1000px) { .exams { grid-template-columns: 0.8fr 1.2fr; gap: 80px; } }
+
+  .res { border-top: 1px solid var(--line); }
+  .res__row { display: grid; grid-template-columns: 64px 1fr 24px; gap: 20px; align-items: center; padding: 24px 8px; border-bottom: 1px solid var(--line); transition: background-color var(--d-ui), padding var(--d-ui) var(--ease-out); }
+  .res__row:hover { background: var(--white); padding-inline: 20px; }
+  .res__type { font-size: 0.6875rem; font-weight: 800; letter-spacing: 0.12em; color: var(--marigold-600); }
+  .res__row > span:nth-child(2) { display: grid; gap: 4px; }
+  .res__t { font-weight: 700; font-size: 1.0625rem; }
+  .res__row :global(svg) { color: var(--ink-3); transition: transform var(--d-ui) var(--ease-out), color var(--d-fast); }
+  .res__row:hover :global(svg) { color: var(--navy-900); transform: translateY(2px); }
+</style>

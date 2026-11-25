@@ -1,0 +1,12 @@
+---
+interface Props { kicker: string; title: string; lead?: string; split?: boolean; id?: string; level?: 'h2' | 'h1'; class?: string }
+const { kicker, title, lead, split = false, id, level = 'h2', class: cls = '' } = Astro.props;
+const H = level;
+---
+<header class={`sec-head ${split ? 'sec-head--split' : ''} ${cls}`}>
+  <div>
+    <p class="label sec-head__kicker" data-reveal="fade">{kicker}</p>
+    <H class="h2" id={id} data-reveal="words" style="margin-top:18px" set:html={title} />
+  </div>
+  {lead && <p class="lead" data-reveal="up" style="--delay:200ms">{lead}<slot /></p>}
+</header>

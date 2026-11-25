@@ -1,0 +1,108 @@
+/* ==========================================================================
+   STKV DESIGN TOKENS
+   Palette is PROVISIONAL: the official crest could not be inspected (legacy site
+   unreachable from the build environment). Primary = deep academic navy,
+   accent = marigold. Swap the four brand values below once the crest colours
+   are confirmed — everything else derives from them.
+   ========================================================================== */
+:root {
+  /* Brand core */
+  --navy-950: #081330;
+  --navy-900: #0d1b3e;
+  --navy-800: #15295a;
+  --navy-700: #213b78;
+  --navy-500: #4562a8;
+  --navy-200: #c7d1ea;
+  --navy-100: #e4e9f5;
+
+  --marigold-600: #8c5a0b;   /* text-safe marigold: 5.2:1 on paper, 4.8:1 on paper-2 (AA) */
+  --marigold-500: #e2a32b;   /* fills & accents */
+  --marigold-300: #f3cf7e;
+  --marigold-100: #fbefd2;
+
+  --clay-600: #a4442a;       /* errors / alerts — 5.3:1 on ivory */
+  --clay-400: #d47a5c;
+  --sage-600: #2f6650;       /* success — 6.2:1 on ivory */
+  --sage-100: #dfece5;
+  --sky-300: #a9c4e6;
+  --sky-100: #e3edf8;
+
+  /* Neutrals (warm paper) */
+  --paper: #f6f1e7;
+  --paper-2: #efe7d7;
+  --paper-3: #e5dac4;
+  --white: #fffdf8;
+  --ink: #111a2e;
+  --ink-2: #434c63;          /* 7.6:1 on paper */
+  --ink-3: #555c70;          /* meta text: ≥5.2:1 on paper, ≥4.8:1 on paper-2 */
+  --line: rgb(17 26 46 / 0.12);
+  --line-strong: rgb(17 26 46 / 0.24);
+  --line-inverse: rgb(255 253 248 / 0.16);
+
+  /* Semantic */
+  --bg: var(--paper);
+  --surface: var(--white);
+  --text: var(--ink);
+  --text-muted: var(--ink-2);
+  --accent: var(--marigold-500);
+  --primary: var(--navy-900);
+  --focus: #2f6fe4;
+
+  /* Typography — two families only */
+  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, 'Noto Serif Devanagari', serif;
+  --font-sans: 'Manrope Variable', 'Manrope', system-ui, -apple-system, 'Segoe UI', 'Noto Sans Devanagari', sans-serif;
+
+  --fs-display: clamp(3.1rem, 1.6rem + 6.4vw, 8.75rem);
+  --fs-h1: clamp(2.6rem, 1.7rem + 4vw, 6rem);
+  --fs-h2: clamp(2rem, 1.35rem + 2.7vw, 4rem);
+  --fs-h3: clamp(1.4rem, 1.2rem + 0.8vw, 2rem);
+  --fs-h4: clamp(1.125rem, 1.06rem + 0.3vw, 1.3rem);
+  --fs-lead: clamp(1.125rem, 1.02rem + 0.5vw, 1.45rem);
+  --fs-body: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --fs-small: 0.875rem;
+  --fs-label: 0.75rem;
+  --fs-stat: clamp(3.5rem, 2.4rem + 4.5vw, 7rem);
+
+  --lh-tight: 1.02;
+  --lh-snug: 1.18;
+  --lh-body: 1.65;
+  --track-label: 0.16em;
+  --track-display: -0.035em;
+
+  /* Space & layout */
+  --gutter: clamp(16px, 4.2vw, 64px);
+  --container: 1360px;
+  --container-narrow: 860px;
+  --section-y: clamp(72px, 3.5rem + 5vw, 160px);
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px;
+  --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px;
+  --header-h: 76px;
+
+  /* Shape — deliberately restrained; the ARCH is the signature shape */
+  --r-1: 2px;
+  --r-2: 6px;
+  --r-pill: 999px;
+  --arch: 999px 999px 0 0;
+
+  /* Elevation */
+  --shadow-1: 0 1px 2px rgb(13 27 62 / 0.06), 0 2px 8px rgb(13 27 62 / 0.05);
+  --shadow-2: 0 2px 6px rgb(13 27 62 / 0.06), 0 14px 32px -8px rgb(13 27 62 / 0.18);
+  --shadow-3: 0 30px 80px -20px rgb(8 19 48 / 0.45);
+
+  /* Motion system */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);       /* entrances, reveals */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);    /* morphs, panels */
+  --ease-snap: cubic-bezier(0.32, 0.72, 0, 1);      /* drawers, overlays (iOS-like) */
+  --ease-back: cubic-bezier(0.34, 1.4, 0.64, 1);    /* tiny confirmations only */
+  --d-press: 120ms;
+  --d-fast: 180ms;
+  --d-ui: 260ms;
+  --d-panel: 420ms;
+  --d-reveal: 900ms;
+  --d-hero: 1300ms;
+  --stagger: 70ms;
+
+  --z-header: 50;
+  --z-overlay: 80;
+  --z-toast: 90;
+}

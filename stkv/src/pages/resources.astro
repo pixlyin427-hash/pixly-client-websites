@@ -1,0 +1,130 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import SubNav from '../components/SubNav.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Calendar from '../components/Calendar.astro';
+import Icon from '../components/Icon.astro';
+import { notices, noticeCategories, academicYears } from '../data/notices';
+import { documents, academicDocs } from '../data/disclosure';
+
+const downloads = [
+  { t: 'Class-wise book lists', g: 'Academic', file: '/docs/sample-book-list.pdf', size: 'Sample PDF' },
+  { t: 'Academic calendar', g: 'Academic', file: '/docs/sample-notice.pdf', size: 'Sample PDF' },
+  { t: 'Admission form', g: 'Forms', file: null, size: 'Awaiting upload' },
+  { t: 'Transfer / leaving certificate request', g: 'Forms', file: null, size: 'Awaiting upload' },
+  { t: 'Fee structure', g: 'Policies', file: null, size: 'Via Mandatory Disclosure', href: '/disclosure/#academics' },
+  { t: 'Uniform & school rules', g: 'Policies', file: null, size: 'Awaiting upload' },
+];
+---
+<Base title="News & Resources" description="Notice Centre, circulars, academic calendar and downloads for parents and students of Shri S. T. Kadam Vidyalaya.">
+  <PageHero crumb="News & Resources" kicker="News & Resources" title="Notices, documents <em>& downloads.</em>" lead="Find any notice in seconds: search, filter by category or year, and download attachments." art="notice" tone="sky" />
+  <SubNav items={[{ id: 'notices', label: 'Notice Centre' }, { id: 'calendar', label: 'Academic Calendar' }, { id: 'downloads', label: 'Downloads' }, { id: 'transparency', label: 'CBSE Disclosure' }]} />
+
+  <section class="section" id="notices" aria-labelledby="nc-t">
+    <div class="container" data-notices>
+      <SectionHead kicker="Smart Notice Centre" title="Every notice, <em>easy to find</em>" lead="These are demonstration notices — each is tagged “Sample”. The school office will publish real notices here." split id="nc-t" />
+
+      <div class="ntool" data-reveal="up">
+        <label class="ntool__search">
+          <Icon name="search" size={20} />
+          <span class="sr-only">Search notices</span>
+          <input type="search" placeholder="Search notices and circulars…" data-n-q />
+        </label>
+        <label class="ntool__sel"><span class="label">Year</span><select class="select" data-n-year><option value="all">All years</option>{academicYears.map((y) => <option value={y}>{y}</option>)}</select></label>
+        <label class="ntool__sel"><span class="label">Sort</span><select class="select" data-n-sort><option value="latest">Latest first</option><option value="oldest">Oldest first</option></select></label>
+        <label class="switch"><input type="checkbox" data-n-archive /><span class="switch__track" aria-hidden="true"><span></span></span><span class="small">Include archived</span></label>
+      </div>
+
+      <div class="chips ncats" role="group" aria-label="Filter by category">
+        {['All', ...noticeCategories].map((c) => <button class="chip" type="button" aria-pressed={c === 'All' ? 'true' : 'false'} data-n-cat={c}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>{c}<span class="chip__count">0</span></button>)}
+      </div>
+
+      <div class="nmeta"><p class="label" data-n-count aria-live="polite">Notices</p><button type="button" class="link small" data-n-clear hidden>Clear all filters</button></div>
+      <ul class="nlist" data-n-list role="list"></ul>
+      <script type="application/json" id="notice-data" set:html={JSON.stringify(notices)} />
+    </div>
+  </section>
+
+  <section class="section bg-paper2" id="calendar" aria-labelledby="cal-t">
+    <div class="container">
+      <SectionHead kicker="Academic Calendar" title="Plan the <em>school year</em>" id="cal-t" />
+      <Calendar />
+    </div>
+  </section>
+
+  <section class="section" id="downloads" aria-labelledby="dl-t">
+    <div class="container">
+      <SectionHead kicker="Downloads" title="Forms & <em>documents</em>" lead="Sample files are clearly marked. Items awaiting upload will become available once the school provides them." split id="dl-t" />
+      <ul class="dl" role="list" data-reveal="stagger">
+        {downloads.map((d) => (
+          <li>
+            <a class:list={['dl__card', { 'is-pending': !d.file && !d.href }]} href={d.file ?? d.href ?? '#'} {...(d.file ? { download: '', 'data-sample-download': '' } : d.href ? {} : { 'data-pending-doc': d.t, 'aria-disabled': 'true' })}>
+              <span class="dl__ico"><Icon name={d.file ? 'download' : d.href ? 'arrow' : 'doc'} size={22} /></span>
+              <span class="label muted">{d.g}</span>
+              <span class="dl__t">{d.t}</span>
+              <span class="small muted">{d.size}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-tight" id="transparency" aria-labelledby="tr-t">
+    <div class="container">
+      <a class="band on-dark" href="/disclosure/" data-reveal="mask">
+        <span class="band__copy">
+          <span class="label band__k">CBSE Transparency Centre</span>
+          <span class="h2 band__t" id="tr-t">Mandatory Public Disclosure</span>
+          <span class="band__d">{documents.length + academicDocs.length} statutory documents and school details, organised the way CBSE prescribes.</span>
+        </span>
+        <span class="band__go" aria-hidden="true"><Icon name="arrow" size={32} /></span>
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ntool { display: grid; gap: 12px; padding: 12px; border-radius: var(--r-2); background: var(--white); box-shadow: var(--shadow-1); }
+  @media (min-width: 900px) { .ntool { grid-template-columns: 1fr auto auto auto; align-items: center; gap: 16px; padding: 10px 10px 10px 20px; } }
+  .ntool__search { display: flex; align-items: center; gap: 12px; color: var(--ink-3); min-height: 52px; }
+  .ntool__search input { flex: 1; min-width: 0; border: 0; background: none; font-size: 1.0625rem; font-weight: 600; outline: none; color: var(--ink); }
+  .ntool__search:focus-within { color: var(--navy-900); }
+  .ntool__sel { display: flex; align-items: center; gap: 10px; }
+  .ntool__sel .label { color: var(--ink-3); }
+  .ntool__sel .select { min-height: 46px; padding-block: 8px; width: auto; }
+  .switch { display: inline-flex; gap: 10px; align-items: center; cursor: pointer; padding: 0 8px; }
+  .switch input { position: absolute; opacity: 0; }
+  .switch__track { position: relative; width: 44px; height: 26px; border-radius: 13px; background: var(--paper-3); transition: background-color var(--d-ui); }
+  .switch__track span { position: absolute; left: 3px; top: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--white); box-shadow: var(--shadow-1); transition: transform var(--d-panel) var(--ease-snap); }
+  .switch input:checked + .switch__track { background: var(--navy-900); }
+  .switch input:checked + .switch__track span { transform: translateX(18px); }
+  .switch input:focus-visible + .switch__track { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .ncats { margin-top: 20px; }
+  .nmeta { display: flex; justify-content: space-between; align-items: center; margin: 36px 0 12px; }
+  .nmeta .label { color: var(--ink-3); }
+
+  .dl { display: grid; gap: 12px; }
+  @media (min-width: 640px) { .dl { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .dl { grid-template-columns: repeat(3, 1fr); } }
+  .dl__card { position: relative; display: grid; gap: 6px; padding: 28px; min-height: 190px; border-radius: var(--r-2); background: var(--white); box-shadow: inset 0 0 0 1px var(--line); align-content: start; transition: box-shadow var(--d-ui), transform var(--d-ui) var(--ease-out); }
+  .dl__card:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px var(--navy-900), var(--shadow-2); }
+  .dl__card.is-pending { background: transparent; border: 1px dashed var(--line-strong); box-shadow: none; cursor: help; }
+  .dl__card.is-pending:hover { transform: none; }
+  .dl__ico { position: absolute; right: 24px; top: 24px; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--paper); color: var(--navy-900); transition: background-color var(--d-ui), color var(--d-ui); }
+  .dl__card:not(.is-pending):hover .dl__ico { background: var(--navy-900); color: var(--white); }
+  .dl__card:not(.is-pending):hover .dl__ico :global(svg) { animation: ic-drop 600ms var(--ease-out); }
+  @keyframes ic-drop { 30% { transform: translateY(5px); } 60% { transform: translateY(-2px); } }
+  .dl__t { margin-top: auto; padding-top: 40px; font-family: var(--font-display); font-size: 1.4rem; line-height: 1.2; letter-spacing: -0.01em; max-width: 16ch; }
+
+  .band { position: relative; display: grid; gap: 24px; align-items: center; padding: clamp(32px, 5vw, 72px); border-radius: var(--r-2); background: var(--navy-900); overflow: hidden; }
+  @media (min-width: 800px) { .band { grid-template-columns: 1fr auto; } }
+  .band::before { content: ''; position: absolute; inset: 0; background: radial-gradient(600px circle at 90% 20%, rgb(226 163 43 / 0.25), transparent 60%); transition: opacity var(--d-panel); opacity: 0.6; }
+  .band:hover::before { opacity: 1; }
+  .band__copy { position: relative; display: grid; gap: 14px; }
+  .band__k { color: var(--marigold-300); }
+  .band__d { color: var(--text-muted); max-width: 52ch; }
+  .band__go { position: relative; width: 88px; height: 88px; border-radius: 50%; display: grid; place-items: center; background: var(--marigold-500); color: var(--navy-950); transition: transform 600ms var(--ease-out); }
+  .band:hover .band__go { transform: rotate(-45deg) scale(1.06); }
+</style>

@@ -1,0 +1,274 @@
+---
+import { mainNav, languages } from '../data/nav';
+import { school } from '../data/site';
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import Button from './Button.astro';
+import Art from './Art.astro';
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => href !== '/' && path.startsWith(href);
+const artTone = { campus: 'navy', classroom: 'marigold', sports: 'sky', book: 'clay', notice: 'ivory', science: 'navy' } as const;
+---
+<header class="hdr" data-header>
+  <div class="hdr__util">
+    <div class="container hdr__util-in">
+      <button class="hdr__demo" type="button" data-open-modal="demo-modal">
+        <span class="hdr__demo-dot" aria-hidden="true"></span> Demonstration build — <u>what this means</u>
+      </button>
+      <ul class="hdr__util-links" role="list">
+        <li><a href="/disclosure/"><Icon name="shield" size={16} /> Mandatory Public Disclosure</a></li>
+        <li><a href={school.app.url} target="_blank" rel="noopener"><Icon name="phone" size={16} /> Parent / Student App<span class="sr-only"> (opens Google Play in a new tab)</span></a></li>
+        <li><a href="/contact/"><Icon name="call" size={16} /> Contact</a></li>
+        <li class="lang" data-lang>
+          <button class="lang__btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-list">
+            <Icon name="globe" size={16} /> <span data-lang-current>English</span> <Icon name="chevron" size={14} class="lang__chev" />
+          </button>
+          <ul class="lang__list" id="lang-list" role="listbox" aria-label="Choose language">
+            {languages.map((l) => (
+              <li role="option" tabindex="-1" aria-selected={l.code === 'en' ? 'true' : 'false'} data-lang-code={l.code} data-ready={String(l.ready)} data-lang-label={`${l.label} (${l.native})`}>
+                <span lang={l.code}>{l.native}</span>
+                {l.ready ? <Icon name="check" size={16} class="lang__tick" /> : <span class="lang__soon">Planned</span>}
+              </li>
+            ))}
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="hdr__bar">
+    <div class="container hdr__bar-in">
+      <a href="/" class="hdr__logo" aria-label={`${school.name} — home`}><Logo /></a>
+
+      <nav class="nav" aria-label="Main">
+        <ul class="nav__list" role="list" data-nav>
+          {mainNav.map((g, i) => (
+            <li class="nav__item" data-dropdown>
+              <a class="nav__link" href={g.href} aria-current={isCurrent(g.href) ? 'page' : undefined}>{g.label}</a>
+              <button class="nav__toggle" type="button" aria-expanded="false" aria-controls={`mega-${i}`}>
+                <span class="sr-only">{g.label} submenu</span><Icon name="chevron" size={14} />
+              </button>
+              <div class="mega" id={`mega-${i}`}>
+                <div class="mega__in">
+                  <div class="mega__intro">
+                    <div class="arch mega__art"><Art name={g.art} tone={artTone[g.art]} /></div>
+                    <div>
+                      <p class="h3">{g.label}</p>
+                      <p class="muted small" style="margin-top:8px">{g.intro}</p>
+                      <a class="link" href={g.href} style="margin-top:14px">Overview <Icon name="arrow" /></a>
+                    </div>
+                  </div>
+                  <ul class="mega__links" role="list">
+                    {g.children.map((c) => (
+                      <li><a href={c.href}><span>{c.label}</span>{c.note && <em>{c.note}</em>}<Icon name="arrow" size={16} /></a></li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </li>
+          ))}
+          <li class="nav__ink" aria-hidden="true"></li>
+        </ul>
+      </nav>
+
+      <div class="hdr__actions">
+        <button class="hdr__search" type="button" data-search-open aria-label="Search the website">
+          <Icon name="search" size={19} /><span class="hdr__search-label">Search</span><kbd>/</kbd>
+        </button>
+        <Button href="/admissions/#enquiry" size="sm" variant="accent" class="hdr__cta">Enquire Now</Button>
+        <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" data-burger>
+          <span class="sr-only">Open menu</span><span class="burger__l"></span><span class="burger__l"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile navigation -->
+<div class="mnav on-dark" id="mnav" data-mnav inert>
+  <div class="mnav__scroll">
+    <nav aria-label="Mobile">
+      <ul class="mnav__groups" role="list">
+        {mainNav.map((g, i) => (
+          <li class="mnav__group" style={`--i:${i}`}>
+            <div class="mnav__row">
+              <a href={g.href} class="mnav__link" aria-current={isCurrent(g.href) ? 'page' : undefined}>{g.label}</a>
+              <button class="mnav__exp" type="button" aria-expanded="false" aria-controls={`mn-${i}`}><span class="sr-only">Show {g.label} pages</span><Icon name="chevron" size={20} /></button>
+            </div>
+            <div class="mnav__sub" id={`mn-${i}`}><div><ul role="list">{g.children.map((c) => <li><a href={c.href}>{c.label}</a></li>)}</ul></div></div>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <div class="mnav__foot" style="--i:6">
+      <Button href="/admissions/#enquiry" variant="accent" block>Enquire Now</Button>
+      <div class="mnav__quick">
+        <a href="/disclosure/"><Icon name="shield" size={18} /> Mandatory Disclosure</a>
+        <a href={school.app.url} target="_blank" rel="noopener"><Icon name="phone" size={18} /> Parent / Student App</a>
+        <a href="/contact/"><Icon name="call" size={18} /> Contact & Transport</a>
+        <button type="button" data-lang-cycle><Icon name="globe" size={18} /> Language: English</button>
+      </div>
+      <button class="mnav__demo" type="button" data-open-modal="demo-modal">Demonstration build — what this means</button>
+    </div>
+  </div>
+</div>
+
+<!-- Search overlay -->
+<div class="search" data-search role="dialog" aria-modal="true" aria-label="Search the website" inert>
+  <div class="search__backdrop" data-search-close></div>
+  <div class="search__panel">
+    <div class="search__field">
+      <Icon name="search" size={22} />
+      <input class="search__input" type="search" placeholder="Search admissions, notices, book lists…" autocomplete="off" spellcheck="false" aria-controls="search-results" aria-describedby="search-status" data-search-input />
+      <button class="search__esc" type="button" data-search-close><span class="sr-only">Close search</span><kbd>Esc</kbd></button>
+    </div>
+    <div class="search__body">
+      <p class="search__status label" id="search-status" aria-live="polite" data-search-status>Popular</p>
+      <ul class="search__results" id="search-results" role="listbox" data-search-results></ul>
+    </div>
+    <div class="search__foot small"><span><kbd>↑</kbd><kbd>↓</kbd> to move</span><span><kbd>↵</kbd> to open</span><span class="search__note">Searches this demonstration website’s content</span></div>
+  </div>
+</div>
+
+<style>
+  .hdr { position: fixed; inset: 0 0 auto; z-index: var(--z-header); transition: transform 520ms var(--ease-snap); }
+  .hdr.is-hidden { transform: translateY(-100%); }
+  .hdr__util { background: var(--navy-950); color: var(--paper); font-size: 0.8125rem; height: 38px; overflow: clip; transition: height var(--d-panel) var(--ease-snap); }
+  .hdr.is-scrolled .hdr__util { height: 0; }
+  .hdr__util-in { height: 38px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .hdr__demo { display: inline-flex; align-items: center; gap: 10px; color: rgb(246 241 231 / 0.78); font-size: 0.8125rem; }
+  .hdr__demo u { text-underline-offset: 3px; text-decoration-color: rgb(246 241 231 / 0.35); transition: text-decoration-color var(--d-fast); }
+  .hdr__demo:hover u { text-decoration-color: var(--marigold-300); }
+  .hdr__demo-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--marigold-500); box-shadow: 0 0 0 3px rgb(226 163 43 / 0.25); }
+  .hdr__util-links { display: flex; align-items: center; gap: 4px; }
+  .hdr__util-links > li > a, .lang__btn { display: inline-flex; align-items: center; gap: 7px; padding: 6px 10px; border-radius: var(--r-1); color: rgb(246 241 231 / 0.86); font-weight: 600; transition: color var(--d-fast), background-color var(--d-fast); }
+  .hdr__util-links > li > a:hover, .lang__btn:hover { color: var(--white); background: rgb(255 253 248 / 0.08); }
+
+  /* Language selector */
+  .lang { position: relative; }
+  .lang__chev { transition: transform var(--d-ui) var(--ease-out); }
+  .lang__btn[aria-expanded='true'] .lang__chev { transform: rotate(180deg); }
+  .lang__list { position: fixed; top: 40px; right: max(var(--gutter), calc((100vw - var(--container)) / 2)); z-index: 70; min-width: 200px; padding: 6px; list-style: none; border-radius: var(--r-2); background: var(--white); color: var(--ink); box-shadow: var(--shadow-3); opacity: 0; transform: translateY(-6px) scale(0.97); transform-origin: top right; pointer-events: none; transition: opacity var(--d-fast) var(--ease-out), transform var(--d-ui) var(--ease-out); }
+  .lang.is-open .lang__list { opacity: 1; transform: none; pointer-events: auto; }
+  .lang__list li { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 10px 12px; border-radius: var(--r-1); cursor: pointer; font-weight: 650; }
+  .lang__list li:hover, .lang__list li:focus { background: var(--paper-2); outline: none; }
+  .lang__soon { font-size: 0.6875rem; font-weight: 750; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+  .lang__tick { color: var(--sage-600); }
+
+  /* Main bar */
+  .hdr__bar { position: relative; background: rgb(246 241 231 / 0); transition: background-color var(--d-panel) var(--ease-out), box-shadow var(--d-panel) var(--ease-out), backdrop-filter var(--d-panel); }
+  .hdr.is-scrolled .hdr__bar, .hdr.is-mega .hdr__bar { background: rgb(246 241 231 / 0.88); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4); box-shadow: 0 1px 0 var(--line); }
+  .hdr__bar-in { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .hdr__logo { flex: none; }
+
+  .nav { display: none; }
+  @media (min-width: 1180px) { .nav { display: block; } }
+  .nav__list { position: relative; display: flex; align-items: center; gap: 2px; }
+  .nav__item { display: flex; align-items: center; }
+  .nav__link { position: relative; padding: 10px 6px 10px 12px; font-weight: 700; font-size: 0.9375rem; color: var(--ink); transition: color var(--d-fast); }
+  .nav__link[aria-current='page']::before { content: ''; position: absolute; left: 50%; bottom: 0; width: 5px; height: 5px; margin-left: -2px; border-radius: 50%; background: var(--marigold-500); }
+  .nav__toggle { display: grid; place-items: center; width: 22px; height: 30px; color: var(--ink-3); transition: color var(--d-fast); }
+  .nav__toggle :global(svg) { transition: transform var(--d-ui) var(--ease-out); }
+  .nav__item.is-open .nav__toggle { color: var(--ink); }
+  .nav__item.is-open .nav__toggle :global(svg) { transform: rotate(180deg); }
+  .nav__ink { position: absolute; left: 0; bottom: 2px; height: 2px; width: var(--w, 0); transform: translateX(var(--x, 0)); background: var(--navy-900); opacity: 0; pointer-events: none; transition: transform 420ms var(--ease-snap), width 420ms var(--ease-snap), opacity var(--d-fast); }
+  .nav__list.has-ink .nav__ink { opacity: 1; }
+
+  /* Mega dropdown */
+  .mega { position: absolute; left: 0; right: 0; top: 100%; padding-top: 1px; visibility: hidden; pointer-events: none; }
+  .mega__in { width: min(100% - 2 * var(--gutter), var(--container)); margin-inline: auto; display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; padding: 32px; border-radius: 0 0 var(--r-2) var(--r-2); background: var(--white); box-shadow: var(--shadow-3); clip-path: inset(0 0 100% 0 round 0 0 6px 6px); transition: clip-path 460ms var(--ease-snap); }
+  .mega__intro { display: grid; grid-template-columns: 132px 1fr; gap: 28px; align-items: end; }
+  .mega__art { width: 132px; }
+  .mega__links { display: grid; align-content: start; }
+  .mega__links a { display: flex; align-items: center; gap: 12px; padding: 13px 4px; border-bottom: 1px solid var(--line); font-weight: 650; transition: padding var(--d-ui) var(--ease-out), color var(--d-fast); }
+  .mega__links a span { flex: 1; }
+  .mega__links a em { font-style: normal; font-size: 0.75rem; color: var(--ink-3); }
+  .mega__links a :global(svg) { opacity: 0; transform: translateX(-8px); transition: opacity var(--d-ui), transform var(--d-ui) var(--ease-out); color: var(--marigold-600); }
+  .mega__links a:hover { padding-left: 12px; }
+  .mega__links a:hover :global(svg) { opacity: 1; transform: none; }
+  .mega__links li, .mega__intro { opacity: 0; transform: translateY(8px); transition: opacity 300ms var(--ease-out), transform 400ms var(--ease-out); }
+  .nav__item.is-open .mega { visibility: visible; pointer-events: auto; }
+  .nav__item.is-open .mega__in { clip-path: inset(0 0 0 0 round 0 0 6px 6px); }
+  .nav__item.is-open .mega__links li, .nav__item.is-open .mega__intro { opacity: 1; transform: none; }
+  .nav__item.is-open .mega__links li:nth-child(1) { transition-delay: 60ms; } .nav__item.is-open .mega__links li:nth-child(2) { transition-delay: 90ms; }
+  .nav__item.is-open .mega__links li:nth-child(3) { transition-delay: 120ms; } .nav__item.is-open .mega__links li:nth-child(4) { transition-delay: 150ms; }
+  .nav__item.is-open .mega__links li:nth-child(5) { transition-delay: 180ms; } .nav__item.is-open .mega__links li:nth-child(6) { transition-delay: 210ms; }
+  .nav__item.is-open .mega__links li:nth-child(7) { transition-delay: 240ms; }
+
+  /* Light header over dark page heroes (until scrolled / menu open) */
+  :global(html[data-hero='dark']) .hdr:not(.is-scrolled):not(.is-mega) :is(.nav__link, .nav__toggle, .hdr__search) { color: var(--paper); }
+  :global(html[data-hero='dark']) .hdr:not(.is-scrolled):not(.is-mega) .hdr__search { box-shadow: inset 0 0 0 1px rgb(255 253 248 / 0.3); }
+  :global(html[data-hero='dark']) .hdr:not(.is-scrolled):not(.is-mega) kbd { background: rgb(255 253 248 / 0.12); color: var(--paper); }
+  :global(html[data-hero='dark']) .hdr:not(.is-scrolled):not(.is-mega) .hdr__logo :global(.logo) { color: var(--paper); }
+  :global(html[data-hero='dark']) .hdr:not(.is-scrolled):not(.is-mega) .hdr__logo :global(.logo__badge) { color: var(--navy-700); }
+  :global(html[data-hero='dark']) .hdr:not(.is-scrolled):not(.is-mega) .nav__ink { background: var(--marigold-500); }
+  :global(html[data-hero='dark']) .hdr:not(.is-scrolled) .burger { background: var(--marigold-500); }
+  :global(html[data-hero='dark']) .hdr:not(.is-scrolled) .burger__l { background: var(--navy-950); }
+
+  /* Mobile menu open: header sits on navy */
+  :global(html.menu-open) .hdr__logo :global(.logo) { color: var(--paper); }
+  :global(html.menu-open) .hdr__logo :global(.logo__badge) { color: var(--navy-700); }
+  :global(html.menu-open) .hdr__search { color: var(--paper); box-shadow: inset 0 0 0 1px rgb(255 253 248 / 0.3); }
+  :global(html.menu-open) .hdr__bar { background: transparent !important; box-shadow: none !important; backdrop-filter: none !important; }
+
+  /* Actions */
+  .hdr__actions { display: flex; align-items: center; gap: 10px; }
+  .hdr__search { display: inline-flex; align-items: center; gap: 10px; height: 42px; padding: 0 8px 0 14px; border-radius: var(--r-pill); box-shadow: inset 0 0 0 1px var(--line-strong); font-weight: 650; font-size: 0.875rem; color: var(--ink-2); transition: box-shadow var(--d-fast), color var(--d-fast), transform var(--d-press); }
+  .hdr__search:hover { box-shadow: inset 0 0 0 1px var(--ink); color: var(--ink); }
+  .hdr__search:active { transform: scale(0.97); }
+  kbd { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 4px; background: rgb(17 26 46 / 0.07); font: 700 0.75rem var(--font-sans); color: var(--ink-2); }
+  @media (max-width: 1179px) { .hdr__search { padding: 0; width: 44px; justify-content: center; } .hdr__search-label, .hdr__search kbd { display: none; } }
+  @media (max-width: 640px) { :global(.hdr__cta) { display: none !important; } .hdr__util { display: none; } .hdr__actions { gap: 6px; } .hdr__bar-in { gap: 12px; } }
+
+  .burger { position: relative; width: 44px; height: 44px; border-radius: 50%; background: var(--navy-900); display: grid; place-items: center; z-index: 2; transition: background-color var(--d-ui), transform var(--d-press); }
+  .burger:active { transform: scale(0.92); }
+  .burger__l { position: absolute; left: 13px; width: 18px; height: 1.6px; background: var(--white); border-radius: 2px; transition: transform var(--d-panel) var(--ease-snap), top var(--d-panel) var(--ease-snap); }
+  .burger__l:nth-of-type(2) { top: 17px; } .burger__l:nth-of-type(3) { top: 25px; }
+  .burger[aria-expanded='true'] { background: var(--marigold-500); }
+  .burger[aria-expanded='true'] .burger__l { background: var(--navy-950); }
+  .burger[aria-expanded='true'] .burger__l:nth-of-type(2) { top: 21px; transform: rotate(45deg); }
+  .burger[aria-expanded='true'] .burger__l:nth-of-type(3) { top: 21px; transform: rotate(-45deg); }
+  @media (min-width: 1180px) { .burger { display: none; } }
+
+  /* Mobile menu */
+  .mnav { position: fixed; inset: 0; z-index: 45; background: var(--navy-950); clip-path: inset(0 0 100% 0); visibility: hidden; transition: clip-path 620ms var(--ease-snap), visibility 0s linear 620ms; }
+  .mnav.is-open { clip-path: inset(0 0 0 0); visibility: visible; transition-delay: 0s; }
+  .mnav__scroll { height: 100%; overflow-y: auto; overscroll-behavior: contain; padding: calc(var(--header-h) + 16px) var(--gutter) 40px; display: grid; align-content: space-between; gap: 40px; }
+  .mnav__group, .mnav__foot { opacity: 0; transform: translateY(24px); transition: opacity 400ms var(--ease-out), transform 600ms var(--ease-out); }
+  .mnav.is-open .mnav__group, .mnav.is-open .mnav__foot { opacity: 1; transform: none; transition-delay: calc(180ms + var(--i) * 55ms); }
+  .mnav__group { border-bottom: 1px solid var(--line-inverse); }
+  .mnav__row { display: flex; align-items: center; justify-content: space-between; }
+  .mnav__link { flex: 1; padding: 16px 0; font-family: var(--font-display); font-size: clamp(1.75rem, 6vw, 2.5rem); font-weight: 360; letter-spacing: -0.02em; color: var(--paper); }
+  .mnav__link[aria-current='page'] { color: var(--marigold-300); }
+  .mnav__exp { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; color: var(--paper); transition: transform var(--d-panel) var(--ease-snap), background-color var(--d-fast); }
+  .mnav__exp[aria-expanded='true'] { transform: rotate(180deg); background: rgb(255 253 248 / 0.08); }
+  .mnav__sub { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--d-panel) var(--ease-snap); }
+  .mnav__sub > div { overflow: hidden; }
+  .mnav__sub.is-open { grid-template-rows: 1fr; }
+  .mnav__sub ul { display: grid; gap: 2px; padding: 0 0 18px; }
+  .mnav__sub a { display: block; padding: 10px 0; color: rgb(246 241 231 / 0.78); font-weight: 600; }
+  .mnav__sub a:hover { color: var(--white); }
+  .mnav__foot { display: grid; gap: 20px; }
+  .mnav__quick { display: grid; gap: 4px; }
+  .mnav__quick > * { display: flex; align-items: center; gap: 12px; padding: 12px 0; color: rgb(246 241 231 / 0.86); font-weight: 650; text-align: left; }
+  .mnav__demo { font-size: 0.8125rem; color: rgb(246 241 231 / 0.6); text-decoration: underline; text-underline-offset: 3px; text-align: left; }
+  @media (min-width: 1180px) { .mnav { display: none; } }
+
+  /* Search overlay */
+  .search { position: fixed; inset: 0; z-index: var(--z-overlay); display: grid; justify-items: center; align-items: start; padding: 10vh 16px 16px; visibility: hidden; }
+  .search.is-open { visibility: visible; }
+  .search__backdrop { position: absolute; inset: 0; background: rgb(8 19 48 / 0.55); backdrop-filter: blur(8px); opacity: 0; transition: opacity var(--d-ui) var(--ease-out); }
+  .search.is-open .search__backdrop { opacity: 1; }
+  .search__panel { position: relative; width: min(720px, 100%); max-height: 78vh; display: grid; grid-template-rows: auto 1fr auto; border-radius: var(--r-2); background: var(--paper); box-shadow: var(--shadow-3); overflow: hidden; opacity: 0; transform: translateY(-16px) scale(0.98); transition: opacity var(--d-ui) var(--ease-out), transform var(--d-panel) var(--ease-snap); }
+  .search.is-open .search__panel { opacity: 1; transform: none; }
+  .search__field { display: flex; align-items: center; gap: 14px; padding: 0 16px 0 22px; border-bottom: 1px solid var(--line); color: var(--ink-3); }
+  .search__input { flex: 1; min-width: 0; height: 68px; border: 0; background: none; font-size: 1.2rem; font-weight: 600; color: var(--ink); outline: none; }
+  .search__input::-webkit-search-cancel-button { display: none; }
+  .search__body { overflow-y: auto; padding: 16px 12px; overscroll-behavior: contain; }
+  .search__status { padding: 0 10px 10px; color: var(--ink-3); }
+  .search__foot { display: flex; gap: 18px; padding: 12px 22px; border-top: 1px solid var(--line); color: var(--ink-3); flex-wrap: wrap; }
+  .search__foot kbd { margin-right: 4px; }
+  .search__note { margin-left: auto; }
+  @media (max-width: 640px) { .search { padding-top: 12px; } .search__foot span:not(.search__note) { display: none; } .search__note { margin: 0; } }
+</style>

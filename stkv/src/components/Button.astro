@@ -1,0 +1,32 @@
+---
+/**
+ * Button — fill-sweep hover, arrow hand-off, press scale, loading spinner and success tick.
+ * Renders <a> when `href` is given, otherwise <button>.
+ */
+import Icon from './Icon.astro';
+import type { IconName } from './icons';
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'accent' | 'light' | 'ghost';
+  size?: 'md' | 'sm';
+  icon?: IconName | false;
+  type?: 'button' | 'submit';
+  block?: boolean;
+  external?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+const { href, variant = 'primary', size = 'md', icon = 'arrow', type = 'button', block = false, external = false, class: cls = '', ...rest } = Astro.props;
+const classes = ['btn', variant !== 'primary' && `btn--${variant}`, size === 'sm' && 'btn--sm', block && 'btn--block', cls].filter(Boolean).join(' ');
+const Tag = href ? 'a' : 'button';
+const ext = external ? { target: '_blank', rel: 'noopener' } : {};
+---
+<Tag class={classes} href={href} type={href ? undefined : type} {...ext} {...rest}>
+  <span class="btn__label"><slot /></span>
+  {icon && (
+    <span class="btn__icon" aria-hidden="true"><Icon name={icon} size={18} /><Icon name={icon} size={18} /></span>
+  )}
+  <svg class="btn__spinner" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity=".25" stroke-width="2.5"/><path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+  <svg class="btn__check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  {external && <span class="sr-only">(opens in a new tab)</span>}
+</Tag>

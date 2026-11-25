@@ -1,0 +1,86 @@
+---
+import '../styles/base.css';
+import '../styles/components.css';
+import '../styles/features.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import { school } from '../data/site';
+import frauncesUrl from '@fontsource-variable/fraunces/files/fraunces-latin-opsz-normal.woff2?url';
+import manropeUrl from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url';
+
+interface Props { title?: string; description?: string; darkHero?: boolean }
+const { title, darkHero = false, description = `${school.name} — a CBSE-affiliated school (Affiliation No. ${school.affiliationNo.value}) in Palghar, Maharashtra, for Classes 1 to 10.` } = Astro.props;
+const fullTitle = title ? `${title} · ${school.name}` : `${school.name} · CBSE School in Palghar`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en" data-hero={darkHero ? 'dark' : undefined}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta name="theme-color" content="#0d1b3e" />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta name="robots" content="noindex" /><!-- demo build: remove at launch -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href={frauncesUrl} as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href={manropeUrl} as="font" type="font/woff2" crossorigin />
+  <script is:inline>document.documentElement.classList.add('js');</script>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org', '@type': 'School', name: school.name,
+    address: { '@type': 'PostalAddress', streetAddress: 'Palghar–Boisar Road', addressLocality: 'Palghar', addressRegion: 'Maharashtra', postalCode: '401404', addressCountry: 'IN' },
+  })} />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <Header />
+  <main id="main" tabindex="-1">
+    <slot />
+  </main>
+  <Footer />
+
+  <div class="toasts" data-toasts aria-live="polite"></div>
+
+  <button class="to-top" type="button" data-to-top aria-label="Back to top">
+    <svg class="to-top__ring" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" /></svg>
+    <Icon name="arrow-up" class="to-top__arrow" size={18} />
+  </button>
+
+  <button class="demo-pill" type="button" data-open-modal="demo-modal">
+    <span class="demo-pill__dot" aria-hidden="true"></span>Demo<span class="long">&nbsp;preview — read me</span>
+  </button>
+
+  <dialog class="modal" id="demo-modal" aria-labelledby="demo-title">
+    <div class="modal__head">
+      <p class="h4" id="demo-title">About this demonstration</p>
+      <button class="icon-btn" type="button" data-close-modal aria-label="Close"><Icon name="close" /></button>
+    </div>
+    <div class="modal__body stack" style="--stack:1.1rem">
+      <p>This is a <strong>frontend design demonstration</strong> of the new STKV website. It is not yet the school’s official website.</p>
+      <ul class="demo-list" role="list">
+        <li><Icon name="check" size={18} /><span><strong>Verified:</strong> affiliation number, affiliation period, status, year of foundation and address are from the official CBSE SARAS record.</span></li>
+        <li><Icon name="info" size={18} /><span><strong>Awaiting confirmation:</strong> items with a dotted underline come from third-party listings. Dashed “To be provided” labels mark information the school still needs to supply.</span></li>
+        <li><Icon name="info" size={18} /><span><strong>Simulated:</strong> notices marked “Sample”, forms and the assistant. Nothing you type is sent to the school.</span></li>
+        <li><Icon name="info" size={18} /><span><strong>Artwork:</strong> the illustrations stand in for photographs, and the arch badge is a temporary mark, not the official crest.</span></li>
+      </ul>
+      <p class="small muted">For real enquiries, please contact the school office directly.</p>
+    </div>
+  </dialog>
+
+  <script>
+    import '../scripts/main';
+  </script>
+</body>
+</html>
+
+<style is:global>
+  .demo-list { display: grid; gap: 14px; }
+  .demo-list li { display: grid; grid-template-columns: 22px 1fr; gap: 12px; color: var(--ink-2); }
+  .demo-list svg { color: var(--marigold-600); margin-top: 3px; }
+  main { outline: none; }
+</style>

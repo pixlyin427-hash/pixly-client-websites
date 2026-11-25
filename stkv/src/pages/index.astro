@@ -1,0 +1,346 @@
+---
+import '@fontsource-variable/bricolage-grotesque/index.css';
+import '@fontsource-variable/manrope/index.css';
+import '@fontsource/tiro-devanagari-sanskrit/400.css';
+import '../styles/home.css';
+import { Image } from 'astro:assets';
+import Photo from '../components/concepts/Photo.astro';
+import { photos, logoTransparent, crest } from '../data/photos';
+import { verified as v } from '../data/verified';
+import { notices } from '../data/notices';
+
+const nav = [
+  { label: 'Our School', href: '/our-school/' },
+  { label: 'Academics', href: '/academics/' },
+  { label: 'Campus Life', href: '/campus-life/' },
+  { label: 'Admissions', href: '/admissions/' },
+  { label: 'News & Resources', href: '/resources/' },
+  { label: 'Contact', href: '/contact/' },
+];
+const ic = {
+  cal: '<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  bell: '<path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15L6 16Z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+  book: '<path d="M4 5.5C6.5 4 9.5 4 12 5.8 14.5 4 17.5 4 20 5.5V19c-2.5-1.4-5.5-1.4-8 .5-2.5-1.9-5.5-1.9-8-.5V5.5Z"/><path d="M12 5.8v13.7"/>',
+  rupee: '<path d="M7 5h10M7 9h10M10 5c3.5 0 5 1.6 5 4s-1.5 4-5 4H8l7 6"/>',
+  shield: '<path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6L12 3Z"/><path d="m8.8 12 2.2 2.2 4.2-4.4"/>',
+  phone: '<rect x="6.5" y="2.5" width="11" height="19" rx="2.2"/><path d="M10.5 18.5h3"/>',
+  cam: '<rect x="3" y="6.5" width="18" height="13" rx="2.5"/><circle cx="12" cy="13" r="3.6"/><path d="M8.5 6.5 10 4h4l1.5 2.5"/>',
+  pin: '<path d="M12 21s-6.5-6.2-6.5-11.2a6.5 6.5 0 1 1 13 0C18.5 14.8 12 21 12 21Z"/><circle cx="12" cy="9.8" r="2.4"/>',
+};
+const quick = [
+  { t: 'Academic Calendar', s: 'Term dates & holidays', href: '/resources/#calendar', i: ic.cal },
+  { t: 'Notices', s: 'Circulars & updates', href: '/resources/#notices', i: ic.bell },
+  { t: 'Book Lists', s: 'Classes 1–10', href: '/academics/#centre', i: ic.book },
+  { t: 'Fee Structure', s: 'CBSE disclosure', href: '/disclosure/#academics', i: ic.rupee },
+  { t: 'Mandatory Disclosure', s: 'CBSE documents', href: '/disclosure/', i: ic.shield },
+  { t: 'Parent / Student App', s: 'Google Play', href: 'https://play.google.com/store/apps/details?id=iconic.stkvem', i: ic.phone, ext: true },
+  { t: 'Photo Gallery', s: 'Life at STKV', href: '/campus-life/#gallery', i: ic.cam },
+  { t: 'Visit & Contact', s: 'Palghar–Boisar Rd', href: '/contact/', i: ic.pin },
+];
+const stats = [
+  { n: v.stats.students, l: 'Learners from Bal Vatika to Class 10' },
+  { n: v.stats.teachers, l: 'Teachers & educators' },
+  { n: v.stats.digitalClassrooms, l: 'Digital classrooms' },
+  { n: v.stats.libraryBooks, l: 'Books in our library' },
+];
+const day = [
+  { time: '08:00', ap: 'am', title: 'Good morning, STKV', text: 'School begins at 8:00 am — friends, assembly and a fresh start.', photo: photos.uniform },
+  { time: '09:00', ap: 'am', title: 'Hands up, minds on', text: 'Lessons in 23 digital classrooms, where questions are the point.', photo: photos.classroom },
+  { time: '10:30', ap: 'am', title: 'Make it bubble', text: 'Science, mathematics and computer labs turn ideas into experiments.', photo: photos.lab },
+  { time: '11:15', ap: 'am', title: 'Quiet hour', text: '5,103 books and a reading habit that lasts a lifetime.', photo: photos.library },
+  { time: '12:00', ap: 'pm', title: 'Wheels, horses & sport', text: 'Skating, horse riding, yoga and games on a 39,460 sq ft playground.', photo: photos.skating },
+  { time: '12:45', ap: 'pm', title: 'Colour & rhythm', text: 'Art, music and dance — creativity on the timetable.', photo: photos.art },
+  { time: '01:30', ap: 'pm', title: 'See you tomorrow', text: 'The school day ends at 1:30 pm. The office stays open until 4:00 pm.', photo: photos.carnival },
+];
+const journey = [
+  { t: 'Bal Vatika', c: 'Pre-school', d: 'Play, stories and first friendships.', tone: 'sun', href: '/academics/#approach' },
+  { t: 'Primary', c: 'Classes 1–5', d: 'Strong basics in reading, numbers and the world around us.', tone: 'red', href: '/academics/?class=1#centre' },
+  { t: 'Middle', c: 'Classes 6–8', d: 'Labs, projects and growing independence.', tone: 'royal', href: '/academics/?class=6#centre' },
+  { t: 'Secondary', c: 'Classes 9–10', d: 'Focused preparation for the CBSE Class X board.', tone: 'navy', href: '/academics/?class=9#centre' },
+];
+// Jeevan Vikas Shikshan Sanstha institutions (stkvem.com/about-trust) + CBSE affiliation
+const timeline = [
+  { y: 1966, t: 'Jeevan Vikas Shikshan Sanstha founded', d: 'By Late Shri Sadanand T. Kadam and his associates.' },
+  { y: 1968, t: 'S. T. Kadam Vidyalaya Secondary School', d: 'Marathi medium, Palghar.' },
+  { y: 1970, t: 'Residential Primary School', d: 'Shigaon.' },
+  { y: 1971, t: 'Anu Vikas Vidyalaya Secondary School', d: 'Dandi.' },
+  { y: 1990, t: 'Residential Secondary School', d: 'Shigaon.' },
+  { y: 2004, t: 'S. T. Kadam Vidyalaya Primary School', d: 'Marathi medium, Palghar.' },
+  { y: 2008, t: 'S. T. Kadam Jr College of Arts & Commerce', d: 'Palghar.' },
+  { y: 2009, t: 'Anu Vikas English High School', d: 'Dandi.' },
+  { y: 2018, t: 'Shri S. T. Kadam Vidyalaya (CBSE)', d: 'Our school opens in Palghar.', hl: true },
+  { y: 2023, t: 'CBSE affiliation granted', d: `Affiliation No. ${v.cbse.affiliationNo}, Secondary level.`, hl: true },
+];
+const latest = [...notices].filter((n) => !n.archived).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4);
+const pd = (s: string) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Shri S. T. Kadam Vidyalaya · CBSE School in Palghar</title>
+  <meta name="description" content={`Shri S. T. Kadam Vidyalaya, Palghar — CBSE affiliated school (No. ${v.cbse.affiliationNo}) from Bal Vatika to Class 10, a Jeevan Vikas Shikshan Sanstha institution since 1966.`} />
+  <meta name="theme-color" content="#0d1846" />
+  <meta name="robots" content="noindex" /><!-- preview build -->
+  <link rel="icon" href="/favicon.svg" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="hd" data-hd>
+    <a class="hd__brand" href="/" aria-label="Shri S. T. Kadam Vidyalaya — home">
+      <Image src={crest} alt="" width={96} class="hd__logo" loading="eager" />
+      <span class="hd__name"><b>Shri S. T. Kadam Vidyalaya</b><span>CBSE · Palghar</span></span>
+    </a>
+    <nav class="hd__nav" aria-label="Main" data-hdnav>
+      <span class="hd__ink" aria-hidden="true"></span>
+      {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+    </nav>
+    <div class="hd__actions">
+      <a class="hd__util" href="/disclosure/">CBSE Disclosure</a>
+      <a class="btn btn--red hd__cta" href="/admissions/#enquiry">Apply 2027–28 <span class="btn__arr" aria-hidden="true">→</span></a>
+      <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" data-burger><span class="sr-only">Menu</span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <div class="mnav" id="mnav" data-mnav inert>
+    <nav class="mnav__links" aria-label="Mobile">
+      {nav.map((n, i) => <a href={n.href} style={`--i:${i}`}>{n.label}<span aria-hidden="true">→</span></a>)}
+      <a href="/disclosure/" style="--i:6">CBSE Disclosure<span aria-hidden="true">→</span></a>
+    </nav>
+    <div class="mnav__foot">
+      <a class="btn btn--sun btn--lg" href="/admissions/#enquiry">Apply for 2027–28 <span class="btn__arr" aria-hidden="true">→</span></a>
+      <a href={`tel:${v.contact.phone.replace(/\s/g, '')}`}>{v.contact.phone}</a>
+      <a href={`mailto:${v.contact.email}`}>{v.contact.email}</a>
+    </div>
+  </div>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-t">
+      <div class="hero__media" data-hero-media><Photo photo={photos.hero} eager sizes="100vw" /></div>
+      <div class="hero__shade"></div>
+      <div class="hero__in">
+        <p class="hero__kick" data-h-kick><span class="dot"></span> CBSE · Palghar · Bal Vatika to Class 10</p>
+        <h1 class="hero__title" id="hero-t" data-h-title>
+          <span class="line"><span class="li">Think <mark class="hl hl--sun">bold.</mark></span></span>
+          <span class="line"><span class="li">Play <mark class="hl hl--red">hard.</mark></span></span>
+          <span class="line"><span class="li">Grow <mark class="hl hl--white">kind.</mark></span></span>
+        </h1>
+        <p class="hero__sub" data-h-sub>Shri S. T. Kadam Vidyalaya — a CBSE school in Palghar where learning, sport and the arts share the timetable.</p>
+        <div class="hero__row" data-h-row>
+          <a class="btn btn--sun btn--lg" href="/admissions/#enquiry">Start your admission <span class="btn__arr" aria-hidden="true">→</span></a>
+          <a class="btn btn--glass btn--lg" href="#day">See a day at STKV</a>
+        </div>
+      </div>
+      <div class="sticker sticker--a" data-sticker>CBSE<br /><b>{v.cbse.affiliationNo}</b></div>
+      <div class="sticker sticker--b" data-sticker>Since<br /><b>{v.school.founded}</b></div>
+      <div class="sticker sticker--c" data-sticker><b>{v.stats.students.toLocaleString('en-IN')}</b><br />learners</div>
+    </section>
+
+    <div class="ribbon-wrap" aria-hidden="true">
+      <div class="ribbon"><div class="ribbon__track" data-marquee>
+        {[0, 1].map(() => v.activities.map((a) => <span>{a} <i>✦</i></span>))}
+      </div></div>
+    </div>
+
+    <!-- QUICK ACCESS -->
+    <section class="quick" aria-label="Quick access for parents and students">
+      <div class="wrap">
+        <ul class="quick__bar" role="list" data-quick>
+          {quick.map((q) => (
+            <li><a class="qa" href={q.href} {...(q.ext ? { target: '_blank', rel: 'noopener' } : {})}>
+              <span class="qa__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={q.i} /></span>
+              <b>{q.t}</b><small>{q.s}{q.ext && <span class="sr-only"> (opens in new tab)</span>}</small>
+            </a></li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats" aria-labelledby="stats-t">
+      <div class="wrap">
+        <div class="stats__head">
+          <div><p class="kick">STKV at a glance</p><h2 class="h2" id="stats-t" data-split>A big school family <em>in Palghar.</em></h2></div>
+          <p class="lede">Part of Jeevan Vikas Shikshan Sanstha, serving education in Palghar district since 1966.</p>
+        </div>
+        <div class="stats__grid">
+          {stats.map((s) => <div class="stat" data-stat><span class="stat__n" data-count={s.n}>{s.n.toLocaleString('en-IN')}</span><span class="stat__l">{s.l}</span></div>)}
+        </div>
+        <p class="src">Source: the school’s published CBSE OASIS record</p>
+      </div>
+    </section>
+
+    <!-- SCHOOL LIFE -->
+    <section class="life" aria-labelledby="life-t">
+      <div class="wrap">
+        <div class="life__head">
+          <div><p class="kick">School life</p><h2 class="h2" id="life-t" data-split>Every day has a <em>new favourite thing.</em></h2></div>
+          <p class="lede">Horse riding, skating, yoga, music, dance and Zumba sit alongside maths, science and reading — part of the week, not an afterthought.</p>
+        </div>
+        <div class="mosaic">
+          <a class="tile tile--xl" href="/campus-life/#activities" data-tile><Photo photo={photos.riding} sizes="(min-width:900px) 50vw, 100vw" /><span class="tile__label"><b>Horse riding</b>Confidence in the saddle</span></a>
+          <a class="tile" href="/campus-life/#events" data-tile><Photo photo={photos.carnival} sizes="(min-width:900px) 25vw, 50vw" /><span class="tile__label"><b>Kids Carnival</b>Our school family</span></a>
+          <a class="tile tile--tall" href="/campus-life/#events" data-tile><Photo photo={photos.janmashtami} sizes="(min-width:900px) 25vw, 50vw" /><span class="tile__label"><b>Festivals</b>Janmashtami at STKV</span></a>
+          <a class="tile" href="/campus-life/#sports" data-tile><Photo photo={photos.skating} sizes="(min-width:900px) 25vw, 50vw" /><span class="tile__label"><b>Skating</b>Balance & speed</span></a>
+          <a class="tile tile--wide" href="/academics/" data-tile><Photo photo={photos.lab} sizes="(min-width:900px) 50vw, 100vw" /><span class="tile__label"><b>Science</b>Questions become experiments</span></a>
+          <a class="tile" href="/campus-life/#activities" data-tile><Photo photo={photos.dance} sizes="(min-width:900px) 25vw, 50vw" /><span class="tile__label"><b>Folk dance</b>Culture on stage</span></a>
+          <a class="tile" href="/campus-life/#sports" data-tile><Photo photo={photos.sportsday} sizes="(min-width:900px) 25vw, 50vw" /><span class="tile__label"><b>Sports day</b>Every house cheering</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- A DAY AT STKV -->
+    <section class="day on-dark" id="day" aria-labelledby="day-t" data-day>
+      <div class="wrap day__intro">
+        <p class="kick kick--sun">A day at STKV</p>
+        <h2 class="h2 h2--light" id="day-t" data-split>From the morning bell <em>to 1:30 pm.</em></h2>
+      </div>
+      <div class="day__pin">
+        <div class="day__clock" aria-hidden="true"><span class="day__time"><span data-clock>08:00</span><small data-ap>am</small></span><span class="day__bar"><span data-daybar></span></span></div>
+        <div class="day__visual">
+          {day.map((d, i) => <div class="day__img" data-dimg style={`z-index:${i}`}><Photo photo={d.photo} sizes="(min-width:1000px) 55vw, 100vw" /></div>)}
+        </div>
+        <ol class="day__steps" role="list">
+          {day.map((d) => <li class="day__step" data-dstep data-ap={d.ap}><span class="day__t">{d.time} {d.ap}</span><h3>{d.title}</h3><p>{d.text}</p></li>)}
+        </ol>
+        <div class="day__dots" aria-hidden="true">{day.map(() => <i data-ddot></i>)}</div>
+      </div>
+    </section>
+
+    <!-- JOURNEY -->
+    <section class="journey" aria-labelledby="jr-t">
+      <div class="wrap">
+        <p class="kick">Academics</p>
+        <h2 class="h2" id="jr-t" data-split>One school. <em>Your child’s whole journey.</em></h2>
+        <ol class="journey__cards" role="list">
+          {journey.map((j, i) => (
+            <li><a class={`jcard jcard--${j.tone}`} href={j.href} data-jcard style={`--i:${i}`}>
+              <span class="jcard__n">0{i + 1}</span><h3>{j.t}</h3><p class="jcard__c">{j.c}</p><p>{j.d}</p><span class="jcard__go" aria-hidden="true">→</span>
+            </a></li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <!-- HERITAGE TIMELINE -->
+    <section class="time on-dark" aria-labelledby="time-t">
+      <div class="time__pin" data-time-pin>
+        <div class="wrap">
+          <p class="kick kick--sun">Six decades of Jeevan Vikas</p>
+          <h2 class="h2 h2--light" id="time-t" data-split>Our story began <em>in 1966.</em></h2>
+        </div>
+        <div class="time__track">
+          <span class="time__line" aria-hidden="true"><span data-time-line></span></span>
+          <ol role="list" class="time__list" data-time-list>
+            {timeline.map((e) => <li class:list={['ev', { 'ev--hl': e.hl }]}><span class="ev__y">{e.y}</span><span class="ev__dot" aria-hidden="true"></span><h3>{e.t}</h3><p>{e.d}</p></li>)}
+          </ol>
+        </div>
+        <p class="wrap src">Source: stkvem.com · About Trust & Affiliation Details</p>
+      </div>
+    </section>
+
+    <!-- MOTTO -->
+    <section class="motto" aria-labelledby="motto-t">
+      <Image src={crest} alt="" width={620} class="motto__crest" />
+      <div class="wrap motto__grid">
+        <figure class="motto__portrait">
+          <Photo photo={photos.founder} sizes="320px" />
+          <figcaption class="motto__cap">Late Shri Sadanand T. Kadam · Founder Chairman, Jeevan Vikas Shikshan Sanstha</figcaption>
+        </figure>
+        <div>
+          <p class="kick kick--light" id="motto-t">Our motto</p>
+          <p class="motto__sa" lang="sa" data-motto>{v.motto.sanskrit}</p>
+          <p class="motto__en">“May <span>all</span> be happy.”</p>
+          <p class="motto__note">A trust founded on one idea — education for every section of society — now in its sixth decade, with nine institutions across Palghar district.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRINCIPAL -->
+    <section class="voice" aria-labelledby="voice-t">
+      <div class="wrap voice__grid">
+        <div class="voice__photo" data-voice-photo><Photo photo={photos.principal} sizes="340px" /></div>
+        <div>
+          <p class="kick" id="voice-t">From the Principal’s desk</p>
+          <blockquote class="voice__q" data-scrub>“{v.principalQuote}”</blockquote>
+          <p class="voice__by"><b>{v.school.principal}</b><span>Principal</span><a class="btn btn--line" href="/our-school/#messages">Read the full message <span class="btn__arr" aria-hidden="true">→</span></a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWS -->
+    <section class="news" aria-labelledby="news-t">
+      <div class="wrap news__grid">
+        <div>
+          <p class="kick">Latest</p>
+          <h2 class="h2" id="news-t" data-split>Notices & <em>news.</em></h2>
+          <p class="lede" style="margin-top:16px">Notices shown here are samples until the school office connects its notice board. <span class="sample">Sample</span></p>
+          <p style="margin-top:22px"><a class="btn btn--navy" href="/resources/#notices">Open the Notice Centre <span class="btn__arr" aria-hidden="true">→</span></a></p>
+        </div>
+        <ul class="news__list" role="list" data-news>
+          {latest.map((n) => (
+            <li><a class="nrow" href={`/resources/?q=${encodeURIComponent(n.title.replace(/^Sample (notice|circular) — /, ''))}#notices`}>
+              <time datetime={n.date}><b>{pd(n.date).getDate()}</b>{pd(n.date).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}</time>
+              <span><span class="nrow__cat">{n.category}</span><span class="nrow__t">{n.title.replace(/^Sample (notice|circular) — /, '')}</span></span>
+              <span class="nrow__go" aria-hidden="true">→</span>
+            </a></li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- ADMISSIONS -->
+    <section class="apply" id="apply" aria-labelledby="apply-t">
+      <div class="wrap apply__grid">
+        <div>
+          <p class="kick">Admissions 2027–28</p>
+          <h2 class="apply__title" id="apply-t" data-split>Applications open <span>1 December.</span></h2>
+          <ul class="apply__facts" role="list">
+            <li>Applications are accepted from 1 December for the academic year starting in April; seats are allotted first come, first served.</li>
+            <li>{v.admissions.age}</li>
+            <li>Siblings of current students are given preference.</li>
+          </ul>
+          <div class="apply__ctas"><a class="btn btn--red btn--lg" href="/admissions/#enquiry">Make an enquiry <span class="btn__arr" aria-hidden="true">→</span></a><a class="btn btn--navy btn--lg" href="/admissions/#visit">Book a campus visit</a></div>
+        </div>
+        <div>
+          <div class="count" data-countdown role="timer" aria-label="Time until admissions open on 1 December">
+            <div><b data-cd="d">00</b> <span>days</span></div><div><b data-cd="h">00</b> <span>hours</span></div><div><b data-cd="m">00</b> <span>mins</span></div><div><b data-cd="s">00</b> <span>secs</span></div>
+          </div>
+          <p class="count__note">Office: {v.timings.office} · <a href={`tel:${v.contact.phone.replace(/\s/g, '')}`}>{v.contact.phone}</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ft">
+    <div class="wrap">
+      <div class="ft__top">
+        <div>
+          <Image src={logoTransparent} alt="Shri S. T. Kadam Vidyalaya official logo" width={150} class="ft__logo" />
+          <address class="ft__addr">{v.contact.address}</address>
+          <div class="ft__c"><a href={`tel:${v.contact.phone.replace(/\s/g, '')}`}>{v.contact.phone}</a><a href={`mailto:${v.contact.email}`}>{v.contact.email}</a><span>School: {v.timings.school}</span></div>
+        </div>
+        <div><h3>Explore</h3><ul role="list">{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul></div>
+        <div><h3>Parents</h3><ul role="list">{quick.slice(0, 5).map((q) => <li><a href={q.href}>{q.t}</a></li>)}</ul></div>
+        <div><h3>Official</h3><ul role="list">
+          <li>CBSE Affiliation No. {v.cbse.affiliationNo}</li><li>School Code {v.cbse.schoolCode}</li>
+          <li><a href="https://saras.cbse.gov.in/SARAS/AffiliatedList/AfflicationDetails/1131284" target="_blank" rel="noopener">CBSE SARAS record ↗</a></li>
+          <li><a href="https://play.google.com/store/apps/details?id=iconic.stkvem" target="_blank" rel="noopener">Parent / Student App ↗</a></li>
+        </ul></div>
+      </div>
+      <div class="ft__bottom">
+        <p>© {new Date().getFullYear()} Shri S. T. Kadam Vidyalaya · A Jeevan Vikas Shikshan Sanstha institution</p>
+        <p class="ft__honest">Preview build. Images marked “AI Concept Image” are AI-generated illustrations, not real students or scenes; “School Archive” images are from the school. Forms are demonstrations.</p>
+      </div>
+    </div>
+  </footer>
+  <a class="totop" href="#main" data-totop aria-label="Back to top">↑</a>
+
+  <script>
+    import '../scripts/home';
+  </script>
+</body>
+</html>

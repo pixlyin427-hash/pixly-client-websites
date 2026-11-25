@@ -1,0 +1,25 @@
+---
+/**
+ * Kadamba radiance — a design motif inspired by the spherical kadamba flower (a nod to the
+ * school's name). Purely decorative; it is NOT the school crest. Draws itself on reveal.
+ */
+interface Props { class?: string; size?: number; delay?: number }
+const { class: cls = '', size = 520, delay = 0 } = Astro.props;
+const n = 64;
+const florets = Array.from({ length: n }, (_, i) => {
+  const a = (i / n) * Math.PI * 2;
+  const long = i % 2 === 0;
+  const r1 = 62, r2 = long ? 168 : 132;
+  return { x1: 200 + Math.cos(a) * r1, y1: 200 + Math.sin(a) * r1, x2: 200 + Math.cos(a) * r2, y2: 200 + Math.sin(a) * r2, long };
+});
+---
+<svg class={`kadamba ${cls}`} width={size} height={size} viewBox="0 0 400 400" fill="none" aria-hidden="true" data-reveal="draw" style={`--delay:${delay}ms`}>
+  <circle cx="200" cy="200" r="48" stroke="currentColor" stroke-width="1.2" style="--len:302" />
+  <circle cx="200" cy="200" r="188" stroke="currentColor" stroke-width="0.8" stroke-dasharray="2 6" opacity="0.5" style="--len:1182" />
+  {florets.map((f, i) => (
+    <line x1={f.x1.toFixed(1)} y1={f.y1.toFixed(1)} x2={f.x2.toFixed(1)} y2={f.y2.toFixed(1)} stroke="currentColor" stroke-width={f.long ? 1.2 : 0.8} stroke-linecap="round" style={`--len:120;--i:${i}`} />
+  ))}
+  {florets.filter((f) => f.long).map((f, i) => (
+    <circle cx={f.x2.toFixed(1)} cy={f.y2.toFixed(1)} r="3" stroke="currentColor" stroke-width="1" style={`--len:20;--i:${i * 2 + 10}`} />
+  ))}
+</svg>

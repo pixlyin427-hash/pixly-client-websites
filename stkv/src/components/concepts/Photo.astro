@@ -1,0 +1,12 @@
+---
+/** Responsive photo with honest credit tag (AI concept vs school archive). */
+import { Image } from 'astro:assets';
+import type { Photo as P } from '../../data/photos';
+interface Props { photo: P; class?: string; sizes?: string; eager?: boolean; tag?: boolean; widths?: number[] }
+const { photo, class: cls = '', sizes = '(min-width: 1000px) 50vw, 100vw', eager = false, tag = true, widths } = Astro.props;
+const w = widths ?? [480, 800, 1200, Math.min(1920, photo.src.width)].filter((x, i, a) => x <= photo.src.width && a.indexOf(x) === i);
+---
+<figure class={`ph ${cls}`}>
+  <Image src={photo.src} alt={photo.alt} widths={w} sizes={sizes} loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : 'auto'} format="webp" quality={78} class="ph__img" />
+  {tag && <figcaption class={`ph__tag ph__tag--${photo.kind}`}>{photo.kind === 'ai' ? 'AI Concept Image' : 'School Archive'}</figcaption>}
+</figure>

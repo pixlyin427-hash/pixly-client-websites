@@ -1,0 +1,139 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { generalInfo, documents, academicDocs, staffInfo, infraInfo, type InfoRow, type DocRow } from '../data/disclosure';
+import { school } from '../data/site';
+
+const sections: { id: string; letter: string; title: string; kind: 'info' | 'docs'; rows: (InfoRow | DocRow)[] }[] = [
+  { id: 'general', letter: 'A', title: 'General information', kind: 'info', rows: generalInfo },
+  { id: 'documents', letter: 'B', title: 'Documents and information', kind: 'docs', rows: documents },
+  { id: 'academics', letter: 'C', title: 'Result and academics', kind: 'docs', rows: academicDocs },
+  { id: 'staff', letter: 'D', title: 'Staff (teaching)', kind: 'info', rows: staffInfo },
+  { id: 'infrastructure', letter: 'E', title: 'School infrastructure', kind: 'info', rows: infraInfo },
+];
+const all = sections.flatMap((s) => s.rows);
+const available = all.filter((r) => ('value' in r ? r.value : (r as DocRow).file)).length;
+const pct = Math.round((available / all.length) * 100);
+---
+<Base title="Mandatory Public Disclosure" description={`CBSE Mandatory Public Disclosure for ${school.name} (Affiliation No. ${school.affiliationNo.value}).`}>
+  <PageHero crumb="Mandatory Public Disclosure" kicker="CBSE Transparency Centre" title="Mandatory Public <em>Disclosure</em>" lead="The information and documents CBSE requires every affiliated school to publish, organised in CBSE’s prescribed sections. Only verified details are shown." art="notice" tone="navy" />
+
+  <section class="section-tight dsc" aria-label="Disclosure documents">
+    <div class="container dsc__grid">
+      <aside class="dsc__side">
+        <div class="dsc__status" data-reveal="up">
+          <p class="label muted">Publication status</p>
+          <div class="ring" style={`--p:${pct}`} aria-hidden="true"><span>{available}<small>/{all.length}</small></span></div>
+          <p class="small"><strong>{available} items published</strong> from the official CBSE SARAS record. {all.length - available} items await documents from the school.</p>
+          <p class="src">Last updated: to be provided</p>
+        </div>
+        <nav class="dsc__nav" aria-label="Disclosure sections">
+          <ol role="list">{sections.map((s) => <li><a href={`#${s.id}`} data-dsc-link={s.id}><span class="dsc__letter">{s.letter}</span>{s.title}</a></li>)}</ol>
+        </nav>
+      </aside>
+
+      <div class="dsc__main">
+        <div class="dsc__search" data-reveal="up">
+          <Icon name="search" size={20} />
+          <label class="sr-only" for="dsearch">Search disclosure</label>
+          <input id="dsearch" type="search" placeholder="Search e.g. fire safety, fee, affiliation…" data-dsearch autocomplete="off" />
+          <span class="small muted" data-dcount aria-live="polite"></span>
+        </div>
+
+        {sections.map((s) => (
+          <section class="dsec" id={s.id} aria-labelledby={`${s.id}-h`} data-dsec>
+            <header class="dsec__head" data-reveal="up"><span class="dsec__letter">{s.letter}</span><h2 class="h3" id={`${s.id}-h`}>{s.title}</h2></header>
+            {s.id === 'academics' && <p class="small muted dsec__note">School is affiliated up to Class X, so Class XII results are not applicable.</p>}
+            <ul class="drows" role="list">
+              {s.rows.map((r, i) => {
+                const isDoc = s.kind === 'docs';
+                const val = isDoc ? (r as DocRow).file : (r as InfoRow).value;
+                return (
+                  <li class="drow" id={isDoc ? (r as DocRow).id : undefined} data-drow data-text={r.label.toLowerCase()} style={`--i:${i}`}>
+                    <span class="drow__n">{s.letter}{i + 1}</span>
+                    <span class="drow__l">{r.label}{(r as DocRow).note && <span class="small muted drow__note">{(r as DocRow).note}</span>}</span>
+                    <span class="drow__v">
+                      {val ? (
+                        isDoc ? <a class="btn btn--sm" href={val} download><span class="btn__label">View PDF</span></a>
+                          : <span class="drow__val"><span>{val}</span>{(r as InfoRow).source && <span class="src">{(r as InfoRow).source}</span>}</span>
+                      ) : (
+                        <span class="drow__pending">
+                          <span class="dstat">Awaiting {isDoc ? 'document' : 'information'}</span>
+                          {isDoc && <a class="dbtn" href="/docs/placeholder-document.pdf" data-pending-doc={r.label} aria-label={`${r.label} — not yet uploaded`}><Icon name="doc" size={16} /> Not uploaded</a>}
+                        </span>
+                      )}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        ))}
+        <div class="empty" data-dempty hidden><p><strong>No disclosure items match your search.</strong></p><p class="small">Try “certificate”, “fee” or “principal”.</p></div>
+        <p class="small muted dsc__foot">Verify the school’s affiliation independently on the <a class="link link--under" href={school.sarasUrl} target="_blank" rel="noopener">CBSE SARAS portal <Icon name="external" size={14} /></a>.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .dsc__grid { display: grid; gap: 40px; }
+  @media (min-width: 1000px) { .dsc__grid { grid-template-columns: 300px 1fr; gap: 72px; align-items: start; } .dsc__side { position: sticky; top: calc(var(--header-h) + 24px); } }
+  .dsc__status { display: grid; gap: 14px; padding: 28px; border-radius: var(--r-2); background: var(--white); box-shadow: var(--shadow-1); }
+  .ring { --size: 120px; width: var(--size); height: var(--size); border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--sage-600) calc(var(--p) * 1%), var(--paper-2) 0); position: relative; }
+  .ring::before { content: ''; position: absolute; inset: 10px; border-radius: 50%; background: var(--white); }
+  .ring span { position: relative; font-family: var(--font-display); font-size: 2.4rem; letter-spacing: -0.03em; }
+  .ring small { font-size: 1rem; color: var(--ink-3); }
+  .dsc__nav { margin-top: 24px; display: none; }
+  @media (min-width: 1000px) { .dsc__nav { display: block; } }
+  .dsc__nav a { display: flex; gap: 14px; align-items: center; padding: 12px 10px; border-radius: var(--r-2); font-weight: 650; font-size: 0.9375rem; color: var(--ink-2); transition: background-color var(--d-fast), color var(--d-fast); }
+  .dsc__nav a:hover, .dsc__nav a[aria-current='true'] { background: var(--white); color: var(--ink); }
+  .dsc__nav a[aria-current='true'] .dsc__letter { background: var(--navy-900); color: var(--white); }
+  .dsc__letter, .dsec__letter { flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 0.8125rem; background: var(--paper-2); transition: background-color var(--d-ui), color var(--d-ui); }
+  .dsec__letter { width: 44px; height: 44px; font-family: var(--font-display); font-size: 1.3rem; font-weight: 400; background: var(--navy-900); color: var(--marigold-300); }
+
+  .dsc__search { position: sticky; top: calc(var(--header-h) + 12px); z-index: 5; display: flex; align-items: center; gap: 12px; padding: 0 18px; min-height: 60px; border-radius: var(--r-2); background: var(--white); box-shadow: var(--shadow-2); color: var(--ink-3); }
+  :global(html:has(.hdr.is-hidden)) .dsc__search { top: 12px; }
+  .dsc__search input { flex: 1; min-width: 0; border: 0; outline: none; background: none; font-size: 1rem; font-weight: 600; color: var(--ink); }
+  .dsec { margin-top: 64px; scroll-margin-top: 170px; }
+  .dsec__head { display: flex; gap: 16px; align-items: center; margin-bottom: 20px; }
+  .dsec__note { margin: -8px 0 16px; }
+  .drows { border-top: 1px solid var(--line); }
+  .drow { display: grid; grid-template-columns: 44px 1fr; gap: 8px 16px; padding: 20px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 180px; }
+  @media (min-width: 760px) { .drow { grid-template-columns: 52px 1.3fr 1fr; align-items: center; } }
+  .drow:target { animation: target-flash 2s var(--ease-out); }
+  @keyframes target-flash { 0%, 40% { background: var(--marigold-100); } }
+  .drow:global(.is-match) { animation: row-in 360ms var(--ease-out) both; }
+  .drow__n { font-size: 0.75rem; font-weight: 800; color: var(--ink-3); padding-top: 2px; }
+  .drow__l { font-weight: 650; display: grid; gap: 4px; }
+  .drow__v { grid-column: 2; }
+  @media (min-width: 760px) { .drow__v { grid-column: 3; justify-self: end; text-align: right; } }
+  .drow__val { display: grid; gap: 4px; font-weight: 650; color: var(--ink); }
+  .drow__pending { display: inline-flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: flex-end; }
+  .dstat { display: inline-flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 750; color: var(--clay-600); }
+  .dstat::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 3px rgb(164 68 42 / 0.15); }
+  .dbtn { display: inline-flex; gap: 6px; align-items: center; padding: 6px 12px; border-radius: var(--r-pill); border: 1px dashed var(--line-strong); font-size: 0.75rem; font-weight: 750; color: var(--ink-2); transition: border-color var(--d-fast), color var(--d-fast); }
+  .dbtn:hover { border-color: var(--ink); color: var(--ink); }
+  .dsc__foot { margin-top: 48px; }
+</style>
+
+<script>
+  const input = document.querySelector<HTMLInputElement>('[data-dsearch]');
+  const rows = Array.from(document.querySelectorAll<HTMLElement>('[data-drow]'));
+  const secs = Array.from(document.querySelectorAll<HTMLElement>('[data-dsec]'));
+  const count = document.querySelector<HTMLElement>('[data-dcount]')!;
+  const empty = document.querySelector<HTMLElement>('[data-dempty]')!;
+  input?.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    let n = 0;
+    rows.forEach((r) => { const m = !q || r.dataset.text!.includes(q) || r.textContent!.toLowerCase().includes(q); r.hidden = !m; r.classList.toggle('is-match', !!q && m); if (m) n++; });
+    secs.forEach((s) => (s.hidden = !s.querySelector('[data-drow]:not([hidden])')));
+    count.textContent = q ? `${n} match${n === 1 ? '' : 'es'}` : '';
+    empty.hidden = n > 0;
+  });
+  // Section scroll-spy for the side navigation
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-dsc-link]'));
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) links.forEach((l) => l.setAttribute('aria-current', String(l.dataset.dscLink === e.target.id))); }), { rootMargin: '-30% 0px -60% 0px' });
+  secs.forEach((s) => io.observe(s));
+</script>
