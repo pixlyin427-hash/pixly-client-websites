@@ -1,0 +1,196 @@
+---
+/**
+ * Art — original geometric editorial illustrations (brand palette).
+ * These are clearly-labelled ILLUSTRATIONS standing in for photography until the school supplies
+ * real images (see docs/ASSET-PLAN.md). Pass `photo` to render a real image instead.
+ */
+import type { ArtName } from '../data/campus';
+
+interface Props {
+  name: ArtName;
+  tone?: 'navy' | 'marigold' | 'ivory' | 'sky' | 'clay';
+  label?: string;
+  photo?: { src: string; alt: string; width: number; height: number };
+  class?: string;
+}
+const { name, tone = 'ivory', label, photo, class: cls = '' } = Astro.props;
+
+const tones: Record<'bg' | 'a' | 'b' | 'c' | 'd', string> = {
+  navy: { bg: '#0d1b3e', a: '#e2a32b', b: '#a9c4e6', c: '#f6f1e7', d: '#213b78' },
+  marigold: { bg: '#e2a32b', a: '#0d1b3e', b: '#fffdf8', c: '#0d1b3e', d: '#f3cf7e' },
+  ivory: { bg: '#efe7d7', a: '#0d1b3e', b: '#e2a32b', c: '#0d1b3e', d: '#e5dac4' },
+  sky: { bg: '#e3edf8', a: '#0d1b3e', b: '#e2a32b', c: '#15295a', d: '#a9c4e6' },
+  clay: { bg: '#c46a4c', a: '#fffdf8', b: '#0d1b3e', c: '#fffdf8', d: '#d47a5c' },
+}[tone];
+
+const uid = `a${Math.random().toString(36).slice(2, 8)}`;
+const rnd = (seed: number) => { const x = Math.sin(seed * 9301 + 49297) * 233280; return x - Math.floor(x); };
+
+// Library shelf books (deterministic)
+const shelves = [0, 1, 2].map((row) => {
+  let x = 70; const books = [];
+  for (let i = 0; x < 330; i++) {
+    const w = 14 + Math.round(rnd(row * 40 + i) * 16);
+    const h = 70 + Math.round(rnd(row * 70 + i * 3) * 34);
+    const tilt = rnd(row * 11 + i) > 0.9 ? -8 : 0;
+    books.push({ x, w, h, tilt, col: ['a', 'b', 'a', 'bg'][Math.floor(rnd(row * 5 + i * 7) * 4)] as 'a' | 'b' | 'bg' });
+    x += w + 3;
+  }
+  return books.filter((bk) => bk.x + bk.w <= 334);
+});
+const petals = Array.from({ length: 12 }, (_, i) => i * 30);
+const rays = Array.from({ length: 36 }, (_, i) => i * 10);
+const board = Array.from({ length: 36 }, (_, i) => ({ x: i % 6, y: Math.floor(i / 6) }));
+---
+{photo ? (
+  <img class={`art ${cls}`} src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" style="object-fit:cover" />
+) : (
+<svg class={`art ${cls}`} viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label={label ?? `Illustration: ${name}`} xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id={`${uid}-dots`} width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.3" fill={tones.c} opacity="0.22" /></pattern>
+    <pattern id={`${uid}-lines`} width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke={tones.c} stroke-width="1.2" opacity="0.18" /></pattern>
+  </defs>
+  <rect width="400" height="500" fill={tones.bg} />
+
+  {name === 'book' && (<g>
+    <circle cx="200" cy="230" r="150" fill={`url(#${uid}-dots)`} />
+    {rays.map((r) => <line x1="200" y1="230" x2={200 + Math.cos((r * Math.PI) / 180) * (r % 20 ? 118 : 138)} y2={230 + Math.sin((r * Math.PI) / 180) * (r % 20 ? 118 : 138)} stroke={tones.c} stroke-width="1.4" opacity="0.5" />)}
+    <circle cx="200" cy="230" r="64" fill={tones.b} />
+    <path d="M52 372 Q126 336 200 372 L200 452 Q126 418 52 452 Z" fill={tones.a} />
+    <path d="M348 372 Q274 336 200 372 L200 452 Q274 418 348 452 Z" fill={tones.d} />
+    {[0, 1, 2, 3].map((i) => <path d={`M74 ${386 + i * 14} Q132 ${364 + i * 14} 186 ${388 + i * 14}`} stroke={tones.bg} stroke-width="2" fill="none" opacity="0.5" />)}
+    {[0, 1, 2, 3].map((i) => <path d={`M214 ${388 + i * 14} Q268 ${364 + i * 14} 326 ${386 + i * 14}`} stroke={tones.c} stroke-width="2" fill="none" opacity="0.35" />)}
+  </g>)}
+
+  {name === 'science' && (<g>
+    <circle cx="290" cy="140" r="110" fill={tones.d} />
+    <ellipse cx="290" cy="140" rx="78" ry="26" fill="none" stroke={tones.c} stroke-width="2" opacity="0.7" />
+    <ellipse cx="290" cy="140" rx="78" ry="26" fill="none" stroke={tones.c} stroke-width="2" opacity="0.7" transform="rotate(60 290 140)" />
+    <ellipse cx="290" cy="140" rx="78" ry="26" fill="none" stroke={tones.c} stroke-width="2" opacity="0.7" transform="rotate(120 290 140)" />
+    <circle cx="290" cy="140" r="10" fill={tones.b} />
+    <path d="M160 190 L160 270 L84 420 Q78 440 98 440 L262 440 Q282 440 276 420 L200 270 L200 190 Z" fill={tones.a} />
+    <path d="M118 360 L242 360 L276 420 Q282 440 262 440 L98 440 Q78 440 84 420 Z" fill={tones.b} />
+    <rect x="150" y="178" width="60" height="16" rx="3" fill={tones.c} />
+    <circle cx="150" cy="330" r="7" fill={tones.b} opacity="0.85" /><circle cx="176" cy="306" r="4.5" fill={tones.b} opacity="0.7" /><circle cx="166" cy="282" r="3" fill={tones.b} opacity="0.6" />
+    <rect x="0" y="440" width="400" height="60" fill={`url(#${uid}-lines)`} />
+  </g>)}
+
+  {name === 'library' && (<g>
+    <path d="M60 470 L60 150 A140 140 0 0 1 340 150 L340 470 Z" fill={tones.d} />
+    <path d="M60 470 L60 150 A140 140 0 0 1 340 150 L340 470 Z" fill={`url(#${uid}-dots)`} />
+    {shelves.map((row, ri) => (<g>
+      {row.map((bk) => <rect x={bk.x} y={236 + ri * 110 - bk.h} width={bk.w} height={bk.h} rx="2" fill={tones[bk.col]} transform={bk.tilt ? `rotate(${bk.tilt} ${bk.x} ${236 + ri * 110})` : undefined} />)}
+      <rect x="56" y={236 + ri * 110} width="288" height="8" fill={tones.a} />
+    </g>))}
+  </g>)}
+
+  {name === 'sports' && (<g>
+    {[0, 1, 2, 3, 4].map((i) => <ellipse cx="200" cy="560" rx={150 + i * 46} ry={170 + i * 40} fill="none" stroke={tones.c} stroke-width="2.5" opacity={0.5 - i * 0.07} />)}
+    <circle cx="210" cy="215" r="96" fill={tones.b} />
+    <circle cx="210" cy="215" r="96" fill="none" stroke={tones.a} stroke-width="4" />
+    <path d="M210 176 L246 202 L232 244 L188 244 L174 202 Z" fill={tones.a} />
+    <path d="M210 176 L210 120 M246 202 L298 188 M232 244 L262 290 M188 244 L158 290 M174 202 L122 188" stroke={tones.a} stroke-width="4" fill="none" />
+    {[0, 1, 2].map((i) => <line x1={40 + i * 12} y1={190 + i * 28} x2={96 + i * 6} y2={190 + i * 28} stroke={tones.a} stroke-width="5" stroke-linecap="round" opacity="0.8" />)}
+  </g>)}
+
+  {name === 'arts' && (<g>
+    <rect x="0" y="0" width="400" height="500" fill={`url(#${uid}-lines)`} />
+    <path d="M80 300 C60 200 150 120 250 140 C340 158 360 250 320 300 C296 330 250 300 236 330 C220 366 260 400 210 420 C140 446 96 380 80 300 Z" fill={tones.a} />
+    <circle cx="150" cy="210" r="20" fill={tones.b} /><circle cx="214" cy="186" r="18" fill={tones.d} /><circle cx="276" cy="214" r="17" fill={tones.bg} /><circle cx="134" cy="290" r="18" fill={tones.c === tones.a ? tones.d : tones.c} />
+    <circle cx="196" cy="370" r="22" fill={tones.bg} />
+    <g transform="rotate(-38 300 360)"><rect x="290" y="250" width="16" height="160" rx="4" fill={tones.b} /><rect x="288" y="232" width="20" height="26" fill={tones.c} /><path d="M290 232 Q298 196 306 232 Z" fill={tones.a} /></g>
+  </g>)}
+
+  {name === 'music' && (<g>
+    <circle cx="200" cy="200" r="140" fill={tones.d} />
+    <path d="M78 330 Q78 440 140 440 Q202 440 202 330 Z" fill={tones.a} />
+    <ellipse cx="140" cy="330" rx="62" ry="18" fill={tones.b} /><ellipse cx="140" cy="330" rx="20" ry="6" fill={tones.a} />
+    <path d="M232 300 L232 440 L318 440 L318 300 Z" fill={tones.a} />
+    <ellipse cx="275" cy="440" rx="43" ry="12" fill={tones.a} />
+    <ellipse cx="275" cy="300" rx="43" ry="12" fill={tones.b} /><ellipse cx="275" cy="300" rx="14" ry="4" fill={tones.a} />
+    {[0, 1, 2, 3].map((i) => <line x1={240 + i * 22} y1="312" x2={240 + i * 22} y2="436" stroke={tones.bg} stroke-width="2" opacity="0.4" />)}
+    <path d="M250 110 L250 186 M250 110 L300 98 L300 172" stroke={tones.c} stroke-width="6" fill="none" stroke-linecap="round" />
+    <ellipse cx="240" cy="190" rx="16" ry="12" fill={tones.c} /><ellipse cx="290" cy="176" rx="16" ry="12" fill={tones.c} />
+  </g>)}
+
+  {name === 'classroom' && (<g>
+    <rect x="44" y="96" width="312" height="210" rx="6" fill={tones.a} />
+    <rect x="44" y="96" width="312" height="210" rx="6" fill={`url(#${uid}-dots)`} />
+    <rect x="34" y="302" width="332" height="12" rx="3" fill={tones.d} />
+    <text x="72" y="160" font-family="Georgia, serif" font-style="italic" font-size="30" fill={tones.bg === '#0d1b3e' ? '#0d1b3e' : '#fffdf8'} opacity="0.9">a² + b² = c²</text>
+    <path d="M86 270 L86 196 L170 270 Z" fill="none" stroke={tones.b} stroke-width="3" />
+    <path d="M220 270 Q262 186 320 230" fill="none" stroke={tones.b} stroke-width="3" stroke-dasharray="6 8" />
+    <circle cx="322" cy="230" r="6" fill={tones.b} />
+    <rect x="0" y="380" width="400" height="120" fill={tones.d} />
+    <g transform="rotate(-14 210 410)"><rect x="110" y="404" width="190" height="18" rx="3" fill={tones.b} /><path d="M300 404 L330 413 L300 422 Z" fill={tones.c} /><rect x="96" y="404" width="16" height="18" fill={tones.a} /></g>
+  </g>)}
+
+  {name === 'celebration' && (<g>
+    <g transform="translate(200 230)">
+      {petals.map((d) => <ellipse cx="0" cy="-92" rx="26" ry="56" fill={d % 60 ? tones.d : tones.b} transform={`rotate(${d})`} opacity="0.95" />)}
+      {petals.map((d) => <circle cx="0" cy="-150" r="8" fill={tones.c} transform={`rotate(${d + 15})`} />)}
+      <circle r="58" fill={tones.bg} /><circle r="40" fill={tones.a} />
+      <circle r="22" fill={tones.b} />
+    </g>
+    <path d="M128 430 Q200 470 272 430 L262 410 L138 410 Z" fill={tones.b} />
+    <path d="M200 408 C186 386 192 368 200 352 C208 368 214 386 200 408 Z" fill={tones.a === '#fffdf8' ? '#fffdf8' : '#e2a32b'} stroke={tones.c} stroke-width="2" />
+  </g>)}
+
+  {name === 'computer' && (<g>
+    <rect x="0" y="0" width="400" height="500" fill={`url(#${uid}-dots)`} />
+    <rect x="58" y="110" width="284" height="196" rx="10" fill={tones.a} />
+    <rect x="74" y="126" width="252" height="164" rx="4" fill={tones.bg} opacity="0.95" />
+    {[0, 1, 2, 3, 4, 5].map((i) => <rect x={92 + (i % 3) * 16} y={146 + i * 22} width={60 + rnd(i) * 120} height="8" rx="4" fill={i % 2 ? tones.b : tones.c} opacity={i % 2 ? 1 : 0.55} />)}
+    <rect x="250" y="256" width="12" height="18" fill={tones.b} />
+    <path d="M176 306 L224 306 L236 352 L164 352 Z" fill={tones.a} />
+    <rect x="70" y="384" width="260" height="46" rx="6" fill={tones.a} />
+    {Array.from({ length: 12 }, (_, i) => <rect x={82 + i * 20.4} y="394" width="15" height="10" rx="2" fill={tones.bg} opacity="0.5" />)}
+    {Array.from({ length: 10 }, (_, i) => <rect x={92 + i * 22} y="410" width="16" height="10" rx="2" fill={tones.bg} opacity="0.5" />)}
+  </g>)}
+
+  {name === 'campus' && (<g>
+    <rect x="0" y="330" width="400" height="170" fill={tones.d} />
+    {[0, 1, 2, 3].map((i) => <path d={`M${30 + i * 88} 470 L${30 + i * 88} 300 A34 34 0 0 1 ${98 + i * 88} 300 L${98 + i * 88} 470 Z`} fill={tones.a} opacity={0.92} />)}
+    {[0, 1, 2, 3].map((i) => <path d={`M${44 + i * 88} 470 L${44 + i * 88} 306 A20 20 0 0 1 ${84 + i * 88} 306 L${84 + i * 88} 470 Z`} fill={tones.bg} opacity="0.35" />)}
+    <rect x="20" y="250" width="360" height="16" fill={tones.a} />
+    <line x1="200" y1="72" x2="200" y2="250" stroke={tones.c} stroke-width="4" />
+    <rect x="202" y="76" width="96" height="20" fill="#f29a38" /><rect x="202" y="96" width="96" height="20" fill="#fffdf8" /><rect x="202" y="116" width="96" height="20" fill="#2f8a3e" />
+    <circle cx="250" cy="106" r="7" fill="none" stroke="#15295a" stroke-width="1.6" />
+  </g>)}
+
+  {name === 'maths' && (<g>
+    <rect x="0" y="0" width="400" height="500" fill={`url(#${uid}-lines)`} />
+    <circle cx="200" cy="230" r="128" fill="none" stroke={tones.a} stroke-width="3" />
+    <line x1="200" y1="230" x2="310" y2="164" stroke={tones.a} stroke-width="3" />
+    <circle cx="200" cy="230" r="7" fill={tones.a} />
+    <path d="M90 420 L300 420 L90 262 Z" fill={tones.b} opacity="0.95" />
+    <rect x="90" y="402" width="18" height="18" fill="none" stroke={tones.a} stroke-width="2.5" />
+    <text x="244" y="300" font-family="Georgia, serif" font-style="italic" font-size="72" fill={tones.a}>π</text>
+    <path d="M214 140 L180 52 M214 140 L246 52" stroke={tones.c} stroke-width="3" /><circle cx="213" cy="48" r="8" fill={tones.c} />
+  </g>)}
+
+  {name === 'notice' && (<g>
+    <rect x="0" y="0" width="400" height="500" fill={`url(#${uid}-dots)`} />
+    <g transform="rotate(-4 200 260)"><rect x="80" y="110" width="240" height="300" rx="3" fill="#fffdf8" /><rect x="80" y="110" width="240" height="54" fill={tones.a} />{[0,1,2,3,4,5].map((i) => <rect x="104" y={190 + i * 30} width={i === 5 ? 110 : 192} height="8" rx="4" fill="#0d1b3e" opacity="0.18" />)}</g>
+    <circle cx="200" cy="112" r="16" fill={tones.b} /><circle cx="196" cy="108" r="5" fill="#fffdf8" opacity="0.6" />
+  </g>)}
+
+  {name === 'yoga' && (<g>
+    <circle cx="200" cy="190" r="104" fill={tones.b} />
+    {rays.filter((r) => r % 30 === 0).map((r) => <line x1={200 + Math.cos((r * Math.PI) / 180) * 122} y1={190 + Math.sin((r * Math.PI) / 180) * 122} x2={200 + Math.cos((r * Math.PI) / 180) * 150} y2={190 + Math.sin((r * Math.PI) / 180) * 150} stroke={tones.c} stroke-width="3" stroke-linecap="round" opacity="0.6" />)}
+    <g transform="translate(200 330)">
+      {[-60, -30, 0, 30, 60].map((d) => <ellipse cx="0" cy="-40" rx="18" ry="46" fill={d === 0 ? tones.a : tones.d} transform={`rotate(${d})`} />)}
+    </g>
+    <rect x="40" y="402" width="320" height="28" rx="14" fill={tones.a} />
+    <circle cx="346" cy="416" r="22" fill={tones.a} /><circle cx="346" cy="416" r="12" fill="none" stroke={tones.bg} stroke-width="2" opacity="0.6" />
+  </g>)}
+
+  {name === 'chess' && (<g>
+    <g transform="translate(200 300) scale(1 0.55) rotate(45)">
+      {board.map((sq) => <rect x={(sq.x - 3) * 46} y={(sq.y - 3) * 46} width="46" height="46" fill={(sq.x + sq.y) % 2 ? tones.a : tones.d} />)}
+    </g>
+    <g transform="translate(150 150)"><circle cx="30" cy="40" r="26" fill={tones.b} /><path d="M10 70 L50 70 L62 150 L-2 150 Z" fill={tones.b} /><rect x="-10" y="146" width="80" height="18" rx="4" fill={tones.b} /></g>
+    <g transform="translate(236 120)"><path d="M0 0 L16 0 L16 16 L30 16 L30 0 L46 0 L46 16 L60 16 L60 0 L76 0 L76 40 L66 46 L70 150 L6 150 L10 46 L0 40 Z" fill={tones.c} /><rect x="-6" y="146" width="88" height="20" rx="4" fill={tones.c} /></g>
+  </g>)}
+</svg>
+)}

@@ -1,0 +1,76 @@
+---
+import { mainNav } from '../data/nav';
+import { school, externalLinks } from '../data/site';
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import Fact from './Fact.astro';
+import Kadamba from './Kadamba.astro';
+---
+<footer class="ftr on-dark" data-theme-section="dark">
+  <div class="container">
+    <div class="ftr__top">
+      <p class="ftr__big display" data-reveal="words">Come and <em>see us</em> on Palghar–Boisar Road.</p>
+      <div class="ftr__top-actions" data-reveal="up" style="--delay:300ms">
+        <a class="btn btn--accent" href="/admissions/#visit"><span class="btn__label">Request a campus visit</span><span class="btn__icon" aria-hidden="true"><Icon name="arrow" size={18} /><Icon name="arrow" size={18} /></span></a>
+        <a class="link link--under" href={school.mapUrl} target="_blank" rel="noopener"><Icon name="map" /> Open in Google Maps<span class="sr-only"> (new tab)</span></a>
+      </div>
+      <Kadamba class="ftr__motif" size={420} />
+    </div>
+
+    <div class="ftr__grid">
+      <div class="ftr__col ftr__col--school">
+        <a href="/" aria-label="Home"><Logo inverse /></a>
+        <address>
+          {school.addressLines.map((l) => <span>{l}</span>)}
+        </address>
+        <dl class="ftr__contact">
+          <div><dt>Phone</dt><dd><Fact fact={school.phone} pendingLabel="To be provided" /></dd></div>
+          <div><dt>Email</dt><dd><Fact fact={school.email} pendingLabel="To be provided" /></dd></div>
+          <div><dt>Office hours</dt><dd><Fact fact={school.officeHours} pendingLabel="To be provided" /></dd></div>
+        </dl>
+      </div>
+      {mainNav.slice(0, 4).map((g) => (
+        <div class="ftr__col">
+          <p class="label ftr__h">{g.label}</p>
+          <ul role="list">{g.children.slice(0, 5).map((c) => <li><a href={c.href}>{c.label}</a></li>)}</ul>
+        </div>
+      ))}
+      <div class="ftr__col">
+        <p class="label ftr__h">Statutory & links</p>
+        <ul role="list">
+          <li><a href="/disclosure/">Mandatory Public Disclosure</a></li>
+          <li><a href="/resources/#notices">Notice Centre</a></li>
+          {externalLinks.map((l) => <li><a href={l.href} target="_blank" rel="noopener">{l.label} <Icon name="external" size={13} /></a></li>)}
+        </ul>
+      </div>
+    </div>
+
+    <div class="ftr__bottom small">
+      <p>© {new Date().getFullYear()} {school.name}. CBSE Affiliation No. {school.affiliationNo.value}.</p>
+      <p class="ftr__honest">Design demonstration. The website mark is temporary (official crest to be supplied); artwork shown is illustration, not school photography; sample notices and forms are simulated.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ftr { position: relative; overflow: hidden; background: var(--navy-950); padding-top: clamp(80px, 10vw, 160px); }
+  .ftr__top { position: relative; display: grid; gap: 40px; padding-bottom: clamp(64px, 8vw, 120px); border-bottom: 1px solid var(--line-inverse); }
+  .ftr__big { font-size: clamp(2.6rem, 1.4rem + 5vw, 7rem); max-width: 14ch; position: relative; z-index: 1; }
+  .ftr__big :global(em) { color: var(--marigold-300); }
+  .ftr__top-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 28px; position: relative; z-index: 1; }
+  .ftr :global(.ftr__motif) { position: absolute; right: -60px; top: -40px; color: var(--marigold-500); opacity: 0.35; width: clamp(260px, 34vw, 480px); height: auto; }
+  .ftr__grid { display: grid; gap: 40px 32px; padding-block: 64px; grid-template-columns: repeat(2, 1fr); }
+  .ftr__col--school { grid-column: 1 / -1; display: grid; gap: 22px; align-content: start; }
+  @media (min-width: 1000px) { .ftr__grid { grid-template-columns: 1.6fr repeat(5, 1fr); } .ftr__col--school { grid-column: auto; } }
+  address { font-style: normal; display: grid; color: var(--text-muted); }
+  .ftr__contact { display: grid; gap: 10px; }
+  .ftr__contact div { display: grid; grid-template-columns: 110px 1fr; gap: 10px; align-items: center; }
+  .ftr__contact dt { font-size: 0.8125rem; color: var(--text-muted); }
+  .ftr__h { color: var(--marigold-300); margin-bottom: 18px; }
+  .ftr__col ul { display: grid; gap: 10px; }
+  .ftr__col li a { display: inline-flex; gap: 6px; align-items: center; color: var(--text-muted); font-size: 0.9375rem; transition: color var(--d-fast), transform var(--d-ui) var(--ease-out); }
+  .ftr__col li a:hover { color: var(--white); transform: translateX(3px); }
+  .ftr__bottom { display: grid; gap: 10px; padding-block: 28px 96px; border-top: 1px solid var(--line-inverse); color: var(--text-muted); }
+  @media (min-width: 900px) { .ftr__bottom { grid-template-columns: auto 1fr; gap: 48px; padding-bottom: 32px; } .ftr__honest { text-align: right; } }
+  .ftr__honest { opacity: 0.8; }
+</style>

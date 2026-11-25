@@ -1,0 +1,228 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import SubNav from '../components/SubNav.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Art from '../components/Art.astro';
+import Icon from '../components/Icon.astro';
+import Fact from '../components/Fact.astro';
+import Pending from '../components/Pending.astro';
+import Button from '../components/Button.astro';
+import { school } from '../data/site';
+import { facilities } from '../data/campus';
+
+const departments = ['All', 'Pre-primary & Primary', 'Languages', 'Mathematics', 'Science', 'Social Science', 'Arts & Physical Education'];
+const info = [
+  ['Name of the school', school.name, 'CBSE SARAS', true],
+  ['Board', 'Central Board of Secondary Education (CBSE)', 'CBSE SARAS', true],
+  ['Affiliation number', school.affiliationNo.value, 'CBSE SARAS', true],
+  ['Affiliation status', school.affiliationStatus.value, 'CBSE SARAS', true],
+  ['Affiliation period', school.affiliationPeriod.value, 'CBSE SARAS', true],
+  ['School type', school.schoolType.value, 'CBSE SARAS', true],
+  ['Year of foundation', school.founded.value, 'CBSE SARAS', true],
+  ['Address', school.address.value, 'CBSE SARAS', true],
+  ['Classes covered by this website', school.classes.value, 'Client brief', true],
+  ['Managing body', school.management.value, 'Third-party listing — to confirm', false],
+  ['School code', null, 'To be provided', false],
+  ['Medium of instruction', null, 'To be provided', false],
+] as const;
+---
+<Base title="Our School" description={`About ${school.name}: vision, leadership, faculty, infrastructure and verified school information.`}>
+  <PageHero crumb="Our School" kicker="Our School" title="A school rooted in <em>Palghar.</em>" lead="Who we are, what we believe, the people who lead STKV, and the facts every family should be able to check." art="campus" tone="navy" />
+  <SubNav items={[{ id: 'about', label: 'About STKV' }, { id: 'vision', label: 'Vision & Mission' }, { id: 'messages', label: 'Messages' }, { id: 'people', label: 'Leadership & Faculty' }, { id: 'infrastructure', label: 'Infrastructure' }, { id: 'information', label: 'School Information' }]} />
+
+  <!-- About -->
+  <section class="section" id="about" aria-labelledby="about-t">
+    <div class="container about">
+      <div>
+        <SectionHead kicker="About STKV" title="Building strong foundations, <em>class by class</em>" id="about-t" />
+        <div class="prose about__text" data-reveal="up">
+          <p class="about__drop">{school.name} is a CBSE-affiliated school on Palghar–Boisar Road in Palghar, Maharashtra. It is affiliated to the Central Board of Secondary Education at the Secondary level (Affiliation No. {school.affiliationNo.value}), and this website covers learning from Class 1 to Class 10.</p>
+          <p>The school is managed by <Fact fact={school.management} />.</p>
+          <p><Pending label="School history & introduction — to be written with the school" source="The school will supply its own introduction, history and values." /></p>
+        </div>
+      </div>
+      <ol class="tl" role="list" aria-label="Milestones">
+        <li class="tl__line" aria-hidden="true"><span data-tl-fill></span></li>
+        <li class="tl__item" data-reveal="left"><span class="tl__y">2018</span><p class="h4">Year of foundation</p><p class="muted small">As recorded by CBSE SARAS.</p></li>
+        <li class="tl__item" data-reveal="left" style="--delay:120ms"><span class="tl__y">2023</span><p class="h4">Current affiliation period begins</p><p class="muted small">CBSE affiliation at the Secondary level, valid 2023–2028.</p></li>
+        <li class="tl__item" data-reveal="left" style="--delay:240ms"><span class="tl__y">2028</span><p class="h4">Affiliation valid until</p><p class="muted small">As recorded by CBSE SARAS.</p></li>
+        <li class="tl__item tl__item--pending" data-reveal="left" style="--delay:360ms"><span class="tl__y">—</span><p class="h4">More milestones</p><p class="muted small">To be added from the school’s records.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Vision & Mission -->
+  <section class="section bg-navy on-dark" id="vision" aria-labelledby="vision-t">
+    <div class="container">
+      <SectionHead kicker="Vision & Mission" title="What guides <em>everything we do</em>" id="vision-t" />
+      <div class="vm">
+        {[{ k: 'Our Vision', t: 'The school’s vision statement will appear here, in the school’s own words.' }, { k: 'Our Mission', t: 'The school’s mission statement will appear here, in the school’s own words.' }].map((v, i) => (
+          <article class="vm__card" data-reveal="up" style={`--delay:${i * 150}ms`}>
+            <span class="vm__q" aria-hidden="true">“</span>
+            <p class="label vm__k">{v.k}</p>
+            <p class="vm__t">{v.t}</p>
+            <Pending label="Awaiting the school’s approved wording" />
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Messages -->
+  <section class="section" id="messages" aria-labelledby="msg-t">
+    <div class="container">
+      <SectionHead kicker="Messages" title="A word from <em>our leadership</em>" id="msg-t" split lead="Messages will be published once the school provides the text and approved photographs." />
+      <div class="tabs" data-tabs>
+        <div class="tabs__list" role="tablist" aria-label="Leadership messages">
+          <button class="tabs__tab" role="tab" id="t-chair" aria-controls="p-chair" aria-selected="true">Chairman’s message</button>
+          <button class="tabs__tab" role="tab" id="t-prin" aria-controls="p-prin" aria-selected="false" tabindex="-1">Principal’s message</button>
+          <span class="tabs__ink" aria-hidden="true"></span>
+        </div>
+        {[{ id: 'chair', role: 'Chairman', fact: school.chairman, init: 'C' }, { id: 'prin', role: 'Principal', fact: school.principal, init: 'P' }].map((m, i) => (
+          <div class="tab-panel msg" role="tabpanel" id={`p-${m.id}`} aria-labelledby={`t-${m.id}`} hidden={i !== 0} tabindex="0">
+            <div class="arch msg__portrait" aria-hidden="true"><span>{m.init}</span><small>Portrait to be supplied</small></div>
+            <div class="msg__body">
+              <p class="label muted">{m.role}</p>
+              <p class="h3 msg__name"><Fact fact={m.fact} pendingLabel="Name to be provided" /></p>
+              <div class="msg__lines" aria-hidden="true"><span></span><span></span><span></span><span></span><span class="s"></span></div>
+              <Pending label={`${m.role}’s message — to be provided by the school`} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Leadership & Faculty -->
+  <section class="section bg-paper2" id="people" aria-labelledby="people-t">
+    <div class="container">
+      <SectionHead kicker="Leadership & Faculty" title="The people <em>behind STKV</em>" id="people-t" split lead="We never invent staff names or qualifications. Profiles appear here once the school shares them with consent." />
+      <div class="lead-grid" data-reveal="stagger">
+        <article class="person"><div class="person__av" aria-hidden="true"><Icon name="user" size={28} /></div><p class="label muted">Management</p><p class="h4"><Fact fact={school.management} /></p></article>
+        <article class="person"><div class="person__av" aria-hidden="true"><Icon name="user" size={28} /></div><p class="label muted">Chairman</p><p class="h4"><Fact fact={school.chairman} pendingLabel="To be provided" /></p></article>
+        <article class="person"><div class="person__av" aria-hidden="true"><Icon name="user" size={28} /></div><p class="label muted">Principal</p><p class="h4"><Fact fact={school.principal} /></p></article>
+      </div>
+
+      <div class="faculty" data-faculty>
+        <div class="faculty__bar">
+          <h3 class="h3">Faculty directory</h3>
+          <div class="chips" role="group" aria-label="Filter by department">
+            {departments.map((d, i) => <button class="chip" type="button" aria-pressed={i === 0 ? 'true' : 'false'} data-dept={d}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>{d}</button>)}
+          </div>
+        </div>
+        <div class="empty" data-dept-out aria-live="polite">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="8.5" r="3.5"/><path d="M2.5 19.5c.9-3 3.4-4.5 6.5-4.5s5.6 1.5 6.5 4.5"/><circle cx="17" cy="9.5" r="2.5"/><path d="M16.5 14.5c2.6 0 4.3 1.3 5 3.5"/></svg>
+          <p><strong>Faculty profiles for <span data-dept-name>all departments</span> are not published yet.</strong></p>
+          <p class="small">Names, subjects and qualifications will be added only from the school’s verified staff records.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Infrastructure -->
+  <section class="section" id="infrastructure" aria-labelledby="infra-t">
+    <div class="container">
+      <SectionHead kicker="Infrastructure" title="Learning spaces <em>at STKV</em>" id="infra-t" split lead="Facility areas are listed for the design. The school will confirm each one and add photographs; statutory infrastructure details appear in the Mandatory Disclosure." />
+      <ul class="infra" role="list">
+        {facilities.map((f, i) => (
+          <li class="infra__card" data-reveal="up" style={`--delay:${(i % 3) * 100}ms`}>
+            <div class="frame infra__art"><Art name={f.art} tone={(['navy', 'marigold', 'sky'] as const)[i % 3]} /></div>
+            <div class="infra__meta"><h3 class="h4">{f.name}</h3><span class="fac-dot" data-tip-end data-tip="Awaiting confirmation from the school" tabindex="0"><span class="sr-only">Awaiting confirmation</span></span></div>
+            <p class="muted small">{f.line}</p>
+          </li>
+        ))}
+      </ul>
+      <div style="margin-top:40px" data-reveal="up"><Button href="/disclosure/#infrastructure" variant="ghost">Infrastructure details in Mandatory Disclosure</Button></div>
+    </div>
+  </section>
+
+  <!-- School information -->
+  <section class="section bg-paper2" id="information" aria-labelledby="info-t">
+    <div class="container-narrow">
+      <SectionHead kicker="School Information" title="Facts you can <em>verify</em>" id="info-t" />
+      <table class="dtable" data-reveal="up">
+        <caption class="sr-only">School information with sources</caption>
+        <tbody>
+          {info.map(([k, v, src, ok]) => (
+            <tr><th scope="row">{k}</th><td>{v ? (ok ? v : <span class="unverified" data-tip={`Awaiting confirmation — ${src}`} tabindex="0">{v}</span>) : <Pending />}<br /><span class="src">{src}</span></td></tr>
+          ))}
+        </tbody>
+      </table>
+      <p style="margin-top:28px" data-reveal="up"><a class="link link--under" href={school.sarasUrl} target="_blank" rel="noopener">View the official CBSE SARAS record <Icon name="external" /></a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about { display: grid; gap: 64px; }
+  @media (min-width: 1000px) { .about { grid-template-columns: 1.2fr 0.8fr; gap: 96px; align-items: start; } }
+  .about__text { font-size: 1.0625rem; }
+  .about__drop::first-letter { float: left; font-family: var(--font-display); font-size: 4.6em; line-height: 0.82; padding: 0.06em 0.12em 0 0; color: var(--navy-900); font-weight: 340; }
+  .tl { position: relative; display: grid; gap: 40px; padding-left: 40px; }
+  .tl__line { position: absolute; left: 7px; top: 8px; bottom: 8px; width: 1.5px; background: var(--line); }
+  .tl__line span { position: absolute; inset: 0; background: var(--marigold-500); transform-origin: top; transform: scaleY(var(--p, 0)); }
+  .tl__item { position: relative; display: grid; gap: 6px; }
+  .tl__item::before { content: ''; position: absolute; left: -40px; top: 10px; width: 16px; height: 16px; border-radius: 50%; background: var(--paper); box-shadow: inset 0 0 0 2px var(--marigold-500); transition: background-color var(--d-panel); }
+  .tl__item:global(.is-in)::before { background: var(--marigold-500); }
+  .tl__item--pending::before { box-shadow: inset 0 0 0 1.5px var(--ink-3); background: var(--paper) !important; border: 0; }
+  .tl__y { font-family: var(--font-display); font-size: 2.6rem; line-height: 1; letter-spacing: -0.03em; font-weight: 320; }
+
+  .vm { display: grid; gap: 24px; }
+  @media (min-width: 900px) { .vm { grid-template-columns: 1fr 1fr; } }
+  .vm__card { position: relative; display: grid; gap: 20px; align-content: start; padding: clamp(32px, 4vw, 56px); border-radius: var(--r-2); box-shadow: inset 0 0 0 1px var(--line-inverse); overflow: hidden; transition: box-shadow var(--d-panel), background-color var(--d-panel); }
+  .vm__card:hover { box-shadow: inset 0 0 0 1px var(--marigold-500); background: rgb(255 253 248 / 0.03); }
+  .vm__q { position: absolute; right: 24px; top: -30px; font-family: var(--font-display); font-size: 12rem; line-height: 1; color: var(--marigold-500); opacity: 0.25; transition: transform 800ms var(--ease-out); }
+  .vm__card:hover .vm__q { transform: translateY(12px) rotate(-6deg); }
+  .vm__k { color: var(--marigold-300); }
+  .vm__t { font-family: var(--font-display); font-style: italic; font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.2rem); line-height: 1.25; color: rgb(246 241 231 / 0.55); max-width: 22ch; font-weight: 300; }
+
+  .msg { display: grid; gap: 40px; margin-top: 40px; align-items: center; }
+  @media (min-width: 800px) { .msg { grid-template-columns: 280px 1fr; gap: 72px; } }
+  .msg__portrait { width: min(280px, 70vw); display: grid; place-content: center; text-align: center; gap: 8px; background: var(--navy-900); color: var(--marigold-300); }
+  .msg__portrait span { font-family: var(--font-display); font-size: 6rem; font-style: italic; line-height: 1; }
+  .msg__portrait small { font-size: 0.6875rem; font-weight: 750; letter-spacing: 0.12em; text-transform: uppercase; color: rgb(246 241 231 / 0.6); }
+  .msg__body { display: grid; gap: 18px; justify-items: start; }
+  .msg__lines { display: grid; gap: 14px; width: 100%; max-width: 560px; margin: 12px 0; }
+  .msg__lines span { height: 10px; border-radius: 5px; background: var(--paper-3); }
+  .msg__lines .s { width: 55%; }
+
+  .lead-grid { display: grid; gap: 16px; }
+  @media (min-width: 800px) { .lead-grid { grid-template-columns: repeat(3, 1fr); } }
+  .person { display: grid; gap: 8px; padding: 28px; border-radius: var(--r-2); background: var(--white); box-shadow: var(--shadow-1); transition: transform var(--d-ui) var(--ease-out), box-shadow var(--d-ui); }
+  .person:hover { transform: translateY(-4px); box-shadow: var(--shadow-2); }
+  .person__av { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; margin-bottom: 12px; background: var(--paper-2); color: var(--ink-3); border: 1px dashed var(--line-strong); }
+  .faculty { margin-top: 72px; display: grid; gap: 28px; }
+  .faculty__bar { display: grid; gap: 20px; }
+
+  .infra { display: grid; gap: 40px 24px; }
+  @media (min-width: 640px) { .infra { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .infra { grid-template-columns: repeat(3, 1fr); } }
+  .infra__card { display: grid; gap: 10px; }
+  .infra__art { aspect-ratio: 4 / 3; margin-bottom: 8px; }
+  .infra__art :global(.art) { transition: transform 1000ms var(--ease-out); }
+  .infra__card:hover .infra__art :global(.art) { transform: scale(1.06) rotate(-1deg); }
+  .infra__meta { display: flex; justify-content: space-between; align-items: center; }
+  .fac-dot { width: 14px; height: 14px; border-radius: 50%; border: 1.5px dashed var(--ink-3); }
+</style>
+
+<script>
+  // Timeline fill follows scroll
+  const tl = document.querySelector<HTMLElement>('.tl');
+  const fill = tl?.querySelector<HTMLElement>('[data-tl-fill]');
+  if (tl && fill) {
+    const upd = () => { const r = tl.getBoundingClientRect(); const p = Math.min(1, Math.max(0, (innerHeight * 0.7 - r.top) / r.height)); fill.style.setProperty('--p', p.toFixed(3)); };
+    addEventListener('scroll', () => requestAnimationFrame(upd), { passive: true }); upd();
+  }
+  // Faculty department filter (interactive empty state)
+  const f = document.querySelector<HTMLElement>('[data-faculty]');
+  if (f) {
+    const chips = Array.from(f.querySelectorAll<HTMLButtonElement>('[data-dept]'));
+    const out = f.querySelector<HTMLElement>('[data-dept-out]')!; const name = f.querySelector<HTMLElement>('[data-dept-name]')!;
+    chips.forEach((c) => c.addEventListener('click', () => {
+      chips.forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
+      name.textContent = c.dataset.dept === 'All' ? 'all departments' : c.dataset.dept!;
+      out.classList.remove('is-entering'); void out.offsetWidth; out.classList.add('is-entering');
+    }));
+  }
+</script>

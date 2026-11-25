@@ -1,0 +1,10 @@
+---
+/** Renders a sourced fact. Unverified values get a dotted underline + source tooltip. */
+import type { Fact as F } from '../data/site';
+import Pending from './Pending.astro';
+interface Props { fact: F; pendingLabel?: string }
+const { fact, pendingLabel } = Astro.props;
+---
+{fact.value === null ? <Pending label={pendingLabel} source={fact.source} />
+  : fact.verified ? <span data-tip={`Source: ${fact.source}`} tabindex="0">{fact.value}</span>
+  : <span class="unverified" data-tip={`Awaiting confirmation — ${fact.source}`} tabindex="0">{fact.value}</span>}

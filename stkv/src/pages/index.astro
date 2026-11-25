@@ -1,0 +1,546 @@
+---
+import Base from '../layouts/Base.astro';
+import Art from '../components/Art.astro';
+import Icon from '../components/Icon.astro';
+import Button from '../components/Button.astro';
+import Kadamba from '../components/Kadamba.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Pending from '../components/Pending.astro';
+import { school } from '../data/site';
+import { stages } from '../data/academics';
+import { activities, facilities } from '../data/campus';
+import { notices } from '../data/notices';
+import { calendarEvents } from '../data/calendar';
+import { steps } from '../data/admissions';
+
+const latest = [...notices].filter((n) => !n.archived).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4);
+const todayIso = new Date().toISOString().slice(0, 10);
+const nextEvents = [...calendarEvents].filter((e) => e.date >= todayIso).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 2);
+const d = (iso: string) => { const [y, m, dd] = iso.split('-').map(Number); return new Date(y, m - 1, dd); };
+const dm = (iso: string) => d(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+
+const quick = [
+  { key: 'calendar', title: 'Academic Calendar', text: 'Term dates, tests and holidays.', href: '/resources/#calendar', icon: 'calendar' },
+  { key: 'notices', title: 'Notices', text: 'Latest circulars from school.', href: '/resources/#notices', icon: 'bell' },
+  { key: 'fees', title: 'Fee Information', text: 'Published under CBSE disclosure.', href: '/disclosure/#academics', icon: 'rupee' },
+  { key: 'transport', title: 'Transport', text: 'Routes & transport enquiry.', href: '/contact/#transport', icon: 'bus' },
+  { key: 'books', title: 'Book Lists', text: 'Class-wise, Classes 1–10.', href: '/academics/#centre', icon: 'book' },
+  { key: 'downloads', title: 'Downloads', text: 'Forms and documents.', href: '/resources/#downloads', icon: 'download' },
+  { key: 'app', title: 'Parent / Student App', text: 'Official app on Google Play.', href: school.app.url, icon: 'phone', external: true },
+  { key: 'contact', title: 'Contact the Office', text: 'Address, map and enquiries.', href: '/contact/', icon: 'call' },
+] as const;
+
+const highlights = [
+  { n: '01', title: 'CBSE affiliated', text: `Affiliation No. ${school.affiliationNo.value}, valid ${school.affiliationPeriod.value}, at the Secondary level.`, art: 'book', tone: 'navy', src: 'CBSE SARAS' },
+  { n: '02', title: 'Class 1 to Class 10', text: 'One school through the foundational, preparatory, middle and secondary stages.', art: 'classroom', tone: 'marigold', src: 'Client brief' },
+  { n: '03', title: 'Palghar–Boisar Road', text: 'Located in Taluka Palghar, District Palghar, Maharashtra 401404.', art: 'campus', tone: 'sky', src: 'CBSE SARAS' },
+  { n: '04', title: 'Connected with parents', text: 'An official Parent / Student app for school communication.', art: 'computer', tone: 'clay', src: 'Client brief' },
+  { n: '05', title: 'Transparent by design', text: 'CBSE Mandatory Public Disclosure, organised and easy to find.', art: 'notice', tone: 'ivory', src: 'CBSE requirement' },
+] as const;
+const stageTone = ['ivory', 'marigold', 'navy', 'sky'] as const;
+const actTone = ['marigold', 'clay', 'sky', 'navy', 'ivory', 'navy'] as const;
+---
+<Base>
+  <!-- ======================= HERO ======================= -->
+  <section class="hero" data-tilt-scope aria-labelledby="hero-title">
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <p class="label hero__kicker" data-reveal="fade"><span class="hero__kicker-line" aria-hidden="true"></span>CBSE · Affiliation No. {school.affiliationNo.value} · Palghar</p>
+        <h1 class="display hero__title" id="hero-title" data-reveal="words" style="--delay:120ms">Where curious minds <em>take root.</em></h1>
+        <p class="lead hero__lead" data-reveal="up" style="--delay:760ms">{school.name} is a CBSE school on Palghar–Boisar Road, guiding learners from Class 1 to Class 10.</p>
+        <div class="hero__ctas" data-reveal="up" style="--delay:920ms">
+          <Button href="/admissions/#enquiry">Begin an enquiry</Button>
+          <a class="link link--under" href="/our-school/">Discover STKV <Icon name="arrow" /></a>
+        </div>
+      </div>
+
+      <div class="hero__stage" aria-hidden="true">
+        <div class="hero__motif" data-depth="-10"><div data-parallax="-0.06"><Kadamba size={560} delay={700} /></div></div>
+        <div class="hero__arch hero__arch--a" data-depth="8"><div data-parallax="0.05"><div class="arch" data-reveal="mask" style="--delay:300ms"><Art name="classroom" tone="navy" /></div></div></div>
+        <div class="hero__arch hero__arch--b" data-depth="-6"><div data-parallax="-0.08"><div class="arch" data-reveal="mask" style="--delay:460ms"><Art name="science" tone="marigold" /></div></div></div>
+        <div class="hero__arch hero__arch--c" data-depth="14"><div data-parallax="0.12"><div class="arch" data-reveal="mask" style="--delay:620ms"><Art name="sports" tone="sky" /></div></div></div>
+        <div class="hero__seal" data-reveal="scale" style="--delay:1100ms" data-depth="20">
+          <span class="label">Est.</span><span class="hero__seal-n">2018</span><span class="hero__seal-s">CBSE SARAS</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="container hero__rail" data-reveal="stagger" style="--delay:1150ms">
+      <div><span class="label muted">Board</span><strong>CBSE · Secondary</strong></div>
+      <div><span class="label muted">Affiliation valid</span><strong>{school.affiliationPeriod.value}</strong></div>
+      <div><span class="label muted">Classes</span><strong>1 to 10</strong></div>
+      <a class="hero__scroll" href="#intro"><span class="hero__scroll-track"><span class="hero__scroll-dot"></span></span><span class="label">Scroll</span></a>
+    </div>
+  </section>
+
+  <!-- ======================= INTRO (scroll-lit statement) ======================= -->
+  <section class="section intro" id="intro" aria-labelledby="intro-title">
+    <div class="container">
+      <p class="label sec-head__kicker" data-reveal="fade" id="intro-title">Our school</p>
+      <p class="intro__statement" data-scrub-words>Learning at STKV grows from strong foundations — the CBSE curriculum, steady guidance from the first class to the tenth, and a school community that families in Palghar can be part of.</p>
+      <div class="intro__facts">
+        <div class="intro__fact" data-reveal="up">
+          <span class="intro__num tnum" data-count="2018" data-from="1990">2018</span>
+          <p>Year of foundation</p><span class="src">CBSE SARAS</span>
+        </div>
+        <div class="intro__fact" data-reveal="up" style="--delay:120ms">
+          <span class="intro__num tnum"><span data-count="10">10</span></span>
+          <p>Classes, from Class 1 to Class 10</p><span class="src">Client brief</span>
+        </div>
+        <div class="intro__fact" data-reveal="up" style="--delay:240ms">
+          <span class="intro__num tnum" data-count="2028" data-from="2000">2028</span>
+          <p>CBSE affiliation valid until</p><span class="src">CBSE SARAS</span>
+        </div>
+        <div class="intro__fact intro__fact--cta" data-reveal="up" style="--delay:360ms">
+          <p class="h3">Get to know the school, its values and the people who lead it.</p>
+          <a class="link link--under" href="/our-school/">About STKV <Icon name="arrow" /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= PARENT QUICK ACCESS (background shifts to navy) ======================= -->
+  <section class="section qa" data-bg-shift aria-labelledby="qa-title">
+    <div class="container">
+      <SectionHead kicker="For parents" title="Everything you need, <em>one tap away.</em>" lead="The information families look for most — calendars, notices, fees, transport and the parent app — gathered in one place." split id="qa-title" />
+      <div class="qa__grid" data-reveal="stagger">
+        <a class="qa__feature" href="/resources/#calendar">
+          <div class="qa__feature-head"><span class="qa__ico" data-anim="calendar"><Icon name="calendar" size={26} /></span><span class="label">Coming up</span></div>
+          <ul role="list" class="qa__events">
+            {nextEvents.map((e) => (
+              <li><time datetime={e.date}><b>{d(e.date).getDate()}</b>{d(e.date).toLocaleDateString('en-IN', { month: 'short' })}</time><span>{e.title.replace('Sample: ', '')}{e.sample && <span class="sample-tag">Sample</span>}</span></li>
+            ))}
+          </ul>
+          <span class="qa__more">Open the academic calendar <Icon name="arrow" size={18} /></span>
+        </a>
+        {quick.map((q) => (
+          <a class="qa__tile" href={q.href} data-key={q.key} {...(('external' in q && q.external) ? { target: '_blank', rel: 'noopener' } : {})}>
+            <span class="qa__ico" data-anim={q.key}><Icon name={q.icon} size={26} /></span>
+            <span class="qa__t">{q.title}{'external' in q && q.external && <span class="sr-only"> (opens Google Play)</span>}</span>
+            <span class="qa__d">{q.text}</span>
+            <Icon name={'external' in q && q.external ? 'external' : 'arrow'} size={18} class="qa__arrow" />
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= HIGHLIGHTS (horizontal rail) ======================= -->
+  <section class="section hl" aria-labelledby="hl-title" data-rail>
+    <div class="container">
+      <div class="hl__head">
+        <SectionHead kicker="At a glance" title="Five things to know <em>about STKV</em>" id="hl-title" />
+        <div class="hl__ctrl">
+          <button class="icon-btn" type="button" data-rail-prev aria-label="Previous"><Icon name="chevron-left" /></button>
+          <button class="icon-btn" type="button" data-rail-next aria-label="Next"><Icon name="chevron-right" /></button>
+        </div>
+      </div>
+    </div>
+    <ol class="hl__track" role="list" data-rail-track tabindex="0" aria-label="Highlights">
+      {highlights.map((h, i) => (
+        <li class="hl__card" data-reveal="up" style={`--delay:${i * 90}ms`}>
+          <div class="arch hl__art"><Art name={h.art} tone={h.tone} /></div>
+          <span class="hl__n">{h.n}</span>
+          <h3 class="h3">{h.title}</h3>
+          <p class="muted">{h.text}</p>
+          <span class="src">Source: {h.src}</span>
+        </li>
+      ))}
+    </ol>
+    <div class="container"><div class="hl__progress" data-rail-progress><span></span></div></div>
+  </section>
+
+  <!-- ======================= ACADEMICS (stage tabs) ======================= -->
+  <section class="section acad bg-paper2" aria-labelledby="acad-title">
+    <div class="container">
+      <SectionHead kicker="Academics" title="A clear path from <em>Class 1 to Class 10</em>" lead="STKV follows the CBSE curriculum, organised in the stages set out by the National Education Policy." split id="acad-title" />
+      <div class="tabs" data-tabs>
+        <div class="tabs__list" role="tablist" aria-label="Learning stages" data-reveal="fade">
+          {stages.map((s, i) => <button class="tabs__tab" role="tab" id={`st-${s.id}`} aria-controls={`sp-${s.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>{s.name}</button>)}
+          <span class="tabs__ink" aria-hidden="true"></span>
+        </div>
+        {stages.map((s, i) => (
+          <div class="tab-panel acad__panel" role="tabpanel" id={`sp-${s.id}`} aria-labelledby={`st-${s.id}`} hidden={i !== 0} tabindex="0">
+            <div class="acad__copy">
+              <p class="acad__range">{s.range[0]}<span>–</span>{s.range[1]}</p>
+              <p class="label muted">{s.classes} · {s.name} stage</p>
+              <p class="h3 acad__lead">{s.lead}</p>
+              <ol class="acad__focus" role="list">{s.focus.map((f, j) => <li><span>0{j + 1}</span>{f}</li>)}</ol>
+              <a class="link link--under" href={`/academics/?class=${s.range[0]}#centre`}>Subjects & book lists for {s.classes} <Icon name="arrow" /></a>
+            </div>
+            <div class="arch acad__art"><Art name={s.art} tone={stageTone[i]} /></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= ACTIVITIES (sticky swap) ======================= -->
+  <section class="section act" aria-labelledby="act-title" data-sticky-swap>
+    <div class="container act__grid">
+      <div class="act__list">
+        <SectionHead kicker="Activities" title="Life beyond <em>the textbook</em>" id="act-title" />
+        <p class="muted act__note"><Pending label="Programme details awaiting confirmation" source="Activity areas shown for the design. The school will confirm its programmes and provide photographs." /></p>
+        <ol role="list">
+          {activities.map((a, i) => (
+            <li class="act__row" data-ss-row>
+              <span class="act__i">0{i + 1}</span>
+              <div><h3 class="act__name">{a.name}</h3><p class="act__line">{a.line}</p></div>
+              <div class="arch act__thumb" aria-hidden="true"><Art name={a.art} tone={actTone[i]} /></div>
+            </li>
+          ))}
+        </ol>
+        <a class="link link--under" href="/campus-life/">Explore campus life <Icon name="arrow" /></a>
+      </div>
+      <div class="act__stage" aria-hidden="true">
+        <div class="act__sticky">
+          <div class="arch act__frames">
+            {activities.map((a, i) => <div class="act__frame" data-ss-frame><Art name={a.art} tone={actTone[i]} /></div>)}
+          </div>
+          <p class="act__count"><span data-ss-count>01</span> / 0{activities.length}<span class="act__cap">Illustration</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= FACILITIES (hover reveal index) ======================= -->
+  <section class="section fac on-dark bg-navy" aria-labelledby="fac-title">
+    <div class="container">
+      <SectionHead kicker="Facilities" title="Spaces for <em>learning</em>" lead="An index of the learning spaces families can explore on a campus visit. Descriptions and photographs will be added by the school." split id="fac-title" />
+      <div class="fac__list" data-hover-reveal>
+        <ul role="list">
+          {facilities.map((f, i) => (
+            <li class="fac__row" data-hr-row data-reveal="up" style={`--delay:${i * 60}ms`}>
+              <span class="fac__i">0{i + 1}</span>
+              <span class="fac__name">{f.name}</span>
+              <span class="fac__line">{f.line}</span>
+              <span class="fac__status" data-tip-end data-tip="Awaiting confirmation from the school" tabindex="0"><span class="sr-only">Awaiting confirmation</span></span>
+              <div class="arch fac__thumb" aria-hidden="true"><Art name={f.art} tone="marigold" /></div>
+            </li>
+          ))}
+        </ul>
+        <div class="fac__float arch" data-hr-float aria-hidden="true">
+          {facilities.map((f) => <div class="fac__slide" data-hr-slide><Art name={f.art} tone="marigold" /></div>)}
+        </div>
+      </div>
+      <div class="fac__cta" data-reveal="up"><Button href="/admissions/#visit" variant="light">Request a campus visit</Button><a class="link link--under" href="/campus-life/#facilities">All facilities <Icon name="arrow" /></a></div>
+    </div>
+  </section>
+
+  <!-- ======================= ACHIEVEMENTS (honour board) ======================= -->
+  <section class="section ach" aria-labelledby="ach-title">
+    <div class="container ach__grid">
+      <div>
+        <SectionHead kicker="Achievements" title="An honour board, <em>ready for our students</em>" id="ach-title" />
+        <p class="prose" data-reveal="up">Student achievements in academics, sport, the arts and Olympiads will be celebrated here. We will only publish achievements that the school has verified.</p>
+        <div style="margin-top:28px" data-reveal="up"><a class="link link--under" href="/campus-life/#achievements">See the achievement showcase <Icon name="arrow" /></a></div>
+      </div>
+      <div class="board" data-reveal="scale">
+        <div class="board__head"><span class="label">Honour Board</span><span class="label">Shri S. T. Kadam Vidyalaya</span></div>
+        <Kadamba class="board__motif" size={220} />
+        <ol class="board__rows" role="list">
+          {['Academics', 'Sport', 'Arts'].map((c, i) => (
+            <li style={`--i:${i}`}><span class="board__cat">{c}</span><span class="board__ph">Student name</span><span class="board__ph board__ph--w">Achievement</span><span class="board__ph board__ph--s">Year</span></li>
+          ))}
+        </ol>
+        <p class="board__foot"><Pending label="Awaiting verified achievements from the school" /></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= NEWS ======================= -->
+  <section class="section news bg-paper2" aria-labelledby="news-title">
+    <div class="container">
+      <SectionHead kicker="Latest from school" title="Notices & <em>news</em>" lead="Demonstration notices show how updates will appear. Real notices will be published by the school office." split id="news-title" />
+      <div class="news__grid">
+        <a class="news__feature" href={`/resources/?q=${encodeURIComponent(latest[0].title.replace(/^Sample (notice|circular) — /, ''))}#notices`} data-reveal="up">
+          <div class="frame news__art" data-reveal="mask"><Art name="notice" tone="navy" /></div>
+          <p class="nrow__meta"><span class="nrow__cat" data-cat={latest[0].category}>{latest[0].category}</span><span>{dm(latest[0].date)}</span><span class="sample-tag">Sample</span></p>
+          <h3 class="h3">{latest[0].title}</h3>
+          <span class="link">Read notice <Icon name="arrow" /></span>
+        </a>
+        <ul class="news__list" role="list" data-reveal="stagger">
+          {latest.slice(1).map((n) => (
+            <li><a href={`/resources/?q=${encodeURIComponent(n.title.replace(/^Sample (notice|circular) — /, ''))}#notices`} class="news__item">
+              <time datetime={n.date}><b>{d(n.date).getDate()}</b>{d(n.date).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}</time>
+              <span><span class="nrow__cat" data-cat={n.category}>{n.category}</span><span class="news__t">{n.title}</span></span>
+              <Icon name="arrow" size={20} class="news__arrow" />
+            </a></li>
+          ))}
+        </ul>
+      </div>
+      <div class="news__cta" data-reveal="up"><Button href="/resources/#notices" variant="ghost">Open the Notice Centre</Button></div>
+    </div>
+  </section>
+
+  <!-- ======================= ADMISSIONS CTA ======================= -->
+  <section class="section adm bg-marigold" aria-labelledby="adm-title">
+    <div class="container">
+      <div class="adm__top">
+        <p class="label sec-head__kicker" data-reveal="fade">Admissions</p>
+        <h2 class="display adm__title" id="adm-title" data-reveal="words">Thinking of joining <em>STKV?</em></h2>
+      </div>
+      <ol class="adm__steps" role="list">
+        <li class="adm__line" aria-hidden="true" data-reveal="line" style="--delay:300ms"></li>
+        {steps.map((s, i) => (
+          <li class="adm__step" data-reveal="up" style={`--delay:${300 + i * 140}ms`}><span class="adm__n">{s.n}</span><h3 class="h4">{s.title}</h3><p>{s.text}</p></li>
+        ))}
+      </ol>
+      <div class="adm__ctas" data-reveal="up">
+        <Button href="/admissions/#enquiry">Start an enquiry</Button>
+        <Button href="/admissions/#visit" variant="ghost">Book a campus visit</Button>
+        <a class="link link--under" href="/admissions/#documents">Document checklist <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= IMPORTANT LINKS ======================= -->
+  <section class="section-tight links" aria-labelledby="links-title">
+    <div class="container">
+      <h2 class="label sec-head__kicker" id="links-title">Important links</h2>
+      <ul class="links__list" role="list" data-reveal="stagger">
+        <li><a href="/disclosure/"><span>CBSE Mandatory Public Disclosure</span><Icon name="arrow" size={22} /></a></li>
+        <li><a href="/academics/#centre"><span>Class-wise book lists</span><Icon name="arrow" size={22} /></a></li>
+        <li><a href={school.app.url} target="_blank" rel="noopener"><span>Parent / Student App</span><Icon name="external" size={22} /></a></li>
+        <li><a href={school.sarasUrl} target="_blank" rel="noopener"><span>CBSE SARAS affiliation record</span><Icon name="external" size={22} /></a></li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero { position: relative; min-height: 100svh; padding-top: calc(var(--header-h) + 38px + clamp(24px, 5vh, 64px)); display: grid; grid-template-rows: 1fr auto; overflow: clip; }
+  .hero::before { content: ''; position: absolute; inset: auto 0 0; height: 45%; background: linear-gradient(to top, var(--paper-2), transparent); pointer-events: none; }
+  .hero__grid { position: relative; display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 1000px) { .hero__grid { grid-template-columns: 1.05fr 0.95fr; gap: 24px; } }
+  .hero__kicker { display: inline-flex; align-items: center; gap: 14px; color: var(--ink-2); }
+  .hero__kicker-line { width: 36px; height: 1px; background: var(--marigold-600); }
+  .hero__title { margin-top: 26px; max-width: 9.5ch; }
+  .hero__title :global(em) { color: var(--navy-700); position: relative; }
+  .hero__lead { margin-top: 28px; }
+  .hero__ctas { margin-top: 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 28px; }
+
+  .hero__stage { position: relative; height: clamp(380px, 62vw, 640px); }
+  @media (min-width: 1000px) { .hero__stage { height: min(68vh, 680px); } }
+  .hero__stage > * { position: absolute; }
+  .hero__motif { inset: 50% auto auto 50%; width: 120%; translate: 0 0; transform: translate(-50%, -50%); color: var(--marigold-600); opacity: 0.55; pointer-events: none; }
+  .hero__motif :global(svg) { width: 100%; height: auto; }
+  .hero__arch .arch { box-shadow: var(--shadow-3); }
+  .hero__arch--a { width: 44%; left: 4%; top: 14%; z-index: 2; }
+  .hero__arch--b { width: 34%; right: 4%; top: 0; z-index: 1; }
+  .hero__arch--c { width: 38%; right: 12%; bottom: 0; z-index: 3; }
+  .hero__seal { left: 6%; bottom: 4%; z-index: 4; width: 116px; height: 116px; border-radius: 50%; background: var(--navy-900); color: var(--paper); display: grid; place-content: center; text-align: center; box-shadow: var(--shadow-2); }
+  .hero__seal-n { font-family: var(--font-display); font-size: 2rem; line-height: 1; letter-spacing: -0.03em; }
+  .hero__seal-s { margin-top: 6px; font-size: 0.5625rem; font-weight: 800; letter-spacing: 0.14em; opacity: 0.6; }
+
+  .hero__rail { position: relative; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px 24px; padding-block: 28px 36px; margin-top: 40px; border-top: 1px solid var(--line); }
+  .hero__rail > div { display: grid; gap: 6px; }
+  .hero__rail strong { font-weight: 700; }
+  @media (min-width: 760px) { .hero__rail { grid-template-columns: repeat(3, 1fr) auto; align-items: center; } }
+  .hero__scroll { display: none; align-items: center; gap: 14px; color: var(--ink-2); }
+  @media (min-width: 760px) { .hero__scroll { display: inline-flex; } }
+  .hero__scroll-track { position: relative; width: 22px; height: 36px; border-radius: 12px; box-shadow: inset 0 0 0 1.5px var(--line-strong); }
+  .hero__scroll-dot { position: absolute; left: 50%; top: 7px; width: 4px; height: 7px; margin-left: -2px; border-radius: 2px; background: var(--navy-900); animation: scroll-dot 2.2s var(--ease-in-out) 2s 4; }
+  @keyframes scroll-dot { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(12px); opacity: 0; } 100% { transform: translateY(0); opacity: 0; } }
+
+  /* ---------- Intro ---------- */
+  .intro__statement { margin-top: 32px; font-family: var(--font-display); font-size: clamp(1.75rem, 1.1rem + 2.7vw, 3.6rem); line-height: 1.16; letter-spacing: -0.025em; font-weight: 340; max-width: 24ch; }
+  .intro__statement :global(.w) { opacity: 0.2; transition: opacity 500ms var(--ease-out); overflow: visible; }
+  .intro__statement :global(.w.is-lit) { opacity: 1; }
+  .intro__facts { margin-top: clamp(56px, 8vw, 112px); display: grid; gap: 1px; background: var(--line); border-block: 1px solid var(--line); }
+  @media (min-width: 640px) { .intro__facts { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .intro__facts { grid-template-columns: repeat(3, 1fr) 1.3fr; } }
+  .intro__fact { display: grid; align-content: start; gap: 10px; padding: 32px 24px 32px 0; background: var(--bg); }
+  @media (min-width: 640px) { .intro__fact { padding: 40px 28px; } }
+  .intro__num { font-family: var(--font-display); font-size: var(--fs-stat); line-height: 0.9; letter-spacing: -0.04em; font-weight: 300; color: var(--navy-900); }
+  .intro__fact p { color: var(--ink-2); }
+  .intro__fact--cta { align-content: space-between; gap: 24px; }
+
+  /* ---------- Quick access ---------- */
+  .qa { transition: background-color 900ms var(--ease-in-out), color 900ms var(--ease-in-out); }
+  .qa.is-active { background: var(--navy-900); color: var(--paper); --text: var(--paper); --text-muted: rgb(246 241 231 / 0.72); --line: var(--line-inverse); }
+  .qa.is-active :global(.sec-head__kicker) { color: var(--marigold-300); }
+  .qa__grid { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 900px) { .qa__grid { grid-template-columns: repeat(4, 1fr); } }
+  .qa__feature { grid-column: 1 / -1; display: grid; gap: 20px; align-content: space-between; padding: 28px; border-radius: var(--r-2); background: var(--marigold-500); color: var(--navy-950); min-height: 260px; transition: transform var(--d-ui) var(--ease-out), box-shadow var(--d-ui); }
+  @media (min-width: 900px) { .qa__feature { grid-column: span 2; grid-row: span 2; } }
+  .qa__feature:hover { transform: translateY(-3px); box-shadow: 0 24px 40px -20px rgb(0 0 0 / 0.5); }
+  .qa__feature-head { display: flex; justify-content: space-between; align-items: center; }
+  .qa__events { display: grid; gap: 14px; }
+  .qa__events li { display: grid; grid-template-columns: 64px 1fr; gap: 16px; align-items: center; padding-top: 14px; border-top: 1px solid rgb(13 27 62 / 0.18); }
+  .qa__events time { display: grid; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
+  .qa__events time b { font-family: var(--font-display); font-size: 2.6rem; font-weight: 340; line-height: 0.95; letter-spacing: -0.03em; }
+  .qa__events li > span { font-family: var(--font-display); font-size: 1.35rem; line-height: 1.2; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .qa__events .sample-tag { background: rgb(13 27 62 / 0.12); color: var(--navy-950); }
+  .qa__more { display: inline-flex; gap: 10px; align-items: center; font-weight: 750; }
+  .qa__more :global(svg) { transition: transform var(--d-ui) var(--ease-out); }
+  .qa__feature:hover .qa__more :global(svg) { transform: translateX(5px); }
+
+  .qa__tile { position: relative; display: grid; align-content: start; gap: 6px; padding: 22px 20px 52px; min-height: 176px; border-radius: var(--r-2); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; transition: box-shadow var(--d-ui), background-color var(--d-ui); }
+  .qa__tile::before { content: ''; position: absolute; inset: 0; background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), rgb(226 163 43 / 0.16), transparent 60%); opacity: 0; transition: opacity var(--d-ui); }
+  .qa__tile:hover { box-shadow: inset 0 0 0 1px var(--marigold-500); background: rgb(255 253 248 / 0.04); }
+  .qa__tile:hover::before { opacity: 1; }
+  .qa__tile:active { transform: scale(0.985); }
+  .qa__ico { display: inline-grid; place-items: center; width: 48px; height: 48px; margin-bottom: 14px; border-radius: 50%; background: rgb(226 163 43 / 0.14); color: var(--marigold-600); }
+  .qa.is-active .qa__ico { color: var(--marigold-300); }
+  .qa__feature .qa__ico { background: rgb(13 27 62 / 0.1); color: var(--navy-950); margin: 0; }
+  .qa__t { font-weight: 750; font-size: 1.0625rem; letter-spacing: -0.01em; }
+  .qa__d { font-size: 0.875rem; color: var(--text-muted); }
+  .qa__tile :global(.qa__arrow) { position: absolute; left: 20px; bottom: 18px; opacity: 0.45; transition: transform var(--d-ui) var(--ease-out), opacity var(--d-ui); }
+  .qa__tile:hover :global(.qa__arrow) { transform: translateX(6px); opacity: 1; color: var(--marigold-300); }
+  /* Each icon has its own micro-animation */
+  .qa__ico :global(svg) { transition: transform 500ms var(--ease-out); }
+  :is(.qa__tile, .qa__feature):hover [data-anim='calendar'] :global(svg) { animation: ic-flip 700ms var(--ease-out); }
+  .qa__tile:hover [data-anim='notices'] :global(svg) { animation: ic-ring 800ms var(--ease-out); transform-origin: 50% 10%; }
+  .qa__tile:hover [data-anim='fees'] :global(svg) { animation: ic-coin 700ms var(--ease-in-out); }
+  .qa__tile:hover [data-anim='transport'] :global(svg) { animation: ic-drive 900ms var(--ease-in-out); }
+  .qa__tile:hover [data-anim='books'] :global(svg) { animation: ic-open 600ms var(--ease-out); }
+  .qa__tile:hover [data-anim='downloads'] :global(svg) { animation: ic-drop 700ms var(--ease-out); }
+  .qa__tile:hover [data-anim='app'] :global(svg) { animation: ic-buzz 500ms linear; }
+  .qa__tile:hover [data-anim='contact'] :global(svg) { animation: ic-ring 700ms var(--ease-out); }
+  @keyframes ic-flip { 40% { transform: perspective(80px) rotateX(-50deg); } }
+  @keyframes ic-ring { 15% { transform: rotate(14deg); } 35% { transform: rotate(-12deg); } 55% { transform: rotate(8deg); } 75% { transform: rotate(-4deg); } }
+  @keyframes ic-coin { 50% { transform: rotateY(180deg) scale(1.1); } }
+  @keyframes ic-drive { 45% { transform: translateX(16px); opacity: 0; } 46% { transform: translateX(-16px); opacity: 0; } }
+  @keyframes ic-open { 40% { transform: scaleX(1.25); } }
+  @keyframes ic-drop { 30% { transform: translateY(5px); } 60% { transform: translateY(-2px); } }
+  @keyframes ic-buzz { 20%, 60% { transform: translateX(-2px) rotate(-4deg); } 40%, 80% { transform: translateX(2px) rotate(4deg); } }
+
+  /* ---------- Highlights rail ---------- */
+  .hl__head { display: flex; justify-content: space-between; align-items: end; gap: 24px; }
+  .hl__ctrl { display: flex; gap: 8px; margin-bottom: clamp(40px, 5vw, 80px); }
+  .hl__ctrl .icon-btn { box-shadow: inset 0 0 0 1px var(--line-strong); }
+  .hl__ctrl .icon-btn:disabled { opacity: 0.3; cursor: default; }
+  .hl__track { display: grid; grid-auto-flow: column; grid-auto-columns: min(80vw, 360px); gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); padding-inline: max(var(--gutter), calc((100vw - var(--container)) / 2)); padding-bottom: 8px; scrollbar-width: none; cursor: grab; }
+  .hl__track::-webkit-scrollbar { display: none; }
+  .hl__track:global(.is-dragging) { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+  .hl__card { scroll-snap-align: start; display: grid; align-content: start; gap: 10px; }
+  .hl__art { margin-bottom: 14px; }
+  .hl__art :global(.art) { transition: transform 1200ms var(--ease-out); }
+  .hl__card:hover .hl__art :global(.art) { transform: scale(1.06); }
+  .hl__n { font-family: var(--font-display); font-style: italic; color: var(--marigold-600); font-size: 1.1rem; }
+  .hl__progress { margin-top: 40px; height: 2px; background: var(--line); }
+  .hl__progress span { display: block; height: 100%; background: var(--navy-900); transform-origin: left; transform: scaleX(calc(0.2 + var(--p, 0) * 0.8)); transition: transform 200ms linear; }
+
+  /* ---------- Academics ---------- */
+  .acad__panel { display: grid; gap: 40px; margin-top: 48px; align-items: center; }
+  @media (min-width: 900px) { .acad__panel { grid-template-columns: 1.3fr 0.7fr; gap: 80px; } }
+  .acad__range { font-family: var(--font-display); font-size: clamp(5rem, 3rem + 9vw, 11rem); line-height: 0.85; letter-spacing: -0.05em; font-weight: 300; color: var(--navy-900); }
+  .acad__range span { color: var(--marigold-600); font-style: italic; margin-inline: 0.05em; }
+  .acad__copy { display: grid; gap: 22px; justify-items: start; }
+  .acad__lead { max-width: 26ch; }
+  .acad__focus { display: grid; gap: 0; width: 100%; max-width: 560px; border-top: 1px solid var(--line); }
+  .acad__focus li { display: flex; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--line); font-weight: 600; }
+  .acad__focus span { font-family: var(--font-display); font-style: italic; color: var(--marigold-600); }
+  .acad__art { max-width: 380px; width: 100%; justify-self: center; }
+  .tab-panel:global(.is-entering) .acad__art { animation: arch-rise 800ms var(--ease-out) both; }
+  @keyframes arch-rise { from { clip-path: inset(100% 0 0 0 round 999px 999px 0 0); } to { clip-path: inset(0 0 0 0 round 999px 999px 0 0); } }
+
+  /* ---------- Activities ---------- */
+  .act__grid { display: grid; gap: 48px; }
+  @media (min-width: 1000px) { .act__grid { grid-template-columns: 1fr 0.85fr; gap: 96px; } }
+  .act__note { margin: -32px 0 32px; }
+  .act__list ol { border-top: 1px solid var(--line); margin-bottom: 40px; }
+  .act__row { display: grid; grid-template-columns: 44px 1fr; gap: 16px; padding: 28px 0; border-bottom: 1px solid var(--line); transition: opacity var(--d-panel); }
+  @media (min-width: 1000px) { .act__row { opacity: 0.38; padding: 36px 0; } .act__row:global(.is-active) { opacity: 1; } }
+  .act__i { font-family: var(--font-display); font-style: italic; color: var(--marigold-600); padding-top: 8px; }
+  .act__name { font-family: var(--font-display); font-size: clamp(1.75rem, 1.2rem + 2vw, 3rem); line-height: 1.05; letter-spacing: -0.03em; font-weight: 360; }
+  .act__line { margin-top: 10px; color: var(--ink-2); max-width: 44ch; }
+  .act__thumb { grid-column: 2; width: 120px; margin-top: 8px; }
+  @media (min-width: 1000px) { .act__thumb { display: none; } }
+  .act__stage { display: none; }
+  @media (min-width: 1000px) { .act__stage { display: block; } }
+  .act__sticky { position: sticky; top: calc(var(--header-h) + 48px); }
+  .act__frames { position: relative; box-shadow: var(--shadow-3); }
+  .act__frame { position: absolute; inset: 0; clip-path: inset(100% 0 0 0); transition: clip-path 900ms var(--ease-in-out); }
+  .act__frame :global(.art) { transform: scale(1.12); transition: transform 1400ms var(--ease-out); }
+  .act__frame:global(.is-on), .act__frame:global(.is-past) { clip-path: inset(0 0 0 0); }
+  .act__frame:global(.is-on) { z-index: 2; } .act__frame:global(.is-on) :global(.art) { transform: scale(1); }
+  .act__count { margin-top: 20px; display: flex; gap: 6px; align-items: baseline; font-family: var(--font-display); font-size: 1.5rem; }
+  .act__cap { margin-left: auto; font-family: var(--font-sans); font-size: 0.6875rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+
+  /* ---------- Facilities ---------- */
+  .fac__list { position: relative; }
+  .fac__list ul { border-top: 1px solid var(--line); }
+  .fac__row { position: relative; display: grid; grid-template-columns: 40px 1fr auto; gap: 6px 16px; align-items: baseline; padding: 26px 0; border-bottom: 1px solid var(--line); cursor: default; }
+  .fac__row::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--marigold-500); transform: scaleX(0); transform-origin: left; transition: transform 600ms var(--ease-out); }
+  .fac__row:hover::after { transform: scaleX(1); }
+  .fac__i { font-family: var(--font-display); font-style: italic; color: var(--marigold-300); }
+  .fac__name { font-family: var(--font-display); font-size: clamp(1.6rem, 1.1rem + 2.2vw, 3.2rem); line-height: 1.05; letter-spacing: -0.03em; font-weight: 340; transition: transform 500ms var(--ease-out), color var(--d-ui); }
+  .fac__row:hover .fac__name { transform: translateX(14px); color: var(--marigold-300); }
+  .fac__line { grid-column: 2; color: var(--text-muted); font-size: 0.9375rem; }
+  .fac__status { grid-row: 1; grid-column: 3; width: 14px; height: 14px; border-radius: 50%; border: 1.5px dashed rgb(246 241 231 / 0.55); }
+  .fac__thumb { grid-column: 2; width: 110px; margin-top: 12px; }
+  @media (min-width: 900px) { .fac__row { grid-template-columns: 60px 1fr 1fr auto; } .fac__line { grid-column: 3; } .fac__status { grid-column: 4; } .fac__thumb { display: none; } }
+  .fac__float { position: absolute; left: 0; top: 0; width: 260px; z-index: 3; pointer-events: none; opacity: 0; scale: 0.8; transition: opacity var(--d-ui) var(--ease-out), scale 500ms var(--ease-out); box-shadow: var(--shadow-3); }
+  .fac__float:global(.is-visible) { opacity: 1; scale: 1; }
+  .fac__slide { position: absolute; inset: 0; opacity: 0; transition: opacity 300ms var(--ease-out); }
+  .fac__slide:global(.is-on) { opacity: 1; }
+  .fac__cta { margin-top: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 28px; }
+
+  /* ---------- Achievements board ---------- */
+  .ach__grid { display: grid; gap: 56px; align-items: center; }
+  @media (min-width: 1000px) { .ach__grid { grid-template-columns: 0.9fr 1.1fr; gap: 96px; } }
+  .board { position: relative; overflow: hidden; padding: clamp(28px, 4vw, 48px); border-radius: var(--r-2); background: var(--navy-900); color: var(--paper); box-shadow: var(--shadow-3); }
+  .board::before { content: ''; position: absolute; inset: 10px; border: 1px solid rgb(226 163 43 / 0.4); border-radius: 3px; pointer-events: none; }
+  .board__head { display: flex; justify-content: space-between; gap: 12px; color: var(--marigold-300); flex-wrap: wrap; }
+  .board :global(.board__motif) { position: absolute; right: -50px; top: -50px; color: var(--marigold-500); opacity: 0.3; }
+  .board__rows { margin-top: 40px; display: grid; gap: 0; }
+  .board__rows li { display: grid; grid-template-columns: 1fr; gap: 10px; padding: 20px 0; border-bottom: 1px solid var(--line-inverse); }
+  @media (min-width: 640px) { .board__rows li { grid-template-columns: 110px 1fr 1.2fr 60px; align-items: center; gap: 16px; } }
+  .board__cat { font-family: var(--font-display); font-style: italic; color: var(--marigold-300); font-size: 1.15rem; }
+  .board__ph { height: 12px; border-radius: 6px; background: repeating-linear-gradient(90deg, rgb(246 241 231 / 0.18) 0 8px, transparent 8px 14px); font-size: 0; }
+  .board__ph--s { max-width: 60px; }
+  .board__foot { margin-top: 28px; }
+
+  /* ---------- News ---------- */
+  .news__grid { display: grid; gap: 40px; }
+  @media (min-width: 1000px) { .news__grid { grid-template-columns: 1fr 1.1fr; gap: 64px; } }
+  .news__feature { display: grid; gap: 16px; align-content: start; }
+  .news__art { aspect-ratio: 16 / 10; }
+  .news__art :global(.art) { transition: transform 1200ms var(--ease-out); }
+  .news__feature:hover .news__art :global(.art) { transform: scale(1.05); }
+  .news__feature .h3 { max-width: 24ch; }
+  .news__feature:hover :global(.link) { background-size: 100% 1.5px; background-position: left bottom; }
+  .news__list { border-top: 1px solid var(--line); }
+  .news__item { position: relative; display: grid; grid-template-columns: 88px 1fr 24px; gap: 20px; align-items: center; padding: 26px 8px; border-bottom: 1px solid var(--line); overflow: hidden; isolation: isolate; }
+  .news__item::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--white); transform: scaleY(0); transform-origin: bottom; transition: transform 500ms var(--ease-out); }
+  .news__item:hover::before { transform: scaleY(1); }
+  .news__item time { display: grid; font-size: 0.6875rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+  .news__item time b { font-family: var(--font-display); font-size: 2.2rem; color: var(--ink); font-weight: 340; line-height: 1; letter-spacing: -0.03em; }
+  .news__item > span { display: grid; gap: 6px; }
+  .news__t { font-weight: 700; line-height: 1.35; }
+  .news__item :global(.news__arrow) { color: var(--marigold-600); transform: translateX(-10px); opacity: 0; transition: transform var(--d-ui) var(--ease-out), opacity var(--d-ui); }
+  .news__item:hover :global(.news__arrow) { transform: none; opacity: 1; }
+  .news__cta { margin-top: 48px; }
+
+  /* ---------- Admissions CTA ---------- */
+  .adm__title { margin-top: 20px; max-width: 12ch; }
+  .adm__title :global(em) { color: var(--white); }
+  .adm__steps { position: relative; display: grid; gap: 32px; margin-top: clamp(56px, 7vw, 104px); }
+  @media (min-width: 900px) { .adm__steps { grid-template-columns: repeat(4, 1fr); gap: 40px; padding-top: 36px; } }
+  .adm__line { display: none; }
+  @media (min-width: 900px) { .adm__line { display: block; position: absolute; left: 0; right: 0; top: 0; height: 1.5px; background: var(--navy-950); } }
+  .adm__step { display: grid; gap: 10px; align-content: start; }
+  .adm__n { font-family: var(--font-display); font-size: 3rem; font-weight: 300; line-height: 1; letter-spacing: -0.03em; }
+  .adm__step p { color: rgb(13 27 62 / 0.78); font-size: 0.9375rem; }
+  .adm__ctas { margin-top: 56px; display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: center; }
+  .adm :global(.btn--ghost) { --btn-fg: var(--navy-950); box-shadow: inset 0 0 0 1px rgb(13 27 62 / 0.4); }
+
+  /* ---------- Important links ---------- */
+  .links__list { margin-top: 28px; display: grid; border-top: 1px solid var(--line); }
+  @media (min-width: 900px) { .links__list { grid-template-columns: 1fr 1fr; column-gap: 48px; } }
+  .links__list a { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 26px 0; border-bottom: 1px solid var(--line); font-family: var(--font-display); font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem); letter-spacing: -0.02em; }
+  .links__list a::after { content: ''; position: absolute; left: 0; bottom: -1px; height: 1.5px; width: 100%; background: var(--navy-900); transform: scaleX(0); transform-origin: right; transition: transform 600ms var(--ease-out); }
+  .links__list a:hover::after { transform: scaleX(1); transform-origin: left; }
+  .links__list a :global(svg) { color: var(--marigold-600); transition: transform var(--d-ui) var(--ease-out); }
+  .links__list a:hover :global(svg) { transform: translateX(6px); }
+</style>
+
+<script>
+  // Spotlight that follows the pointer on quick-access tiles (cheap: CSS variables only)
+  document.querySelectorAll<HTMLElement>('.qa__tile').forEach((t) => t.addEventListener('pointermove', (e) => {
+    const r = t.getBoundingClientRect(); t.style.setProperty('--mx', `${e.clientX - r.left}px`); t.style.setProperty('--my', `${e.clientY - r.top}px`);
+  }));
+</script>

@@ -1,0 +1,279 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import SubNav from '../components/SubNav.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Icon from '../components/Icon.astro';
+import Button from '../components/Button.astro';
+import Pending from '../components/Pending.astro';
+import { steps, documentChecklist, faqs, enquiryClasses } from '../data/admissions';
+import { school } from '../data/site';
+
+const err = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.1"/></svg>';
+const ok = '<svg class="field__ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
+---
+<Base title="Admissions" description="Admissions at Shri S. T. Kadam Vidyalaya, Palghar: eligibility, process, required documents, online enquiry and campus visits.">
+  <PageHero crumb="Admissions" kicker="Admissions" title="Your child’s next chapter <em>starts here.</em>" lead="Everything a family needs to apply — clearly explained, step by step, with an enquiry you can complete in a few minutes." art="book" tone="clay">
+    <div class="hero-ctas" data-reveal="up" style="--delay:760ms"><Button href="#enquiry">Start an enquiry</Button><Button href="#visit" variant="ghost">Book a campus visit</Button></div>
+  </PageHero>
+  <SubNav items={[{ id: 'overview', label: 'Overview & Eligibility' }, { id: 'process', label: 'Process' }, { id: 'documents', label: 'Documents' }, { id: 'enquiry', label: 'Online Enquiry' }, { id: 'visit', label: 'Campus Visit' }, { id: 'faq', label: 'FAQs' }]} />
+
+  <section class="section" id="overview" aria-labelledby="ov-t">
+    <div class="container">
+      <SectionHead kicker="Overview & Eligibility" title="Before you <em>apply</em>" id="ov-t" />
+      <dl class="ov" data-reveal="stagger">
+        <div class="ov__i"><dt class="label">Classes</dt><dd class="ov__v">1 – 10</dd><dd class="small muted">CBSE affiliated at the Secondary level.</dd></div>
+        <div class="ov__i"><dt class="label">Board</dt><dd class="ov__v">CBSE</dd><dd class="small muted">Affiliation No. {school.affiliationNo.value}</dd></div>
+        <div class="ov__i"><dt class="label">Age & eligibility</dt><dd class="ov__p"><Pending label="Rules to be migrated" source="The school's published admission rules (legacy website) must be copied here verbatim." /></dd><dd class="small muted">Set by the school’s official admission rules.</dd></div>
+        <div class="ov__i"><dt class="label">Admission dates</dt><dd class="ov__p"><Pending label="Announced by school" /></dd><dd class="small muted">Watch the Notice Centre for dates.</dd></div>
+        <div class="ov__i"><dt class="label">Fees</dt><dd class="ov__p"><a class="link link--under" href="/disclosure/#academics">Fee structure <Icon name="arrow" /></a></dd><dd class="small muted">Published under CBSE Mandatory Disclosure.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section bg-paper2" id="process" aria-labelledby="pr-t">
+    <div class="container proc">
+      <div class="proc__head">
+        <SectionHead kicker="Admission Process" title="Four simple <em>steps</em>" lead="A typical admission journey. The school will confirm the exact steps for each class." id="pr-t" />
+      </div>
+      <ol class="proc__list" role="list" data-proc>
+        <li class="proc__rail" aria-hidden="true"><span data-proc-fill></span></li>
+        {steps.map((s, i) => (
+          <li class="proc__step" data-reveal="up" style={`--delay:${i * 80}ms`}>
+            <span class="proc__n">{s.n}</span>
+            <div><h3 class="h3">{s.title}</h3><p class="muted">{s.text}</p></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="documents" aria-labelledby="doc-t">
+    <div class="container docs">
+      <div>
+        <SectionHead kicker="Required Documents" title="Your document <em>checklist</em>" id="doc-t" />
+        <p class="prose" data-reveal="up">Tick documents off as you gather them — your progress stays in this browser. This is a typical list for CBSE schools; the school will publish its final list.</p>
+      </div>
+      <div class="cl" data-checklist data-reveal="up">
+        <div class="cl__head">
+          <p class="h4" data-cl-count aria-live="polite">0 of {documentChecklist.length} ready</p>
+          <button type="button" class="link small" data-cl-reset>Reset</button>
+        </div>
+        <div class="cl__bar" data-cl-bar><span></span></div>
+        <ul role="list" class="cl__list">
+          {documentChecklist.map((d) => (
+            <li><label class="check"><input type="checkbox" value={d.id} /><span class="check__box" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span><span class="cl__t">{d.label}</span><span class="small muted">{d.hint}</span></span></label></li>
+          ))}
+        </ul>
+        <p class="cl__done"><Icon name="check" size={18} /> All set — confirm the final list with the school office.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-paper2" id="enquiry" aria-labelledby="en-t">
+    <div class="container enq">
+      <div class="enq__side">
+        <SectionHead kicker="Online Enquiry" title="Tell us about <em>your child</em>" id="en-t" />
+        <div class="notice-box" data-reveal="up"><Icon name="info" size={20} /><span><strong>Demonstration form.</strong> It validates and shows a confirmation, but nothing is sent to the school. For a real enquiry, please contact the school office.</span></div>
+        <ul class="enq__why" role="list" data-reveal="stagger">
+          <li><Icon name="clock" size={20} /> Takes about 3 minutes</li>
+          <li><Icon name="shield" size={20} /> Only the details the school needs</li>
+          <li><Icon name="check" size={20} /> Review everything before you submit</li>
+        </ul>
+      </div>
+      <div class="enq__card" data-reveal="up">
+        <form class="enq__form" data-validate aria-labelledby="en-t">
+          <ol class="steps-nav" role="list">
+            <li data-step-label class="is-current"><span>Student</span></li><li data-step-label><span>Parent</span></li><li data-step-label><span>Preferences</span></li><li data-step-label><span>Review</span></li>
+          </ol>
+          <div class="form-progress" data-progress></div>
+
+          <fieldset data-step>
+            <legend>About the student</legend>
+            <p class="small muted step-hint">Step 1 of 4 · Fields marked <span class="req">*</span> are required.</p>
+            <div class="form-grid form-grid--2">
+              <div class="field span-2"><label class="field__label" for="sName">Student’s full name <span class="req">*</span></label><input class="input" id="sName" name="studentName" required minlength="2" autocomplete="off" data-review-label="Student" data-msg-required="Please enter the student’s full name." /><Fragment set:html={ok} /><p class="field__error" aria-live="polite"><span><Fragment set:html={err} /></span></p></div>
+              <div class="field"><label class="field__label" for="dob">Date of birth <span class="req">*</span></label><input class="input" type="date" id="dob" name="dob" required max={new Date().toISOString().slice(0, 10)} data-review-label="Date of birth" data-msg-required="Please enter the date of birth." /><p class="field__error" aria-live="polite"><span><Fragment set:html={err} /></span></p></div>
+              <div class="field"><label class="field__label" for="cur">Current school <span class="muted">(optional)</span></label><input class="input" id="cur" name="currentSchool" data-review-label="Current school" /></div>
+              <div class="field span-2 radio-group" data-radio-group="classApplying" role="radiogroup" aria-labelledby="cls-l">
+                <span class="field__label" id="cls-l">Class applying for <span class="req">*</span></span>
+                <div class="choices">{enquiryClasses.map((c, i) => <label class="choice"><input type="radio" name="classApplying" value={c} required={i === 0} data-review-label="Class applying for" /><span>{c.replace('Class ', '')}</span></label>)}</div>
+                <p class="field__error"><span><Fragment set:html={err} /> Please choose a class.</span></p>
+              </div>
+            </div>
+            <div class="step-actions"><span></span><Button type="button" data-next>Continue</Button></div>
+          </fieldset>
+
+          <fieldset data-step>
+            <legend>Parent or guardian</legend>
+            <p class="small muted step-hint">Step 2 of 4 · How the school can reach you.</p>
+            <div class="form-grid form-grid--2">
+              <div class="field"><label class="field__label" for="pName">Full name <span class="req">*</span></label><input class="input" id="pName" name="parentName" required minlength="2" autocomplete="name" data-review-label="Parent / guardian" data-msg-required="Please enter your name." /><Fragment set:html={ok} /><p class="field__error" aria-live="polite"><span><Fragment set:html={err} /></span></p></div>
+              <div class="field"><label class="field__label" for="rel">Relationship <span class="req">*</span></label><select class="select" id="rel" name="relationship" required data-review-label="Relationship" data-msg-required="Please choose your relationship to the student."><option value="">Choose…</option><option>Mother</option><option>Father</option><option>Guardian</option></select><Fragment set:html={ok} /><p class="field__error" aria-live="polite"><span><Fragment set:html={err} /></span></p></div>
+              <div class="field"><label class="field__label" for="mob">Mobile number <span class="req">*</span></label><input class="input" id="mob" name="mobile" type="tel" inputmode="numeric" required pattern="[6-9][0-9]{9}" autocomplete="tel-national" data-phone data-review-label="Mobile" data-msg-pattern="Enter a 10-digit Indian mobile number starting with 6, 7, 8 or 9." data-msg-required="Please enter a mobile number." /><Fragment set:html={ok} /><span class="field__hint">10 digits, without +91</span><p class="field__error" aria-live="polite"><span><Fragment set:html={err} /></span></p></div>
+              <div class="field"><label class="field__label" for="em">Email <span class="muted">(optional)</span></label><input class="input" id="em" name="email" type="email" autocomplete="email" data-review-label="Email" /><Fragment set:html={ok} /><p class="field__error" aria-live="polite"><span><Fragment set:html={err} /></span></p></div>
+            </div>
+            <div class="step-actions"><Button type="button" variant="ghost" icon={false} data-back>Back</Button><Button type="button" data-next>Continue</Button></div>
+          </fieldset>
+
+          <fieldset data-step>
+            <legend>Preferences</legend>
+            <p class="small muted step-hint">Step 3 of 4 · Help the school respond the right way.</p>
+            <div class="form-grid">
+              <div class="field radio-group" data-radio-group="contactBy" role="radiogroup" aria-labelledby="cb-l">
+                <span class="field__label" id="cb-l">Preferred contact <span class="req">*</span></span>
+                <div class="choices">{['Phone call', 'WhatsApp', 'Email'].map((c, i) => <label class="choice"><input type="radio" name="contactBy" value={c} required={i === 0} data-review-label="Preferred contact" /><span>{c}</span></label>)}</div>
+                <p class="field__error"><span><Fragment set:html={err} /> Please choose how we should contact you.</span></p>
+              </div>
+              <div class="field"><label class="field__label" for="msg">Questions or notes <span class="muted">(optional)</span></label><textarea class="textarea" id="msg" name="message" maxlength="600" data-review-label="Notes"></textarea><span class="field__hint">Up to 600 characters</span></div>
+              <div class="field"><label class="check"><input type="checkbox" name="consent" required data-msg-required="Please confirm to continue." /><span class="check__box" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="small">I agree that the school may contact me about this enquiry. <span class="req">*</span></span></label><p class="field__error" aria-live="polite"><span><Fragment set:html={err} /></span></p></div>
+            </div>
+            <div class="step-actions"><Button type="button" variant="ghost" icon={false} data-back>Back</Button><Button type="button" data-next>Review</Button></div>
+          </fieldset>
+
+          <fieldset data-step data-review>
+            <legend>Review your enquiry</legend>
+            <p class="small muted step-hint">Step 4 of 4 · Check your details, then submit.</p>
+            <dl class="review" data-review-out></dl>
+            <div class="step-actions"><Button type="button" variant="ghost" icon={false} data-back>Back</Button><Button type="submit" icon="send">Submit enquiry</Button></div>
+          </fieldset>
+        </form>
+
+        <div class="success" data-success hidden>
+          <span class="success__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+          <h3 class="h3" tabindex="-1">Thank you<span data-name></span>.</h3>
+          <p class="muted">Your enquiry has been recorded <strong>in this demonstration only</strong>.</p>
+          <p class="success__ref" data-ref>DEMO-00000</p>
+          <div class="notice-box"><Icon name="info" size={20} /><span>Nothing was sent to the school. When the website goes live, this step will deliver your enquiry to the admissions office.</span></div>
+          <button type="button" class="link link--under" data-reset>Start a new enquiry</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="visit" aria-labelledby="vi-t">
+    <div class="container visit">
+      <div class="visit__copy">
+        <SectionHead kicker="Campus Visit" title="See STKV <em>for yourself</em>" id="vi-t" />
+        <p class="prose" data-reveal="up">Choose a preferred date and time and the school can confirm your visit. Visits are best scheduled during office hours (<Pending label="timings to be provided" />).</p>
+        <div style="margin-top:32px" data-reveal="up"><Button data-open-modal="visit-modal" icon="calendar">Request a visit</Button></div>
+      </div>
+      <a class="visit__map" href={school.mapUrl} target="_blank" rel="noopener" data-reveal="scale">
+        <svg viewBox="0 0 400 260" aria-hidden="true" class="visit__svg"><rect width="400" height="260" fill="#e3edf8" /><path d="M-10 190 C80 170 160 210 230 160 S360 90 420 110" stroke="#fffdf8" stroke-width="26" fill="none" /><path d="M-10 190 C80 170 160 210 230 160 S360 90 420 110" stroke="#c7d1ea" stroke-width="2" stroke-dasharray="8 10" fill="none" /><path d="M140 -10 L170 270" stroke="#fffdf8" stroke-width="14" /><g fill="#c7d1ea">{Array.from({ length: 18 }, (_, i) => <rect x={20 + (i % 6) * 62} y={20 + Math.floor(i / 6) * 70} width="34" height="22" rx="3" opacity=".7" />)}</g></svg>
+        <span class="visit__pin"><Icon name="map" size={26} /></span>
+        <span class="visit__lbl"><strong>Palghar–Boisar Road</strong><span class="small">Open in Google Maps ↗ · stylised map, not to scale</span></span>
+      </a>
+    </div>
+  </section>
+
+  <dialog class="modal" id="visit-modal" aria-labelledby="vm-title">
+    <div class="modal__head"><p class="h4" id="vm-title">Request a campus visit</p><button class="icon-btn" type="button" data-close-modal aria-label="Close"><Icon name="close" /></button></div>
+    <div class="modal__body">
+      <form data-validate class="form-grid">
+        <div class="field"><label class="field__label" for="vName">Your name <span class="req">*</span></label><input class="input" id="vName" name="parentName" required minlength="2" autocomplete="name" /><Fragment set:html={ok} /><p class="field__error"><span><Fragment set:html={err} /></span></p></div>
+        <div class="field"><label class="field__label" for="vMob">Mobile number <span class="req">*</span></label><input class="input" id="vMob" type="tel" inputmode="numeric" required pattern="[6-9][0-9]{9}" data-phone data-msg-pattern="Enter a 10-digit Indian mobile number." /><Fragment set:html={ok} /><p class="field__error"><span><Fragment set:html={err} /></span></p></div>
+        <div class="field"><label class="field__label" for="vDate">Preferred date <span class="req">*</span></label><input class="input" id="vDate" type="date" required data-future data-msg-min="Please choose a date from tomorrow onwards." /><p class="field__error"><span><Fragment set:html={err} /></span></p></div>
+        <div class="field radio-group" data-radio-group="slot" role="radiogroup" aria-labelledby="slot-l"><span class="field__label" id="slot-l">Preferred time <span class="req">*</span></span><div class="choices">{['Morning', 'Midday', 'Afternoon'].map((s, i) => <label class="choice"><input type="radio" name="slot" value={s} required={i === 0} /><span>{s}</span></label>)}</div><p class="field__error"><span><Fragment set:html={err} /> Please choose a time.</span></p></div>
+        <p class="small muted">Demonstration — the request is not sent to the school.</p>
+        <Button type="submit" block icon="send">Send request</Button>
+      </form>
+      <div class="success" data-success hidden>
+        <span class="success__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+        <h3 class="h3" tabindex="-1">Visit request noted<span data-name></span></h3>
+        <p class="muted">Reference <strong data-ref>DEMO</strong> — demonstration only; nothing was sent.</p>
+        <button type="button" class="link link--under" data-close-modal>Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <section class="section bg-paper2" id="faq" aria-labelledby="faq-t">
+    <div class="container faq">
+      <SectionHead kicker="Admission FAQs" title="Questions families <em>often ask</em>" id="faq-t" />
+      <div class="acc" data-acc-single>
+        {faqs.map((f) => (
+          <div class="acc__item" data-reveal="up">
+            <h3><button class="acc__btn" type="button" aria-expanded="false" data-acc-btn>{f.q}<span class="acc__icon" aria-hidden="true"></span></button></h3>
+            <div class="acc__panel"><div><p>{f.a}</p></div></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero-ctas { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 12px; }
+  .ov { display: grid; gap: 1px; background: var(--line); border-block: 1px solid var(--line); }
+  @media (min-width: 700px) { .ov { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .ov { grid-template-columns: repeat(5, 1fr); } }
+  .ov__i { display: grid; gap: 12px; align-content: start; padding: 32px 24px 32px 0; background: var(--bg); }
+  @media (min-width: 700px) { .ov__i { padding: 36px 24px; } }
+  .ov__i dt { color: var(--marigold-600); }
+  .ov__v { font-family: var(--font-display); font-size: clamp(2.6rem, 2rem + 2vw, 3.6rem); line-height: 1; letter-spacing: -0.03em; font-weight: 320; }
+  .ov__p { min-height: 3.6rem; display: flex; align-items: center; }
+
+  .proc { display: grid; gap: 40px; }
+  @media (min-width: 1000px) { .proc { grid-template-columns: 0.8fr 1.2fr; gap: 80px; } .proc__head { position: sticky; top: 180px; align-self: start; } }
+  .proc__list { position: relative; display: grid; gap: 48px; padding-left: 72px; }
+  .proc__rail { position: absolute; left: 22px; top: 10px; bottom: 10px; width: 2px; background: var(--paper-3); }
+  .proc__rail span { position: absolute; inset: 0; background: var(--navy-900); transform-origin: top; transform: scaleY(var(--p, 0)); }
+  .proc__step { position: relative; display: grid; gap: 8px; }
+  .proc__n { position: absolute; left: -72px; top: 0; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--paper-2); box-shadow: inset 0 0 0 2px var(--navy-900); font-weight: 800; font-size: 0.8125rem; transition: background-color var(--d-panel), color var(--d-panel); }
+  .proc__step:global(.is-lit) .proc__n { background: var(--navy-900); color: var(--white); }
+  .proc__step .muted { margin-top: 8px; max-width: 46ch; }
+
+  .docs { display: grid; gap: 40px; }
+  @media (min-width: 1000px) { .docs { grid-template-columns: 0.9fr 1.1fr; gap: 80px; align-items: start; } }
+  .cl { padding: clamp(24px, 3vw, 40px); border-radius: var(--r-2); background: var(--white); box-shadow: var(--shadow-1); }
+  .cl__head { display: flex; justify-content: space-between; align-items: center; }
+  .cl__bar { height: 6px; margin: 16px 0 8px; border-radius: 3px; background: var(--paper-2); overflow: hidden; }
+  .cl__bar span { display: block; height: 100%; background: var(--sage-600); transform-origin: left; transform: scaleX(var(--p, 0)); transition: transform 600ms var(--ease-snap); }
+  .cl__list { display: grid; }
+  .cl__list li { padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .cl__list li > label > span:last-child { display: grid; gap: 2px; }
+  .cl__t { font-weight: 650; transition: color var(--d-ui); }
+  .cl__list input:checked ~ span .cl__t { color: var(--ink-3); text-decoration: line-through; text-decoration-color: var(--sage-600); }
+  .cl__done { display: flex; gap: 10px; align-items: center; margin-top: 16px; color: var(--sage-600); font-weight: 700; max-height: 0; opacity: 0; overflow: hidden; transition: max-height var(--d-panel) var(--ease-out), opacity var(--d-panel); }
+  .cl:global(.is-complete) .cl__done { max-height: 60px; opacity: 1; }
+
+  .enq { display: grid; gap: 48px; }
+  @media (min-width: 1100px) { .enq { grid-template-columns: 0.7fr 1.3fr; gap: 72px; align-items: start; } .enq__side { position: sticky; top: 180px; } }
+  .enq__side .notice-box { margin-top: -16px; }
+  .enq__why { display: grid; gap: 14px; margin-top: 32px; }
+  .enq__why li { display: flex; gap: 12px; align-items: center; font-weight: 650; color: var(--ink-2); }
+  .enq__why :global(svg) { color: var(--marigold-600); }
+  .enq__card { padding: clamp(24px, 4vw, 56px); border-radius: var(--r-2); background: var(--white); box-shadow: var(--shadow-2); scroll-margin-top: 140px; }
+  .enq__form { scroll-margin-top: 160px; }
+  .step-hint { margin-bottom: 28px; }
+  .req { color: var(--clay-600); }
+
+  .visit { display: grid; gap: 48px; align-items: center; }
+  @media (min-width: 1000px) { .visit { grid-template-columns: 1fr 1fr; gap: 80px; } }
+  .visit__map { position: relative; display: block; border-radius: var(--r-2); overflow: hidden; box-shadow: var(--shadow-2); }
+  .visit__svg { width: 100%; height: auto; transition: transform 1200ms var(--ease-out); }
+  .visit__map:hover .visit__svg { transform: scale(1.04); }
+  .visit__pin { position: absolute; left: 56%; top: 46%; width: 56px; height: 56px; margin: -56px 0 0 -28px; display: grid; place-items: center; border-radius: 50% 50% 50% 0; rotate: -45deg; background: var(--navy-900); color: var(--marigold-300); box-shadow: var(--shadow-2); animation: pin-drop 900ms var(--ease-back) both; }
+  .visit__pin :global(svg) { rotate: 45deg; }
+  .visit__map:hover .visit__pin { animation: pin-bob 800ms var(--ease-in-out); }
+  @keyframes pin-drop { from { transform: translateY(-40px); opacity: 0; } }
+  @keyframes pin-bob { 50% { transform: translate(4px, -8px); } }
+  .visit__lbl { position: absolute; left: 16px; bottom: 16px; right: 16px; display: grid; gap: 2px; padding: 14px 16px; border-radius: var(--r-2); background: rgb(255 253 248 / 0.94); backdrop-filter: blur(6px); }
+
+  .faq { display: grid; gap: 24px; }
+  @media (min-width: 1000px) { .faq { grid-template-columns: 0.8fr 1.2fr; gap: 80px; } }
+</style>
+
+<script>
+  // Process rail fills with scroll; steps light up as the rail passes them
+  const list = document.querySelector<HTMLElement>('[data-proc]');
+  if (list) {
+    const fill = list.querySelector<HTMLElement>('[data-proc-fill]')!;
+    const stepsEls = Array.from(list.querySelectorAll<HTMLElement>('.proc__step'));
+    const upd = () => {
+      const r = list.getBoundingClientRect(); const line = innerHeight * 0.6;
+      fill.style.setProperty('--p', Math.min(1, Math.max(0, (line - r.top) / r.height)).toFixed(3));
+      stepsEls.forEach((s) => s.classList.toggle('is-lit', s.getBoundingClientRect().top < line));
+    };
+    addEventListener('scroll', () => requestAnimationFrame(upd), { passive: true }); upd();
+  }
+</script>

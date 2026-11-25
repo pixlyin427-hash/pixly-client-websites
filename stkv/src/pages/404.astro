@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import Kadamba from '../components/Kadamba.astro';
+---
+<Base title="Page not found">
+  <section class="nf">
+    <Kadamba class="nf__m" size={520} />
+    <div class="container nf__in">
+      <p class="label" style="color:var(--marigold-600)">Error 404</p>
+      <h1 class="display" data-reveal="words">This page has <em>wandered off.</em></h1>
+      <p class="lead">The page may have moved. Try search, or head back to the homepage.</p>
+      <div class="nf__ctas"><Button href="/">Back to home</Button><button class="btn btn--ghost" type="button" data-search-open><span class="btn__label">Search the site</span></button></div>
+    </div>
+  </section>
+</Base>
+<style>
+  .nf { position: relative; min-height: 90svh; display: grid; align-items: center; overflow: clip; padding-top: 140px; }
+  .nf :global(.nf__m) { position: absolute; right: -120px; top: 50%; translate: 0 -50%; color: var(--marigold-600); opacity: 0.4; width: min(80vw, 640px); height: auto; }
+  .nf__in { position: relative; display: grid; gap: 24px; justify-items: start; }
+  .nf h1 { max-width: 12ch; }
+  .nf__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+</style>

@@ -1,0 +1,48 @@
+---
+/** Sticky in-page section navigation with scroll-spy and a sliding active marker. */
+interface Props { items: { id: string; label: string }[] }
+const { items } = Astro.props;
+---
+<nav class="subnav" aria-label="On this page" data-subnav>
+  <div class="container subnav__in">
+    <span class="label subnav__label">On this page</span>
+    <ul role="list" class="subnav__list">
+      {items.map((i) => <li><a href={`#${i.id}`} data-spy={i.id}>{i.label}</a></li>)}
+      <li class="subnav__ink" aria-hidden="true"></li>
+    </ul>
+  </div>
+</nav>
+<style>
+  .subnav { position: sticky; top: 0; z-index: 30; background: rgb(246 241 231 / 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-block: 1px solid var(--line); transition: top 520ms var(--ease-snap); }
+  :global(html:has(.hdr:not(.is-hidden))) .subnav { top: var(--header-h); }
+  .subnav__in { display: flex; align-items: center; gap: 24px; }
+  .subnav__label { color: var(--ink-3); flex: none; display: none; }
+  @media (min-width: 900px) { .subnav__label { display: block; } }
+  .subnav__list { position: relative; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+  .subnav__list:global(.is-overflowing) { -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); mask-image: linear-gradient(90deg, #000 88%, transparent); }
+  .subnav__list::-webkit-scrollbar { display: none; }
+  .subnav__list a { display: block; padding: 16px 12px; white-space: nowrap; font-size: 0.875rem; font-weight: 700; color: var(--ink-2); transition: color var(--d-fast); }
+  .subnav__list a:hover, .subnav__list a[aria-current='true'] { color: var(--ink); }
+  .subnav__ink { position: absolute; left: 0; bottom: 0; height: 2px; width: var(--w, 0); transform: translateX(var(--x, 0)); background: var(--marigold-500); transition: transform 420ms var(--ease-snap), width 420ms var(--ease-snap); }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-subnav]').forEach((nav) => {
+    const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>('[data-spy]'));
+    const ink = nav.querySelector<HTMLElement>('.subnav__ink')!;
+    const list = nav.querySelector<HTMLElement>('.subnav__list')!;
+    const set = (id: string) => {
+      const a = links.find((l) => l.dataset.spy === id); if (!a) return;
+      links.forEach((l) => l.setAttribute('aria-current', String(l === a)));
+      ink.style.setProperty('--x', `${a.offsetLeft}px`); ink.style.setProperty('--w', `${a.offsetWidth}px`);
+      list.scrollTo({ left: a.offsetLeft - 40, behavior: 'smooth' });
+    };
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) set(e.target.id); }), { rootMargin: '-35% 0px -60% 0px' });
+    links.forEach((l) => { const s = document.getElementById(l.dataset.spy!); if (s) io.observe(s); });
+    const first = document.getElementById(links[0].dataset.spy!);
+    const atTop = () => { if (first && first.getBoundingClientRect().top > innerHeight * 0.4) set(links[0].dataset.spy!); };
+    const fit = () => list.classList.toggle('is-overflowing', list.scrollWidth > list.clientWidth + 2);
+    addEventListener('scroll', () => requestAnimationFrame(atTop), { passive: true });
+    addEventListener('resize', fit, { passive: true });
+    fit(); set(links[0].dataset.spy!);
+  });
+</script>

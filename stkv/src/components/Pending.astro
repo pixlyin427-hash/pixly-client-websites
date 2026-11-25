@@ -1,0 +1,7 @@
+---
+/** Honest placeholder for information the school has not yet provided. */
+import { PENDING_LABEL } from '../data/site';
+interface Props { label?: string; source?: string }
+const { label = PENDING_LABEL, source } = Astro.props;
+---
+<span class="pending" data-tip={source ?? 'This website is a demonstration. The school will supply this information.'} tabindex="0">{label}</span>

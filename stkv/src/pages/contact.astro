@@ -1,0 +1,132 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import SubNav from '../components/SubNav.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Icon from '../components/Icon.astro';
+import Button from '../components/Button.astro';
+import Fact from '../components/Fact.astro';
+import Pending from '../components/Pending.astro';
+import { school } from '../data/site';
+import { enquiryClasses } from '../data/admissions';
+
+const err = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.1"/></svg>';
+const ok = '<svg class="field__ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
+
+// Assistant answers come ONLY from verified site data or say plainly that information is pending.
+const intents = [
+  { k: ['affiliation', 'affiliated', 'cbse', 'number', 'code', 'board'], a: `STKV is affiliated to CBSE at the Secondary level. Affiliation No. ${school.affiliationNo.value}, valid ${school.affiliationPeriod.value} (CBSE SARAS).`, link: ['/disclosure/', 'Mandatory Disclosure'] },
+  { k: ['address', 'where', 'location', 'located', 'map', 'reach', 'direction'], a: `The school is on ${school.address.value}.`, link: [school.mapUrl, 'Open in Google Maps'] },
+  { k: ['admission', 'admissions', 'apply', 'enquiry', 'join', 'seat'], a: 'You can start an admission enquiry online in about three minutes (demonstration form). Admission dates and rules will be published by the school.', link: ['/admissions/#enquiry', 'Start an enquiry'] },
+  { k: ['age', 'eligibility', 'eligible', 'criteria'], a: 'Age and eligibility criteria are set in the school’s official admission rules, which have not been published on this demo yet. Please confirm with the school office.', link: ['/admissions/#overview', 'Admissions overview'] },
+  { k: ['fee', 'fees', 'cost', 'charges', 'payment'], a: 'The fee structure is published under CBSE Mandatory Public Disclosure. The school has not uploaded it to this demo yet.', link: ['/disclosure/#academics', 'Fee structure section'] },
+  { k: ['book', 'books', 'list', 'textbook'], a: 'Class-wise book lists for Classes 1–10 are in the Academic Centre. Official lists will be uploaded by the school each year.', link: ['/academics/#centre', 'Academic Centre'] },
+  { k: ['app', 'application', 'android', 'mobile', 'login'], a: 'The official Parent / Student app is available on Google Play (package iconic.stkvem).', link: [school.app.url, 'Open Google Play'] },
+  { k: ['phone', 'call', 'email', 'contact', 'number', 'timing', 'timings', 'hours', 'office'], a: 'The school’s phone number, email and office hours have not been provided for this demo yet. They will appear on the Contact page.', link: ['/contact/', 'Contact page'] },
+  { k: ['transport', 'bus', 'van', 'route', 'pickup'], a: 'Transport details have not been confirmed by the school. You can leave a transport enquiry on this page (demo).', link: ['/contact/#transport', 'Transport enquiry'] },
+  { k: ['class', 'classes', 'grade', 'standard', 'nursery'], a: 'This website covers Class 1 to Class 10. Pre-primary classes will be confirmed by the school.', link: ['/academics/', 'Academics'] },
+  { k: ['notice', 'circular', 'holiday', 'exam', 'calendar'], a: 'Notices, circulars and the academic calendar are in News & Resources. The current entries are samples.', link: ['/resources/#notices', 'Notice Centre'] },
+];
+---
+<Base title="Contact & Transport" description={`Contact ${school.name}, Palghar–Boisar Road, Palghar. Address, map, transport enquiry and information assistant.`}>
+  <PageHero crumb="Contact & Transport" kicker="Contact" title="Find us on <em>Palghar–Boisar Road.</em>" lead="Address, directions, transport enquiries and a quick assistant for common questions." art="campus" tone="sky" />
+  <SubNav items={[{ id: 'contact', label: 'Contact details' }, { id: 'transport', label: 'Transport enquiry' }, { id: 'assistant', label: 'Information assistant' }]} />
+
+  <section class="section" id="contact" aria-labelledby="c-t">
+    <div class="container">
+      <SectionHead kicker="Contact details" title="Reach the <em>school office</em>" id="c-t" />
+      <div class="cgrid" data-reveal="stagger">
+        <article class="ccard ccard--main">
+          <Icon name="map" size={28} />
+          <p class="label muted">Address</p>
+          <address class="h3">{school.addressLines.map((l) => <span>{l}</span>)}</address>
+          <p class="src">Source: CBSE SARAS</p>
+          <Button href={school.mapUrl} external variant="light" icon="external">Get directions</Button>
+        </article>
+        <article class="ccard"><Icon name="call" size={26} /><p class="label muted">Phone</p><p class="h4"><Fact fact={school.phone} /></p></article>
+        <article class="ccard"><Icon name="mail" size={26} /><p class="label muted">Email</p><p class="h4"><Fact fact={school.email} /></p></article>
+        <article class="ccard"><Icon name="clock" size={26} /><p class="label muted">Office hours</p><p class="h4"><Fact fact={school.officeHours} /></p></article>
+        <article class="ccard"><Icon name="phone" size={26} /><p class="label muted">Parent / Student App</p><a class="link link--under" href={school.app.url} target="_blank" rel="noopener">Google Play <Icon name="external" size={16} /></a></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-paper2" id="transport" aria-labelledby="t-t">
+    <div class="container tr">
+      <div>
+        <SectionHead kicker="Transport" title="Getting to <em>school</em>" id="t-t" />
+        <p class="prose" data-reveal="up">Details of school transport — routes, stops and charges — have not been confirmed by the school yet. Use this enquiry to show your interest; when the website goes live, it will reach the transport desk.</p>
+        <p style="margin-top:20px" data-reveal="up"><Pending label="Transport arrangements to be confirmed" /></p>
+      </div>
+      <div class="tr__card" data-reveal="up">
+        <form data-validate class="form-grid">
+          <div class="field"><label class="field__label" for="tArea">Your area / locality <span class="req">*</span></label><input class="input" id="tArea" required minlength="2" placeholder="e.g. your village or neighbourhood" data-msg-required="Please enter your area." /><Fragment set:html={ok} /><p class="field__error"><span><Fragment set:html={err} /></span></p></div>
+          <div class="form-grid form-grid--2">
+            <div class="field"><label class="field__label" for="tClass">Student’s class <span class="req">*</span></label><select class="select" id="tClass" required data-msg-required="Please choose a class."><option value="">Choose…</option>{enquiryClasses.map((c) => <option>{c}</option>)}</select><Fragment set:html={ok} /><p class="field__error"><span><Fragment set:html={err} /></span></p></div>
+            <div class="field"><label class="field__label" for="tMob">Mobile number <span class="req">*</span></label><input class="input" id="tMob" type="tel" inputmode="numeric" required pattern="[6-9][0-9]{9}" data-phone data-msg-pattern="Enter a 10-digit Indian mobile number." /><Fragment set:html={ok} /><p class="field__error"><span><Fragment set:html={err} /></span></p></div>
+          </div>
+          <div class="field radio-group" data-radio-group="trip" role="radiogroup" aria-labelledby="trip-l"><span class="field__label" id="trip-l">Needed for <span class="req">*</span></span><div class="choices">{['Morning pickup', 'Afternoon drop', 'Both'].map((s, i) => <label class="choice"><input type="radio" name="trip" value={s} required={i === 0} /><span>{s}</span></label>)}</div><p class="field__error"><span><Fragment set:html={err} /> Please choose an option.</span></p></div>
+          <p class="small muted">Demonstration — nothing is sent to the school.</p>
+          <Button type="submit" icon="send">Send transport enquiry</Button>
+        </form>
+        <div class="success" data-success hidden>
+          <span class="success__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+          <h3 class="h3" tabindex="-1">Transport enquiry noted</h3>
+          <p class="muted">Reference <strong data-ref>DEMO</strong> — demonstration only; nothing was sent.</p>
+          <button type="button" class="link link--under" data-reset>Send another</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="assistant" aria-labelledby="as-t">
+    <div class="container as">
+      <div>
+        <SectionHead kicker="Information assistant" title="Ask a <em>quick question</em>" id="as-t" />
+        <p class="prose" data-reveal="up">A demonstration of a school information assistant. It answers only from this website’s verified content and says so when the school has not provided something — it never guesses.</p>
+      </div>
+      <div class="as__box" data-assistant data-reveal="up">
+        <div class="as-log" data-as-log role="log" aria-live="polite" aria-label="Conversation">
+          <div class="as-msg as-msg--bot">Hello! Ask me about admissions, the CBSE affiliation, the address, fees, book lists or the parent app.</div>
+        </div>
+        <div class="as__sugg">
+          {['What is the affiliation number?', 'Where is the school?', 'How do I apply?', 'Fee structure', 'Parent app'].map((s) => <button class="chip" type="button" data-as-suggest>{s}</button>)}
+        </div>
+        <form class="as__form" data-as-form>
+          <label class="sr-only" for="as-in">Your question</label>
+          <input id="as-in" class="input" placeholder="Type your question…" autocomplete="off" />
+          <button class="as__send" type="submit" aria-label="Send question"><Icon name="send" size={20} /></button>
+        </form>
+      </div>
+      <script type="application/json" id="assistant-data" set:html={JSON.stringify(intents)} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cgrid { display: grid; gap: 12px; }
+  @media (min-width: 700px) { .cgrid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .cgrid { grid-template-columns: 1.6fr 1fr 1fr; } .ccard--main { grid-row: span 2; } }
+  .ccard { display: grid; gap: 10px; align-content: start; justify-items: start; padding: 28px; border-radius: var(--r-2); box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow var(--d-ui), transform var(--d-ui) var(--ease-out); }
+  .ccard:hover { box-shadow: inset 0 0 0 1px var(--navy-900); transform: translateY(-3px); }
+  .ccard > :global(svg) { color: var(--marigold-600); margin-bottom: 8px; }
+  .ccard--main { background: var(--navy-900); color: var(--paper); --text-muted: rgb(246 241 231 / 0.7); box-shadow: none; gap: 14px; padding: 36px; }
+  .ccard--main > :global(svg) { color: var(--marigold-300); }
+  .ccard--main .src { color: rgb(246 241 231 / 0.55); margin-bottom: 12px; }
+  address { font-style: normal; display: grid; }
+  .tr { display: grid; gap: 40px; }
+  @media (min-width: 1000px) { .tr { grid-template-columns: 0.9fr 1.1fr; gap: 80px; align-items: start; } }
+  .tr__card { padding: clamp(24px, 4vw, 48px); border-radius: var(--r-2); background: var(--white); box-shadow: var(--shadow-2); }
+  .req { color: var(--clay-600); }
+  .as { display: grid; gap: 40px; }
+  @media (min-width: 1000px) { .as { grid-template-columns: 0.8fr 1.2fr; gap: 80px; align-items: start; } }
+  .as__box { border-radius: var(--r-2); background: var(--white); box-shadow: var(--shadow-2); overflow: hidden; }
+  .as__sugg { display: flex; gap: 8px; overflow-x: auto; padding: 14px 16px; border-top: 1px solid var(--line); scrollbar-width: none; }
+  .as__sugg .chip { flex: none; min-height: 36px; font-size: 0.8125rem; }
+  .as__form { display: flex; gap: 8px; padding: 12px 16px 16px; }
+  .as__send { flex: none; width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; background: var(--navy-900); color: var(--white); transition: transform var(--d-press), background-color var(--d-fast); }
+  .as__send:hover { background: var(--navy-700); }
+  .as__send:active { transform: scale(0.92); }
+  .as__send:hover :global(svg) { animation: send 500ms var(--ease-out); }
+  @keyframes send { 50% { transform: translate(3px, -3px); } }
+</style>
