@@ -1,0 +1,271 @@
+---
+import '@fontsource-variable/unbounded/index.css';
+import '@fontsource-variable/manrope/index.css';
+import { Image } from 'astro:assets';
+import ConceptBase from '../../components/concepts/ConceptBase.astro';
+import Photo from '../../components/concepts/Photo.astro';
+import { photos, logoTransparent as logoOfficial } from '../../data/photos';
+import { verified as v } from '../../data/verified';
+
+const day = [
+  { time: '08:00', title: 'Good morning, STKV', text: 'School begins at 8:00 am — friends, assembly and a fresh start.', photo: photos.uniform },
+  { time: '09:00', title: 'Hands up, minds on', text: 'Lessons in 23 digital classrooms, where questions are the point.', photo: photos.classroom },
+  { time: '10:30', title: 'Make it bubble', text: 'Composite science, mathematics and computer labs turn ideas into experiments.', photo: photos.lab },
+  { time: '11:15', title: 'Quiet hour', text: '5,103 books and a reading habit that lasts a lifetime.', photo: photos.library },
+  { time: '12:00', title: 'Wheels, horses & sport', text: 'Skating, horse riding, yoga and games on a 39,460 sq ft playground.', photo: photos.skating },
+  { time: '12:45', title: 'Colour & rhythm', text: 'Art, music and dance — creativity on the timetable.', photo: photos.art },
+  { time: '13:30', title: 'See you tomorrow', text: 'School day ends at 1:30 pm. The office stays open until 4:00 pm.', photo: photos.sportsday },
+];
+const acts = [
+  { n: 'Horse riding', p: photos.riding }, { n: 'Skating', p: photos.skating }, { n: 'Folk dance', p: photos.dance },
+  { n: 'Art & craft', p: photos.art }, { n: 'Coding', p: photos.computer }, { n: 'Sports day', p: photos.sportsday },
+];
+const marquee = [`${v.stats.students.toLocaleString('en-IN')} learners`, `${v.stats.teachers} teachers`, `${v.stats.digitalClassrooms} digital classrooms`, `${v.stats.libraryBooks.toLocaleString('en-IN')} books`, `${v.stats.campusSqM.toLocaleString('en-IN')} m² campus`];
+---
+<ConceptBase title="C · A Day at STKV" theme="daylight">
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute;display:none">
+    <clipPath id="shield" clipPathUnits="objectBoundingBox">
+      <path d="M0.5,0.015 C0.585,0.015 0.97,0.62 0.99,0.79 C1.005,0.93 0.9,0.985 0.5,0.985 C0.1,0.985 -0.005,0.93 0.01,0.79 C0.03,0.62 0.415,0.015 0.5,0.015 Z" />
+    </clipPath>
+  </svg>
+
+  <header class="dnav">
+    <a href="#" class="dnav__brand"><span class="dnav__badge"><Image src={logoOfficial} alt="STKV official logo" width={110} /></span><span class="dnav__name">Shri S. T. Kadam<br />Vidyalaya</span></a>
+    <div class="dnav__right"><a href="#apply" class="dbtn dbtn--sun">Apply 2027–28</a><button class="dnav__menu" type="button" aria-label="Open menu"><span></span><span></span></button></div>
+  </header>
+
+  <main>
+    <section class="open" data-open>
+      <div class="open__stage">
+        <h1 class="open__title"><span class="open__l" data-open-l>A school</span><span class="open__r" data-open-r>with a <em>difference</em></span></h1>
+        <div class="shield" data-shield><Photo photo={photos.hero} eager sizes="100vw" tag={false} /></div>
+        <p class="open__sub" data-open-sub>CBSE · Palghar · Bal Vatika to Class 10</p>
+        <p class="open__hint" data-open-hint>Scroll to step inside <span aria-hidden="true">↓</span></p>
+        <p class="open__greet" data-open-greet>Good morning from <b>Palghar.</b></p>
+        <span class="ph__tag ph__tag--ai open__tag">AI concept image</span>
+      </div>
+    </section>
+
+    <section class="day" data-day aria-label="A day at STKV">
+      <div class="day__pin">
+        <div class="day__clock" aria-hidden="true"><span class="day__label">A day at STKV</span><span class="day__time" data-clock>08:00</span><span class="day__bar"><span data-daybar></span></span></div>
+        <div class="day__visual">
+          {day.map((d, i) => <div class="day__img" data-dimg style={`z-index:${i}`}><Photo photo={d.photo} sizes="(min-width:1000px) 55vw, 100vw" /></div>)}
+        </div>
+        <ol class="day__steps" role="list">
+          {day.map((d) => (
+            <li class="day__step" data-dstep>
+              <span class="day__t">{d.time}</span>
+              <h2>{d.title}</h2>
+              <p>{d.text}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="mq" aria-label="STKV in numbers">
+      <p class="mq__row mq__row--a" data-mq="-1">{marquee.map((m) => <span>{m} <i>✺</i></span>)}</p>
+      <p class="mq__row mq__row--b" data-mq="1">{[...marquee].reverse().map((m) => <span>{m} <i>✺</i></span>)}</p>
+      <p class="mq__src">Figures as published in the school’s CBSE OASIS record</p>
+    </section>
+
+    <section class="acts" data-acts>
+      <div class="dwrap">
+        <p class="dkick">Beyond the classroom</p>
+        <ul class="acts__list" role="list">
+          {acts.map((a, i) => (
+            <li class="act" data-act={i}><a href="#"><span class="act__n">0{i + 1}</span><span class="act__name">{a.n}</span><span class="act__go" aria-hidden="true">→</span></a><div class="act__inline"><Photo photo={a.p} sizes="90vw" /></div></li>
+          ))}
+        </ul>
+      </div>
+      <div class="acts__float" data-float aria-hidden="true">{acts.map((a) => <div class="acts__fimg"><Photo photo={a.p} sizes="360px" tag={false} /></div>)}</div>
+    </section>
+
+    <section class="dcta" id="apply">
+      <div class="dcta__bg" data-cta-bg><Photo photo={photos.dance} sizes="100vw" /></div>
+      <div class="dwrap dcta__in">
+        <p class="dkick">Admissions 2027–28</p>
+        <h2 class="dcta__title" data-cta-title>Join us from <span>1 December.</span></h2>
+        <p class="dcta__note">{v.admissions.opens}</p>
+        <div class="dcta__btns"><a href="#" class="dbtn dbtn--sun">Make an enquiry</a><a href="#" class="dbtn dbtn--ghost">Visit the campus</a></div>
+        <p class="dcta__contact">{v.contact.phone} · {v.contact.email}</p>
+      </div>
+    </section>
+    <footer class="dfoot dwrap"><p>Concept preview · Photos marked “AI concept image” are illustrative and will be replaced by approved school photography.</p></footer>
+  </main>
+</ConceptBase>
+
+<style is:global>
+  .daylight { --bg: #0a0f2c; --bg2: #121a45; --red: #ff4d4d; --crest: #d42a2f; --sun: #ffc93c; --white: #fff; --muted: #b6bce0;
+    --disp: 'Unbounded Variable', system-ui, sans-serif; --body: 'Manrope Variable', system-ui, sans-serif; --ease: cubic-bezier(.22,1,.36,1); }
+  .daylight body { background: var(--bg); color: var(--white); font: 500 1.05rem/1.6 var(--body); }
+  .daylight .dwrap { width: min(100% - 2 * clamp(16px, 4vw, 56px), 1320px); margin-inline: auto; }
+  .daylight .dkick { font: 700 .78rem/1 var(--body); letter-spacing: .2em; text-transform: uppercase; color: var(--sun); }
+  .daylight .dbtn { display: inline-flex; align-items: center; min-height: 50px; padding: 0 24px; border-radius: 99px; font: 800 .92rem var(--body); transition: transform .3s var(--ease), background-color .3s, color .3s; }
+  .daylight .dbtn:hover { transform: scale(1.05); } .daylight .dbtn:active { transform: scale(.96); }
+  .daylight .dbtn--sun { background: var(--sun); color: var(--bg); }
+  .daylight .dbtn--ghost { box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / .6); }
+  .daylight .dbtn--ghost:hover { background: #fff; color: var(--bg); }
+
+  .daylight .dnav { position: fixed; z-index: 50; inset: 0 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 16px clamp(16px, 3vw, 40px); mix-blend-mode: normal; }
+  .daylight .dnav__brand { display: flex; align-items: center; gap: 12px; }
+  .daylight .dnav__badge { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 18px; background: #fff; overflow: hidden; }
+  .daylight .dnav__badge img { width: 58px; height: auto; }
+  .daylight .dnav__name { font: 700 .78rem/1.15 var(--disp); letter-spacing: .02em; text-transform: uppercase; }
+  @media (max-width: 560px) { .daylight .dnav__name { display: none; } }
+  .daylight .dnav__right { display: flex; gap: 10px; align-items: center; }
+  .daylight .dnav__menu { width: 50px; height: 50px; border-radius: 50%; background: rgb(255 255 255 / .12); backdrop-filter: blur(10px); display: grid; place-content: center; gap: 6px; }
+  .daylight .dnav__menu span { display: block; width: 20px; height: 2px; background: #fff; border-radius: 2px; transition: transform .3s var(--ease); }
+  .daylight .dnav__menu:hover span:first-child { transform: translateX(4px); }
+
+  /* Opening: crest-shaped window that opens onto the day */
+  .daylight .open { height: 100svh; }
+  .daylight .open__stage { position: relative; height: 100svh; display: grid; place-items: center; overflow: clip; background: radial-gradient(120% 80% at 50% 110%, #1c2a7a 0%, var(--bg) 60%); }
+  .daylight .shield { --s: 1; --b: 1; position: absolute; inset: 0; z-index: 2; clip-path: polygon(calc(50% + var(--s) * var(--b) * 0.00vmin) calc(50% + var(--s) * var(--b) * -20.71vmin), calc(50% + var(--s) * var(--b) * 1.35vmin) calc(50% + var(--s) * var(--b) * -20.00vmin), calc(50% + var(--s) * var(--b) * 3.27vmin) calc(50% + var(--s) * var(--b) * -18.07vmin), calc(50% + var(--s) * var(--b) * 5.58vmin) calc(50% + var(--s) * var(--b) * -15.16vmin), calc(50% + var(--s) * var(--b) * 8.14vmin) calc(50% + var(--s) * var(--b) * -11.53vmin), calc(50% + var(--s) * var(--b) * 10.78vmin) calc(50% + var(--s) * var(--b) * -7.43vmin), calc(50% + var(--s) * var(--b) * 13.33vmin) calc(50% + var(--s) * var(--b) * -3.13vmin), calc(50% + var(--s) * var(--b) * 15.66vmin) calc(50% + var(--s) * var(--b) * 1.13vmin), calc(50% + var(--s) * var(--b) * 17.58vmin) calc(50% + var(--s) * var(--b) * 5.09vmin), calc(50% + var(--s) * var(--b) * 18.95vmin) calc(50% + var(--s) * var(--b) * 8.49vmin), calc(50% + var(--s) * var(--b) * 19.60vmin) calc(50% + var(--s) * var(--b) * 11.07vmin), calc(50% + var(--s) * var(--b) * 19.63vmin) calc(50% + var(--s) * var(--b) * 12.69vmin), calc(50% + var(--s) * var(--b) * 19.33vmin) calc(50% + var(--s) * var(--b) * 14.11vmin), calc(50% + var(--s) * var(--b) * 18.65vmin) calc(50% + var(--s) * var(--b) * 15.33vmin), calc(50% + var(--s) * var(--b) * 17.57vmin) calc(50% + var(--s) * var(--b) * 16.36vmin), calc(50% + var(--s) * var(--b) * 16.02vmin) calc(50% + var(--s) * var(--b) * 17.22vmin), calc(50% + var(--s) * var(--b) * 13.98vmin) calc(50% + var(--s) * var(--b) * 17.90vmin), calc(50% + var(--s) * var(--b) * 11.40vmin) calc(50% + var(--s) * var(--b) * 18.42vmin), calc(50% + var(--s) * var(--b) * 8.24vmin) calc(50% + var(--s) * var(--b) * 18.78vmin), calc(50% + var(--s) * var(--b) * 4.45vmin) calc(50% + var(--s) * var(--b) * 19.00vmin), calc(50% + var(--s) * var(--b) * 0.00vmin) calc(50% + var(--s) * var(--b) * 19.06vmin), calc(50% + var(--s) * var(--b) * -4.45vmin) calc(50% + var(--s) * var(--b) * 19.00vmin), calc(50% + var(--s) * var(--b) * -8.24vmin) calc(50% + var(--s) * var(--b) * 18.78vmin), calc(50% + var(--s) * var(--b) * -11.40vmin) calc(50% + var(--s) * var(--b) * 18.42vmin), calc(50% + var(--s) * var(--b) * -13.98vmin) calc(50% + var(--s) * var(--b) * 17.90vmin), calc(50% + var(--s) * var(--b) * -16.02vmin) calc(50% + var(--s) * var(--b) * 17.22vmin), calc(50% + var(--s) * var(--b) * -17.57vmin) calc(50% + var(--s) * var(--b) * 16.36vmin), calc(50% + var(--s) * var(--b) * -18.66vmin) calc(50% + var(--s) * var(--b) * 15.33vmin), calc(50% + var(--s) * var(--b) * -19.33vmin) calc(50% + var(--s) * var(--b) * 14.11vmin), calc(50% + var(--s) * var(--b) * -19.63vmin) calc(50% + var(--s) * var(--b) * 12.69vmin), calc(50% + var(--s) * var(--b) * -19.60vmin) calc(50% + var(--s) * var(--b) * 11.07vmin), calc(50% + var(--s) * var(--b) * -18.95vmin) calc(50% + var(--s) * var(--b) * 8.49vmin), calc(50% + var(--s) * var(--b) * -17.58vmin) calc(50% + var(--s) * var(--b) * 5.09vmin), calc(50% + var(--s) * var(--b) * -15.66vmin) calc(50% + var(--s) * var(--b) * 1.13vmin), calc(50% + var(--s) * var(--b) * -13.33vmin) calc(50% + var(--s) * var(--b) * -3.13vmin), calc(50% + var(--s) * var(--b) * -10.78vmin) calc(50% + var(--s) * var(--b) * -7.43vmin), calc(50% + var(--s) * var(--b) * -8.14vmin) calc(50% + var(--s) * var(--b) * -11.53vmin), calc(50% + var(--s) * var(--b) * -5.58vmin) calc(50% + var(--s) * var(--b) * -15.16vmin), calc(50% + var(--s) * var(--b) * -3.27vmin) calc(50% + var(--s) * var(--b) * -18.07vmin), calc(50% + var(--s) * var(--b) * -1.35vmin) calc(50% + var(--s) * var(--b) * -20.00vmin)); }
+  .daylight .shield .ph { width: 100%; height: 100%; }
+  .daylight .shield .ph__img { object-position: 58% 40%; }
+  @media (max-width: 760px) { .daylight .shield { --b: 1.7; } }
+  .daylight .open__title { position: absolute; inset: 0; z-index: 3; display: grid; align-content: center; pointer-events: none; font: 800 clamp(2.4rem, 1rem + 6.4vw, 8rem)/.95 var(--disp); letter-spacing: -0.04em; text-transform: uppercase; }
+  .daylight .open__l { justify-self: start; padding-left: clamp(16px, 4vw, 60px); transform: translateY(-.8em); }
+  .daylight .open__r { justify-self: end; padding-right: clamp(16px, 4vw, 60px); text-align: right; transform: translateY(.8em); }
+  .daylight .open__r em { font-style: normal; color: var(--sun); }
+  @media (max-width: 760px) { .daylight .open__l { transform: translateY(-3.4em); } .daylight .open__r { transform: translateY(2.6em); } }
+  .daylight .open__sub { position: absolute; bottom: 90px; left: 50%; translate: -50% 0; z-index: 3; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: .78rem; color: var(--muted); white-space: nowrap; }
+  .daylight .open__hint { position: absolute; bottom: 60px; left: 50%; translate: -50% 0; z-index: 3; font-size: .85rem; font-weight: 700; color: var(--sun); }
+  .daylight .open__greet { position: absolute; z-index: 4; left: clamp(16px, 4vw, 60px); bottom: 70px; font: 800 clamp(2rem, 1rem + 4vw, 5rem)/1 var(--disp); letter-spacing: -0.04em; opacity: 0; text-shadow: 0 4px 30px rgb(0 0 0 / .4); }
+  .daylight .open__greet b { color: var(--sun); }
+  .daylight .open__tag { position: absolute; z-index: 4; right: 16px; bottom: 70px; opacity: 0; }
+
+  /* A day at STKV */
+  .daylight .day { background: var(--bg); }
+  .daylight .day__pin { position: relative; height: 100svh; display: grid; grid-template-columns: 1fr; overflow: clip; }
+  @media (min-width: 1000px) { .daylight .day__pin { grid-template-columns: .9fr 1.1fr; } }
+  .daylight .day__visual { position: absolute; inset: 0; }
+  @media (min-width: 1000px) { .daylight .day__visual { position: relative; inset: auto; grid-column: 2; grid-row: 1; margin: 110px clamp(16px, 3vw, 40px) 40px 0; border-radius: 36px; overflow: hidden; } }
+  .daylight .day__img { position: absolute; inset: 0; clip-path: inset(100% 0 0 0); }
+  .daylight .day__img:first-child { clip-path: inset(0 0 0 0); }
+  .daylight .day__img .ph { width: 100%; height: 100%; }
+  @media (max-width: 999px) { .daylight .day__visual::after { content: ''; position: absolute; inset: 0; z-index: 20; background: linear-gradient(180deg, rgb(10 15 44 / .2), rgb(10 15 44 / .92) 75%); } }
+  .daylight .day__clock { position: absolute; z-index: 30; left: clamp(16px, 4vw, 60px); top: 110px; display: grid; gap: 6px; }
+  .daylight .day__label { font: 700 .75rem var(--body); letter-spacing: .2em; text-transform: uppercase; color: var(--sun); }
+  .daylight .day__time { font: 800 clamp(3.4rem, 2rem + 6vw, 8.5rem)/1 var(--disp); letter-spacing: -0.05em; font-variant-numeric: tabular-nums; }
+  .daylight .day__bar { width: min(320px, 60vw); height: 4px; border-radius: 4px; background: rgb(255 255 255 / .15); overflow: hidden; }
+  .daylight .day__bar span { display: block; height: 100%; background: var(--sun); transform-origin: left; transform: scaleX(0); }
+  .daylight .day__steps { position: absolute; z-index: 30; left: clamp(16px, 4vw, 60px); bottom: clamp(40px, 10vh, 90px); width: min(460px, calc(100% - 32px)); height: 230px; }
+  .daylight .day__step { position: absolute; inset: 0; display: grid; align-content: end; gap: 10px; opacity: 0; }
+  .daylight .day__step:first-child { opacity: 1; }
+  .daylight .day__t { display: none; }
+  .daylight .day__step h2 { font: 800 clamp(1.9rem, 1.4rem + 1.8vw, 3rem)/1.02 var(--disp); letter-spacing: -0.035em; }
+  .daylight .day__step p { color: var(--muted); font-size: 1.1rem; max-width: 36ch; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .daylight .day__pin { height: auto; display: block; }
+    .daylight .day__visual, .daylight .day__clock { display: none; }
+    .daylight .day__steps { position: static; width: auto; height: auto; padding: 60px clamp(16px, 4vw, 60px); display: grid; gap: 36px; }
+    .daylight .day__step { position: static; opacity: 1; }
+    .daylight .day__t { display: block; color: var(--sun); font: 800 1.4rem var(--disp); }
+  }
+  /* Marquee numbers */
+  .daylight .mq { padding: clamp(80px, 10vw, 140px) 0; overflow: clip; background: var(--bg2); }
+  .daylight .mq__row { display: flex; width: max-content; gap: 40px; font: 800 clamp(3rem, 2rem + 5vw, 7.5rem)/1.05 var(--disp); letter-spacing: -0.04em; text-transform: uppercase; white-space: nowrap; }
+  .daylight .mq__row span { display: inline-flex; align-items: center; gap: 40px; }
+  .daylight .mq__row i { font-style: normal; color: var(--red); font-size: .6em; }
+  .daylight .mq__row--b { color: transparent; -webkit-text-stroke: 1.5px rgb(255 255 255 / .55); margin-left: -30vw; }
+  .daylight .mq__src { width: min(100% - 32px, 1320px); margin: 26px auto 0; font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+  /* Activities hover list */
+  .daylight .acts { position: relative; padding: clamp(80px, 10vw, 140px) 0; }
+  .daylight .acts__list { margin-top: 30px; border-top: 1px solid rgb(255 255 255 / .15); }
+  .daylight .act a { display: grid; grid-template-columns: 60px 1fr auto; align-items: center; gap: 16px; padding: 22px 0; border-bottom: 1px solid rgb(255 255 255 / .15); transition: padding .5s var(--ease), color .3s; }
+  .daylight .act__n { font: 700 .9rem var(--disp); color: var(--muted); }
+  .daylight .act__name { font: 800 clamp(2rem, 1.2rem + 3.4vw, 5rem)/1 var(--disp); letter-spacing: -0.045em; text-transform: uppercase; }
+  .daylight .act__go { font-size: 2rem; transform: translateX(-20px); opacity: 0; transition: transform .5s var(--ease), opacity .3s; color: var(--sun); }
+  .daylight .act a:hover { padding-left: 24px; color: var(--sun); }
+  .daylight .act a:hover .act__go { transform: none; opacity: 1; }
+  .daylight .act__inline { display: none; }
+  @media (hover: none), (max-width: 760px) { .daylight .act__inline { display: block; margin: 0 0 18px; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; } .daylight .act__inline .ph { height: 100%; } }
+  .daylight .acts__float { position: absolute; left: 0; top: 0; z-index: 5; width: 340px; aspect-ratio: 4/3; border-radius: 22px; overflow: hidden; pointer-events: none; opacity: 0; scale: .6; }
+  .daylight .acts__fimg { position: absolute; inset: 0; opacity: 0; transition: opacity .35s; }
+  .daylight .acts__fimg.is-on { opacity: 1; }
+  .daylight .acts__fimg .ph { height: 100%; }
+
+  /* CTA */
+  .daylight .dcta { position: relative; min-height: 100svh; display: grid; align-items: end; overflow: clip; isolation: isolate; }
+  .daylight .dcta__bg { position: absolute; inset: -10% 0; z-index: -1; }
+  .daylight .dcta__bg .ph { height: 100%; }
+  .daylight .dcta__bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(10 15 44 / .3), rgb(10 15 44 / .95) 80%); }
+  .daylight .dcta__in { padding: 0 0 120px; display: grid; gap: 22px; justify-items: start; }
+  .daylight .dcta__title { font: 800 clamp(2.8rem, 1.4rem + 6vw, 8rem)/.92 var(--disp); letter-spacing: -0.05em; text-transform: uppercase; }
+  .daylight .dcta__title span { color: var(--sun); display: block; }
+  .daylight .dcta__note { max-width: 52ch; color: var(--muted); }
+  .daylight .dcta__btns { display: flex; flex-wrap: wrap; gap: 12px; }
+  .daylight .dcta__contact { font-weight: 700; color: var(--muted); }
+  .daylight .dfoot { padding: 30px 0 100px; font-size: .8rem; color: var(--muted); }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { SplitText } from 'gsap/SplitText';
+  gsap.registerPlugin(ScrollTrigger, SplitText);
+
+  const mm = gsap.matchMedia();
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    // 1 · Opening: shield rises, title halves slide in, then on scroll the shield opens to full screen
+    gsap.timeline({ defaults: { ease: 'expo.out' } })
+      .from('[data-shield]', { '--s': .2, autoAlpha: 0, duration: 1.6 })
+      .from('[data-shield] .ph__img', { scale: 1.35, duration: 2.2 }, 0)
+      .from('[data-open-l]', { xPercent: -60, autoAlpha: 0, duration: 1.3 }, .3)
+      .from('[data-open-r]', { xPercent: 60, autoAlpha: 0, duration: 1.3 }, .4)
+      .from('[data-open-sub], [data-open-hint]', { y: 20, autoAlpha: 0, duration: .8, stagger: .1 }, .9);
+
+    gsap.timeline({ scrollTrigger: { trigger: '[data-open]', start: 'top top', end: '+=140%', pin: true, scrub: 1, invalidateOnRefresh: true } })
+      .to('[data-shield]', { '--s': () => (Math.max(innerWidth, innerHeight) / Math.min(innerWidth, innerHeight)) * 6.5, ease: 'power2.in' }, 0)
+      .to('[data-open-l]', { xPercent: -120, autoAlpha: 0, ease: 'power2.in' }, 0)
+      .to('[data-open-r]', { xPercent: 120, autoAlpha: 0, ease: 'power2.in' }, 0)
+      .to('[data-open-sub], [data-open-hint]', { autoAlpha: 0, duration: .2 }, 0)
+      .to('[data-open-greet], .open__tag', { autoAlpha: 1, y: -10, duration: .3 }, .7);
+
+    // 2 · A day at STKV: pinned; each hour wipes the next photo up and swaps the caption
+    const imgs = gsap.utils.toArray<HTMLElement>('[data-dimg]');
+    const steps = gsap.utils.toArray<HTMLElement>('[data-dstep]');
+    const times = steps.map((s) => s.querySelector('.day__t')!.textContent!);
+    const clock = document.querySelector<HTMLElement>('[data-clock]')!;
+    const dtl = gsap.timeline({ scrollTrigger: { trigger: '[data-day]', start: 'top top', end: `+=${steps.length * 70}%`, pin: '.day__pin', scrub: .8,
+      onUpdate: (st) => { const i = Math.min(steps.length - 1, Math.floor(st.progress * steps.length + .15)); if (clock.textContent !== times[i]) clock.textContent = times[i]; } } });
+    dtl.to('[data-daybar]', { scaleX: 1, ease: 'none', duration: steps.length }, 0);
+    imgs.forEach((img, i) => {
+      if (i === 0) { dtl.fromTo(img.querySelector('.ph__img'), { scale: 1.15 }, { scale: 1, duration: 1, ease: 'none' }, 0); return; }
+      dtl.fromTo(img, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .6, ease: 'power2.inOut' }, i - .3)
+        .fromTo(img.querySelector('.ph__img'), { scale: 1.3 }, { scale: 1, duration: 1, ease: 'none' }, i - .3)
+        .to(steps[i - 1], { autoAlpha: 0, y: -30, duration: .3 }, i - .3)
+        .fromTo(steps[i], { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: .35 }, i - .1);
+    });
+
+    // 3 · Marquee rows move opposite ways with scroll
+    gsap.utils.toArray<HTMLElement>('[data-mq]').forEach((row) => {
+      const dir = Number(row.dataset.mq);
+      gsap.fromTo(row, { xPercent: dir < 0 ? 0 : -25 }, { xPercent: dir < 0 ? -25 : 0, ease: 'none', scrollTrigger: { trigger: '.mq', start: 'top bottom', end: 'bottom top', scrub: true } });
+    });
+
+    // 4 · Activities: floating preview follows the cursor (desktop)
+    const float = document.querySelector<HTMLElement>('[data-float]')!;
+    const fimgs = gsap.utils.toArray<HTMLElement>('.acts__fimg');
+    if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      const xTo = gsap.quickTo(float, 'x', { duration: .6, ease: 'power3' }); const yTo = gsap.quickTo(float, 'y', { duration: .6, ease: 'power3' });
+      const sec = document.querySelector<HTMLElement>('[data-acts]')!;
+      sec.addEventListener('pointermove', (e) => { const r = sec.getBoundingClientRect(); xTo(e.clientX - r.left - 170); yTo(e.clientY - r.top - 128); });
+      document.querySelectorAll<HTMLElement>('[data-act]').forEach((li) => {
+        li.addEventListener('pointerenter', () => { fimgs.forEach((f, j) => f.classList.toggle('is-on', j === Number(li.dataset.act))); gsap.to(float, { autoAlpha: 1, scale: 1, rotate: gsap.utils.random(-6, 6), duration: .5, ease: 'back.out(1.6)' }); });
+      });
+      document.querySelector('.acts__list')!.addEventListener('pointerleave', () => gsap.to(float, { autoAlpha: 0, scale: .6, duration: .35 }));
+    }
+    gsap.from('.act', { x: -60, autoAlpha: 0, stagger: .08, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: '.acts__list', start: 'top 80%' } });
+
+    // 5 · CTA: background parallax, title chars cascade
+    gsap.to('[data-cta-bg]', { yPercent: 10, ease: 'none', scrollTrigger: { trigger: '.dcta', start: 'top bottom', end: 'bottom top', scrub: true } });
+    const t = SplitText.create('[data-cta-title]', { type: 'chars,words' });
+    gsap.from(t.chars, { yPercent: 120, autoAlpha: 0, rotate: 8, stagger: .025, duration: .9, ease: 'expo.out', scrollTrigger: { trigger: '.dcta', start: 'top 55%' } });
+  });
+</script>
