@@ -1,0 +1,78 @@
+@import "tailwindcss";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+@import "@fontsource/mukta/devanagari-400.css";
+@import "@fontsource/mukta/devanagari-500.css";
+@import "@fontsource/mukta/devanagari-600.css";
+@import "@fontsource/mukta/devanagari-700.css";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --bg: #f4f7fc; --surface: #ffffff; --raised: #ffffff; --muted: #eaf0f8; --border: #dce4ef; --hair: #e6ecf5; --border-strong: #c7d3e4;
+  --ice: #dceaff; --text: #142b50; --text-2: #4a5b78; --text-3: #5d6b85; --link: #2457c5;
+  --deck: #142b50; --dock: #142b50;
+  --teal-soft: #def2ef; --teal-ink: #0b7a67; --amber-soft: #fdf1dd; --amber-ink: #8a5a0b;
+  --purple-soft: #efebfa; --purple-ink: #5f45bf; --coral-soft: #fcece7; --coral-ink: #b14a27;
+  --success-soft: #e4f0eb; --success-ink: #21845a; --warning-soft: #f9eede; --warning-ink: #8a5a0b;
+  --error-soft: #f7e8e9; --error-ink: #c43d45; --info-soft: #e7eef7; --info-ink: #3975b9;
+  --e1: 0 0 0 1px var(--hair), 0 1px 2px rgb(20 43 80 / 0.04), 0 4px 14px rgb(20 43 80 / 0.05);
+  --e2: 0 0 0 1px var(--hair), 0 2px 6px rgb(20 43 80 / 0.07), 0 12px 28px rgb(20 43 80 / 0.09);
+  --e3: 0 8px 16px rgb(20 43 80 / 0.09), 0 28px 56px rgb(20 43 80 / 0.16);
+  --scrim: rgb(10 23 48 / 0.45);
+  color-scheme: light;
+}
+[data-theme="dark"] {
+  --bg: #0a1730; --surface: #11264a; --raised: #16305a; --muted: #1a3560; --border: #24406b; --hair: #1f3961; --border-strong: #34507f;
+  --ice: #16326b; --text: #f4f7fc; --text-2: #b8c6dd; --text-3: #93a5c4; --link: #62a5f5;
+  --deck: #142b50; --dock: #1c3762;
+  --teal-soft: rgb(20 163 139 / 0.2); --teal-ink: #4fd1b7; --amber-soft: rgb(240 165 43 / 0.16); --amber-ink: #f5c163;
+  --purple-soft: rgb(128 101 216 / 0.26); --purple-ink: #b3a2f0; --coral-soft: rgb(234 121 81 / 0.2); --coral-ink: #f4a385;
+  --success-soft: rgb(33 132 90 / 0.26); --success-ink: #5cc795; --warning-soft: rgb(217 145 33 / 0.2); --warning-ink: #f2c267;
+  --error-soft: rgb(196 61 69 / 0.24); --error-ink: #f08a8f; --info-soft: rgb(57 117 185 / 0.28); --info-ink: #8db8e8;
+  --e1: 0 0 0 1px var(--hair); --e2: 0 0 0 1px var(--border), 0 10px 28px rgb(0 0 0 / 0.28); --e3: 0 0 0 1px var(--border-strong), 0 24px 56px rgb(0 0 0 / 0.45);
+  --scrim: rgb(3 8 20 / 0.62);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg); --color-surface: var(--surface); --color-raised: var(--raised); --color-muted: var(--muted);
+  --color-line: var(--border); --color-hair: var(--hair); --color-line-strong: var(--border-strong);
+  --color-ink: var(--text); --color-ink-2: var(--text-2); --color-ink-3: var(--text-3); --color-link: var(--link);
+  --color-deck: var(--deck); --color-dock: var(--dock); --color-ice: var(--ice);
+  --color-navy: #142b50; --color-royal: #2457c5; --color-royal-press: #1c469f; --color-sky: #62a5f5;
+  --color-teal: #14a38b; --color-teal-deep: #0e8572; --color-teal-soft: var(--teal-soft); --color-teal-ink: var(--teal-ink);
+  --color-amber: #f0a52b; --color-amber-soft: var(--amber-soft); --color-amber-ink: var(--amber-ink);
+  --color-purple: #8065d8; --color-purple-soft: var(--purple-soft); --color-purple-ink: var(--purple-ink);
+  --color-coral: #ea7951; --color-coral-soft: var(--coral-soft); --color-coral-ink: var(--coral-ink);
+  --color-success: #21845a; --color-success-soft: var(--success-soft); --color-success-ink: var(--success-ink);
+  --color-warning: #d99121; --color-warning-soft: var(--warning-soft); --color-warning-ink: var(--warning-ink);
+  --color-error: #c43d45; --color-error-soft: var(--error-soft); --color-error-ink: var(--error-ink);
+  --color-info: #3975b9; --color-info-soft: var(--info-soft); --color-info-ink: var(--info-ink);
+  --font-sans: "Geist Variable", "Mukta", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", "Mukta", ui-monospace, monospace;
+  --shadow-e1: var(--e1); --shadow-e2: var(--e2); --shadow-e3: var(--e3);
+  --ease-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  html[data-text="lg"] { font-size: 112.5%; }
+  body { @apply bg-bg font-sans text-ink antialiased; letter-spacing: -0.006em; overscroll-behavior-y: none; }
+  :lang(hi), :lang(mr) { letter-spacing: 0; }
+  button { cursor: pointer; -webkit-user-select: none; user-select: none; touch-action: manipulation; }
+  :focus-visible { outline: 2px solid var(--color-sky); outline-offset: 2px; }
+  input, textarea, select { font: inherit; color: inherit; }
+}
+
+@layer components {
+  .eyebrow { @apply font-mono text-[10.5px] leading-[14px] font-medium tracking-[0.1em] uppercase; }
+  :lang(hi) .eyebrow, :lang(mr) .eyebrow { @apply font-sans text-[12px] tracking-normal normal-case; }
+  .deck-dots { background-image: radial-gradient(rgb(255 255 255 / 0.075) 1px, transparent 1.3px); background-size: 16px 16px; background-position: 8px 8px; }
+  .hatch { background-image: repeating-linear-gradient(135deg, var(--hatch, rgb(255 255 255 / 0.12)) 0 2px, transparent 2px 7px); }
+  .barcode { background: repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 3px, currentColor 3px 5px, transparent 5px 6px, currentColor 6px 7px, transparent 7px 10px); }
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+}
