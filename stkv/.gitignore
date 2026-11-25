@@ -3,3 +3,4 @@ dist/
 .astro/
 .figma-snapshots/
 assets-src/
+*.log
