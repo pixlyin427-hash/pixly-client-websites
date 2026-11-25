@@ -25,6 +25,7 @@ import chairman from '../assets/photos/real-chairman.jpg';
 import founder from '../assets/photos/real-founder-portrait.jpg';
 import logo from '../assets/brand/stkv-logo-official.png';
 import logoT from '../assets/brand/stkv-logo-transparent.png';
+import crestImg from '../assets/brand/stkv-crest.png';
 
 export interface Photo { src: ImageMetadata; alt: string; kind: 'ai' | 'real'; credit?: string }
 
@@ -50,3 +51,4 @@ export const photos = {
 
 export const logoOfficial = logo;
 export const logoTransparent = logoT;
+export const crest = crestImg;
