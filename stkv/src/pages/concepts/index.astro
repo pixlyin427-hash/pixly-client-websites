@@ -1,0 +1,20 @@
+---
+import { Image } from 'astro:assets';
+import { photos } from '../../data/photos';
+const list = [
+  { href: '/concepts/pulse/', t: 'A · Pulse', d: 'Energetic, photography-led. Crest red, royal navy & sunshine yellow.', p: photos.hero },
+  { href: '/concepts/heritage/', t: 'B · Heritage Editorial', d: 'Magazine storytelling: the trust’s journey since 1966 and the school motto.', p: photos.classroom },
+  { href: '/concepts/daylight/', t: 'C · A Day at STKV', d: 'Immersive and cinematic: the crest shield opens into an 8:00 → 1:30 school-day story.', p: photos.lab },
+];
+---
+<html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="robots" content="noindex" /><title>STKV · Homepage concepts</title><link rel="icon" href="/favicon.svg" /></head>
+<body style="margin:0;font:16px/1.5 system-ui,sans-serif;background:#0e1433;color:#fff">
+  <main style="max-width:1200px;margin:0 auto;padding:48px 20px">
+    <p style="margin:0;letter-spacing:.14em;text-transform:uppercase;font-size:12px;opacity:.7">Shri S. T. Kadam Vidyalaya · Website redesign</p>
+    <h1 style="font-size:clamp(2rem,5vw,3.4rem);line-height:1.05;margin:10px 0 8px">Homepage concepts for review</h1>
+    <p style="opacity:.75;max-width:60ch">Images marked “AI Concept Image” are AI-generated illustrations, not real students or scenes. Images marked “School Archive” are from stkvem.com.</p>
+    <div style="display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:28px">
+      {list.map((c) => <a href={c.href} style="display:block;color:inherit;text-decoration:none;background:#1b2a6b;border-radius:20px;overflow:hidden"><Image src={c.p.src} alt="" widths={[600]} sizes="400px" style="width:100%;height:220px;object-fit:cover;display:block" /><div style="padding:18px 20px 22px"><strong style="font-size:1.3rem">{c.t}</strong><p style="margin:6px 0 0;opacity:.8">{c.d}</p></div></a>)}
+    </div>
+  </main>
+</body></html>

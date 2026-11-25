@@ -1,6 +1,7 @@
 /**
  * Photo registry. `kind` drives the on-image credit label:
- *  - 'ai'   → AI-generated CONCEPT image (uniform modelled on the school's published 2019–20 photos).
+ *  - 'ai'   → AI-generated CONCEPT image. Primary uniform modelled on the school's published 2019–20 photos;
+ *             senior (Classes 6–10) uniform modelled on reference photos supplied by the client (to be confirmed).
  *             Must be replaced by approved school photography before launch.
  *  - 'real' → genuine image published on stkvem.com (school archive).
  */
@@ -31,10 +32,10 @@ export const photos = {
   hero: { src: hero, kind: 'ai', alt: 'Laughing students in navy-and-white uniforms running across a sunlit school courtyard' },
   classroom: { src: classroom, kind: 'ai', alt: 'A teacher at a smart board while eager students raise their hands' },
   library: { src: library, kind: 'ai', alt: 'A girl reading a storybook on a cushion between library shelves' },
-  lab: { src: lab, kind: 'ai', alt: 'Two students in safety goggles watching a colour-changing test tube' },
+  lab: { src: lab, kind: 'ai', alt: 'Two senior students in safety goggles watching a colour-changing test tube in the chemistry lab' },
   skating: { src: skating, kind: 'ai', alt: 'Students in helmets roller-skating through cones in an activity hall' },
   riding: { src: riding, kind: 'ai', alt: 'A student on a chestnut horse during a supervised riding lesson at golden hour' },
-  computer: { src: computer, kind: 'ai', alt: 'Two students building a block-coding game with their teacher' },
+  computer: { src: computer, kind: 'ai', alt: 'Two senior students building a block-coding project with their teacher' },
   sportsday: { src: sportsday, kind: 'ai', alt: 'A girl breaking the finish tape on sports day as classmates cheer' },
   dance: { src: dance, kind: 'ai', alt: 'Girls in traditional Maharashtrian dress performing a lezim folk dance' },
   art: { src: art, kind: 'ai', alt: 'A student proudly holding up her peacock painting in art class' },
